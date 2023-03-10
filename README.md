@@ -1,14 +1,17 @@
 # 关于如何协同开发
 
 ## 项目如何下载
-1. 在本地新建一个文件夹，比如 petHospital
-2. 打开控制台，进入这个新建文件夹的目录 /petHospital
-3. 输入以下命令，可以下载代码到本地，以及将本地文件夹与github仓库关联到一起
+1. 在本地随便选一个文件夹，用于存放这个项目代码，比如 Document
+2. 打开控制台，进入这个文件夹的目录，比如 cd Document
+3. 输入以下命令，可以下载代码到本地，以及将本地文件夹与github仓库关联到一起。下载后该文件夹里会新增一个文件夹 petHospital
 ``` 
 git clone https://github.com/zcy530/PetHospital.git 
 ```
-
-4. 使用下列命令查看是否与github仓库关联成功
+4. 在控制台中，进入这个下载下来的项目文件
+``` 
+cd petHospital
+```
+5. 使用下列命令查看是否与github仓库关联成功
 ``` 
 git remote -v
 

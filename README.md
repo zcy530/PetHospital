@@ -1,70 +1,69 @@
-# Getting Started with Create React App
+# 关于如何协同开发
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 项目如何下载
+1. 在本地新建一个文件夹，比如 petHospital
+2. 打开控制台，进入这个新建文件夹的目录 /petHospital
+3. 输入以下命令，可以下载代码到本地，以及将本地文件夹与github仓库关联到一起
+``` 
+git clone https://github.com/zcy530/PetHospital.git 
+```
 
-## Available Scripts
+4. 使用下列命令查看是否与github仓库关联成功
+``` 
+git remote -v
 
-In the project directory, you can run:
+// 如果结果如下，说明关联成功
+/petHospital > git remote -v
+origin  git@github.com:zcy530/PetHospital.git (fetch)
+origin  git@github.com:zcy530/PetHospital.git (push)
+```
+## 如何运行
+1. 确保控制台在项目文件夹的目录中
+2. 因为项目中还没有安装依赖，第一次运行需要通过以下的命令安装 node_modules
+``` 
+yarn install 
+```
+3. 通过下面的命令运行项目
+``` 
+yarn start
+```
+4. Compiled successfully 之后，打开浏览器，输入 http://localhost:3000 访问项目的页面
 
-### `yarn start`
+## 如何协同开发：创建分支
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+1. 推荐用 vscode 编辑器，打开上方菜单的Terminal，再次确认 Terminal 在项目文件的目录中
+``` 
+/Documents/petHospital > 
+```
+2. 每次创建分支之前，首先保证本地 origin 的代码是最新的，把最近的远程代码拉到本地，不然后面会有点混乱
+``` 
+git pull
+```
+3. 创建你自己的分支，后面是分支的名字，可以自己取，以「名字/修改的功能」命名比较好~
+``` 
+git branch zhangcaiyi/create_home_page
+```
+3. 可以查看现在仓库一共有哪些分支
+```
+git branch -a
+按q退出
+```
+5. 切换到你现在的分支当中，后面名字是你自己刚刚创建的
+``` 
+git checkout zhangcaiyi/create_home_page
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
 
-### `yarn test`
+## 如何协同开发：提交代码
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. 代码当中有修改
+``` 
+git add .
+git status 保证所有文件都是绿色
+git commmit -m "这里写注释"
+git push --set-upstream origin zhangcaiyi/create_home_page
+```
+2. push 成功之后打开远程仓库的网址 https://github.com/zcy530/PetHospital， 就可以看到最顶部多了一个绿色的按钮 "Create Pull Request"，点击这个按钮，创建 Pull Request，这样管理员后台收到这个 PR，就可以把它合进去
 
-### `yarn build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## 一些注意
+每个页面都被放在不同的page里的文件夹里面，因此不同的模块的开发过程应该不会相互干扰，但是不排除有时候会修改一些global的配置，比如package.json、静态资源等等，如果有全局的改变，尽快上传到远端。

@@ -6,6 +6,7 @@ import Exam from './pages/exam/exam.tsx';
 import NavBar from "./components/Navbar.tsx";
 import "./style.css";
 import "./App.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   return (

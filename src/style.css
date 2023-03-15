@@ -21,6 +21,18 @@ html {
   button:focus {
     box-shadow: none !important;
   }
+
+
+  /* --------- */
+  /* Navbar */
+  /* --------- */
+  .navbar {
+    position: fixed !important;
+    padding: 1rem 2rem !important;
+    font-size: 1.8rem !important;
+    height: 4rem;
+    width: 50rem;
+  }
   
   /* --------- */
   /* Home section */

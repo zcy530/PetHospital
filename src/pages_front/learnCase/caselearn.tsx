@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom'
 import {Card, Row, Col, Button, Container, Tab, Nav} from 'react-bootstrap';
 import { cardType } from './cardType';
 import { caseData, caseType} from './caseData.tsx';
@@ -28,7 +29,7 @@ function CaseLearn() {
                       <Card.Body>
                         <Card.Title>{variant.title}</Card.Title>
                         <Card.Text className='card-content'>{variant.content}</Card.Text>
-                        <Button variant="dark" href='/detail'>Go somewhere</Button>
+                        <Button variant="outline-dark" size="sm" href='/detail'>查看</Button>
                       </Card.Body>
                     </Card>
                   </Col>
@@ -43,7 +44,8 @@ function CaseLearn() {
                         <Card.Img variant="top" src={variant.image} style={{borderRadius:'15px 15px 0 0',height:'100px'}}/>
                         <Card.Body>
                           <Card.Title>{variant.title}</Card.Title>
-                          <Card.Text>{variant.content}</Card.Text>
+                          <Card.Text className='card-content'>{variant.content}</Card.Text>
+                          <Button variant="outline-dark"  size="sm"  href='/detail'>Detail</Button>
                         </Card.Body>
                       </Card>
                     </Col>
@@ -58,7 +60,8 @@ function CaseLearn() {
                         <Card.Img variant="top" src={variant.image} style={{borderRadius:'15px 15px 0 0',height:'100px'}}/>
                         <Card.Body>
                           <Card.Title>{variant.title}</Card.Title>
-                          <Card.Text>{variant.content}</Card.Text>
+                          <Card.Text className='card-content'>{variant.content}</Card.Text>
+                          <Button variant="outline-dark"  size="sm"  href='/detail'>Detail</Button>
                         </Card.Body>
                       </Card>
                     </Col>

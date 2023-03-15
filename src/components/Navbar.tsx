@@ -21,8 +21,8 @@ function NavBar() {
             </Nav.Item>
 
             <NavDropdown title="Learn">
-              <NavDropdown.Item href="/caselearn">病例学习</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.2">角色扮演</NavDropdown.Item>
+              <NavDropdown.Item href="/caselearn">Case Learning</NavDropdown.Item>
+              <NavDropdown.Item href="#action/3.2">Duty Learning</NavDropdown.Item>
             </NavDropdown>
 
             <Nav.Item>
@@ -34,9 +34,9 @@ function NavBar() {
             </Nav.Item>
 
             <NavDropdown title="User">
-              <NavDropdown.Item href="/userinfo">修改个人信息</NavDropdown.Item>
-              <NavDropdown.Item href="/">后台管理系统</NavDropdown.Item>
-              <NavDropdown.Item href="/">退出登录</NavDropdown.Item>
+              <NavDropdown.Item href="/userinfo">Information</NavDropdown.Item>
+              <NavDropdown.Item href="/">Management System</NavDropdown.Item>
+              <NavDropdown.Item href="/">Log Out</NavDropdown.Item>
             </NavDropdown>
           </Nav>
          </Navbar.Collapse>

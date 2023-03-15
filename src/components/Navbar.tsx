@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 function NavBar() {
 
   return (
-    <Navbar variant="light" bg="transparent" expand="lg">
+    <Navbar variant="light" bg="transparent">
       <Container>
         
         <Navbar.Brand>
@@ -41,14 +41,14 @@ function NavBar() {
           </Nav>
          </Navbar.Collapse>
 
-         <Form className="d-flex" style={{marginRight:'2rem'}}>
+         <Form className="d-flex">
           <Form.Control
             type="search"
             placeholder="Pealse input"
             className="me-2"
             aria-label="Search"
           />
-          <Button variant="primary">Search</Button>
+          <Button variant="primary" style={{marginRight:'5rem'}}>Search</Button>
         </Form>
        </Container>
      </Navbar>

@@ -5,6 +5,7 @@ html {
   /* Navbar */
 
   .navbar {
+    margin-top: 20px;
     margin-bottom: 50px;
     padding: 0.3rem 2rem !important;
     font-size: 30px !important;

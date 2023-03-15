@@ -17,9 +17,9 @@ code {
 @import url("https://fonts.googleapis.com/css2?family=Raleway:wght@500&display=swap");
 body {
   margin: 0;
-  font-family: "Raleway", serif !important;
+  font-family: 'Segoe UI', "Microsoft YaHei","STXihei", -apple-system, !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-image: linear-gradient(to left, rgb(194, 217, 229), rgb(99, 153, 201));
+  background-image: linear-gradient(to left, rgb(211, 235, 248), rgb(91, 145, 192));
 }
 

@@ -20,6 +20,7 @@ git remote -v
 origin  git@github.com:zcy530/PetHospital.git (fetch)
 origin  git@github.com:zcy530/PetHospital.git (push)
 ```
+
 ## 如何运行
 1. 确保控制台在项目文件夹的目录中
 2. 因为项目中还没有安装依赖，第一次运行需要通过以下的命令安装 node_modules
@@ -69,4 +70,7 @@ git push --set-upstream origin zhangcaiyi/create_home_page
 2. push 成功之后打开远程仓库的网址 https://github.com/zcy530/PetHospital， 就可以看到最顶部多了一个绿色的按钮 "Create Pull Request"，点击这个按钮，创建 Pull Request，这样管理员后台收到这个 PR，就可以把它合进去
 
 ## 一些注意
+前台代码放在 pages_front 文件夹
+后台代码放在 pages_back 文件夹
+
 每个页面都被放在不同的page里的文件夹里面，因此不同的模块的开发过程应该不会相互干扰，但是不排除有时候会修改一些global的配置，比如package.json、静态资源等等，如果有全局的改变，尽快上传到远端。

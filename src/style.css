@@ -27,11 +27,9 @@ html {
   /* Navbar */
   /* --------- */
   .navbar {
-    position: fixed !important;
-    padding: 1rem 2rem !important;
-    font-size: 1.8rem !important;
-    height: 4rem;
-    width: 50rem;
+    transition: all 0.3s ease-out 0s !important;
+    padding: 0.3rem 2rem !important;
+    font-size: 1.6rem !important;
   }
   
   /* --------- */

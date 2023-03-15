@@ -1,12 +1,14 @@
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom"
-import Home from './pages/home/home.tsx';
-import Learn from './pages/learn/learn.tsx';
-import Guide from './pages/guide/guide.tsx';
-import Exam from './pages/exam/exam.tsx';
-import NavBar from "./components/Navbar.tsx";
+import Home from './pages_front/home/home.tsx';
+import Learn from './pages_front/learn/learn.tsx';
+import Guide from './pages_front/guide/guide.tsx';
+import Exam from './pages_front/exam/exam.tsx';
+import NavBar from "./Components/Navbar.tsx";
+import UserInfo from "./pages_back/userInfo/userInfo.tsx";
+import 'bootstrap/dist/css/bootstrap.min.css';
 import "./style.css";
 import "./App.css";
-import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 function App() {
   return (
@@ -18,6 +20,7 @@ function App() {
 				<Route path='/learn' element={<Learn />} />
 				<Route path='/guide' element={<Guide />} />
 				<Route path='/exam' element={<Exam />} />
+				<Route path='/userinfo' element={<UserInfo />} />
 			</Routes>
 			</div>
 		</BrowserRouter>

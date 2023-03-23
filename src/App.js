@@ -7,6 +7,7 @@ import Exam from './pages_front/exam/exam.tsx';
 import NavBar from "./Components/Navbar.tsx";
 import UserInfo from "./pages_back/userInfo/userInfo.tsx";
 import Footer from "./Components/footer.tsx";
+import SystemMenu from "./pages_back/systemMenu/systemMenu.tsx";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./style.css";
 import "./App.css";
@@ -23,6 +24,7 @@ function App() {
 				<Route path='/exam' element={<Exam />} />
 				<Route path='/userinfo' element={<UserInfo />} />
 				<Route path='/detail' element={<Detail />} />
+				<Route path='/systemMenu' element={<SystemMenu />} />
 			</Routes>
 			</div>
 			<Footer />

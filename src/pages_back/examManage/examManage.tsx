@@ -1,8 +1,8 @@
 import React from 'react'
 
-const UserInfo = () => {
+const ExamManage = () => {
   return(
     <h1>Userinfo</h1>
   )
 }
-export default UserInfo;
+export default ExamManage;

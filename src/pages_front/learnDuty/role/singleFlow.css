@@ -1,0 +1,19 @@
+.singleFlow{
+    margin-bottom: 5%
+}
+.flow-icon{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.flow-items{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    margin: 2%;
+}
+.flow-button{
+    margin: 2%;
+}

@@ -1,0 +1,16 @@
+.newRole{
+    width: 100%;
+    height: calc(2vh + 600px);
+    overflow: scroll;
+}
+.Navi_Bar{
+    padding-left: 5%;
+    text-align: left;
+}
+.text_a{
+    left: 0%;
+    width: 10%;
+}
+.text_b{
+    left: 10%;
+}

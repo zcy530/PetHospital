@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom"
+import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Home from './pages_front/home/home.tsx';
 import CaseLearn from './pages_front/learnCase/caselearn.tsx';
 import Detail from "./pages_front/learnCase/details.tsx";
@@ -7,7 +7,7 @@ import Exam from './pages_front/exam/exam.tsx';
 import NavBar from "./Components/Navbar.tsx";
 import UserInfo from "./pages_back/userInfo/userInfo.tsx";
 import Footer from "./Components/footer.tsx";
-import SystemMenu from "./pages_back/systemMenu/systemMenu.tsx";
+import SystemManage from "./pages_back/systemManage.tsx";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./style.css";
 import "./App.css";
@@ -24,7 +24,7 @@ function App() {
 				<Route path='/exam' element={<Exam />} />
 				<Route path='/userinfo' element={<UserInfo />} />
 				<Route path='/detail' element={<Detail />} />
-				<Route path='/systemMenu' element={<SystemMenu />} />
+				<Route path='/systemManage/*' element={<SystemManage />} />
 			</Routes>
 			</div>
 			<Footer />

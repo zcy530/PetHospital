@@ -35,7 +35,7 @@ function NavBar() {
 
             <NavDropdown title="User">
               <NavDropdown.Item href="/userinfo">Information</NavDropdown.Item>
-              <NavDropdown.Item href="/systemMenu">Management System</NavDropdown.Item>
+              <NavDropdown.Item href="/systemManage">Management System</NavDropdown.Item>
               <NavDropdown.Item href="/">Log Out</NavDropdown.Item>
             </NavDropdown>
           </Nav>

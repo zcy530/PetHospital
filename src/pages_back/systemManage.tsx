@@ -3,6 +3,8 @@ import type { MenuProps } from 'antd';
 import { Menu } from 'antd';
 import { Container } from 'react-bootstrap';
 import { Link, Navigate, Outlet, Route, Routes } from "react-router-dom";
+import UserInfo from './userManage/userInfo.tsx';
+import CaseInfo from './caseManage/caseInfo.tsx';
 import Page1 from "./systemMenu/Page1.tsx";
 import Page2 from "./systemMenu/Page2.tsx";
 
@@ -87,9 +89,9 @@ return (
           style={{ width: 256, borderRadius : 10, opacity : 0.8, height:'100%' }}>
         </Menu>
         <Routes>
-            <Route path="case"  element={<Page1 />} />
+            <Route path="case"  element={<CaseInfo />} />
             <Route path="disease"  element={<Page2 />} />
-            <Route path="user"  element={<Page1 />} />
+            <Route path="user"  element={<UserInfo />} />
             <Route path="exercise"  element={<Page2 />} />
             <Route path="paper"  element={<Page1 />} />
             <Route path="department"  element={<Page2 />} />

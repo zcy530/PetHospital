@@ -1,47 +1,14 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import type { ColumnsType, ColumnType } from 'antd/es/table';
-import { DeleteTwoTone, EditTwoTone } from '@ant-design/icons';
-import { SearchOutlined } from '@ant-design/icons';
-import type { InputRef } from 'antd';
-import { Button, Input, Space, Table } from 'antd';
+import { DeleteTwoTone, EditTwoTone, SearchOutlined, ExclamationCircleFilled } from '@ant-design/icons';
+import { Button, Input, InputRef, Space, Table, Modal } from 'antd';
 import type { FilterConfirmProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
+import { UserType } from './userType';
+import {Success, Fail} from './alert.tsx';
+import {ShowDeleteConfirm} from './confirm.tsx';
 
-//定义数据属性
-interface DataType {
-  key: string;
-  user_name: string;
-  character: string;
-  class: number;
-  email: string;
-}
-
-type DataIndex = keyof DataType;
-
-const data: DataType[] = [
-  {
-    key: '1',
-    user_name: '张三',
-    character: '管理员',
-    class: 1,
-    email: '123456@qq.com',
-  },
-  {
-    key: '2',
-    user_name: '李四',
-    character: '学生',
-    class: 2,
-    email: '11111@163.com',
-  },
-  {
-    key: '3',
-    user_name: '王五',
-    character: '学生',
-    class: 3,
-    email: 'abcde@gmail.com',
-  },
-];
-
+type DataIndex = keyof UserType;
 
 const UserInfo: React.FC = () => {
   const [searchText, setSearchText] = useState('');
@@ -67,7 +34,7 @@ const UserInfo: React.FC = () => {
   };
 
   //获取列
-  const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<DataType> => ({
+  const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<UserType> => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
       <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
         <Input
@@ -145,15 +112,66 @@ const UserInfo: React.FC = () => {
       ),
   });
 
+  //编辑操作
+  const edit = (id: number) => {
+    console.log("点击编辑id为" + id + "的用户");
+    //跳出编辑的对话框
+  };
+
+  //删除操作
+  const del = (id: number) => {
+    console.log("点击删除id为" + id + "的用户");
+    //弹出对话框 是否删除？
+    showDeleteConfirm(id);
+  }
+
+  const { confirm } = Modal;
+
+  const showDeleteConfirm = (id: number) => {
+    confirm({
+      title: '确认删除该用户吗？',
+      icon: <ExclamationCircleFilled />,
+      // content: 'Some descriptions',
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk() {
+        console.log('OK');
+        //删除的事件 DELETE
+        fetch(`https://localhost:8080/petHospital/users/${id}`, {
+          method: 'DELETE',
+        }).then((response) => {
+          if (response.status === 200) {
+            // setPosts(
+            //   posts.filter((post) => {
+            //     return post.id !== id;
+            //   })
+            // );
+            console.log('删除成功！')
+            //返回删除成功的提示
+            return <Success />
+          } else {
+            console.log('删除失败！')
+            return <Fail />;
+          }
+        });
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+  };
+
+
   // 定义列
-  const columns: ColumnsType<DataType> = [
+  const columns: ColumnsType<UserType> = [
     {
-      title: '用户名',
-      dataIndex: 'user_name',
-      key: 'user_name',
+      title: '用户id',
+      dataIndex: 'userId',
+      key: 'userId',
       // width: '30%',
       // 该列添加搜索功能
-      ...getColumnSearchProps('user_name'),
+      ...getColumnSearchProps('userId'),
       // render: (text) => <a>{text}</a>,
     },
     {
@@ -164,13 +182,13 @@ const UserInfo: React.FC = () => {
     },
     {
       title: '班级',
-      dataIndex: 'class',
-      key: 'class',
+      dataIndex: 'userClass',
+      key: 'userClass',
     },
     {
       title: '角色',
-      dataIndex: 'character',
-      key: 'character',
+      dataIndex: 'role',
+      key: 'role',
     },
 
     {
@@ -178,14 +196,34 @@ const UserInfo: React.FC = () => {
       key: 'action',
       render: (_, record) => (
         <Space size="middle">
-          <EditTwoTone />
-          <DeleteTwoTone />
+          <EditTwoTone onClick={() => edit(record.userId)} />
+          <DeleteTwoTone onClick={() => del(record.userId)} />
         </Space>
       ),
     },
   ];
 
-  return <Table columns={columns} dataSource={data} />;
+  const [posts, setPosts] = useState([]);
+  useEffect(() => {
+    //获取后台数据
+    fetch('http://localhost:8080/petHospital/users',
+    )
+      .then(
+        (response) => response.json(),
+      )
+      .then((data) => {
+        console.log(data.result);
+        setPosts(data.result);
+        //设置posts值为data
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, []);
+
+  console.log(posts);
+
+  return <Table rowKey={(r) => r.userId} columns={columns} dataSource={posts} />;
 };
 
 export default UserInfo;

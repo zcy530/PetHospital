@@ -5,7 +5,6 @@ import Detail from "./pages_front/learnCase/details.tsx";
 import Guide from './pages_front/guide/guide.tsx';
 import Exam from './pages_front/exam/exam.tsx';
 import NavBar from "./Components/Navbar.tsx";
-import UserInfo from "./pages_back/userInfo/userInfo.tsx";
 import Footer from "./Components/footer.tsx";
 import SystemManage from "./pages_back/systemManage.tsx";
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -22,7 +21,6 @@ function App() {
 				<Route path='/caselearn' element={<CaseLearn />} />
 				<Route path='/guide' element={<Guide />} />
 				<Route path='/exam' element={<Exam />} />
-				<Route path='/userinfo' element={<UserInfo />} />
 				<Route path='/detail' element={<Detail />} />
 				<Route path='/systemManage/*' element={<SystemManage />} />
 			</Routes>

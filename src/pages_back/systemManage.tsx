@@ -7,6 +7,7 @@ import UserInfo from './userManage/userInfo.tsx';
 import CaseInfo from './caseManage/caseInfo.tsx';
 import Page1 from "./systemMenu/Page1.tsx";
 import Page2 from "./systemMenu/Page2.tsx";
+import CaseInsert from './caseManage/caseInsert.tsx';
 
 import {
   ContainerOutlined,
@@ -94,7 +95,7 @@ return (
           </div>
         </Col>
         <Col span={19}>
-          <div style={{height:'100%'}}>
+          <div style={{height:'100%', opacity: 0.8}}>
           <Routes>
               <Route path="case"  element={<CaseInfo />} />
               <Route path="disease"  element={<Page2 />} />
@@ -107,6 +108,7 @@ return (
               <Route path="role"  element={<Page1 />} />
               <Route path="procedure"  element={<Page2 />} />
               <Route path="" element={<Navigate to ="/systemManage/case" />}/>
+              <Route path="/case/insert" element={<CaseInsert />}/>
           </Routes>
             <div>
               <Outlet/>

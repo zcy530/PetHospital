@@ -167,7 +167,7 @@ const CaseInfo: React.FC = () => {
         <Container>
             <div style={{ margin: 16 }}>
                 {/* <Link to="/systemManage/case/update"> */}
-                    <Button type="primary" href='/systemManage/case/update'>上传病例<UploadOutlined /> </Button>
+                    <Button type="primary"  href='/systemManage/case/insert'>上传病例<UploadOutlined /> </Button>
                 {/* </Link> */}
             </div>
             {/* 病例的表格 */}

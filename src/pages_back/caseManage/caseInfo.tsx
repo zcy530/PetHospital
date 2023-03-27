@@ -10,7 +10,7 @@ import Highlighter from 'react-highlight-words';
 //导入CaseData & CaseType
 import { CaseData } from './caseData.tsx';
 import { CaseType } from "./caseType";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Container } from 'react-bootstrap';
 
 //列的下标
@@ -160,13 +160,15 @@ const CaseInfo: React.FC = () => {
     //点击上传病例
     const upLoadCase = (e) => {
         console.log('跳转至上传病例页面');
-        navigateTo('/systemManage/caseUpload');
+        navigateTo('/systemManage/case/update');
     }
 
     return (
         <Container>
             <div style={{ margin: 16 }}>
-                <Button type="primary" onClick={upLoadCase}>上传病例<UploadOutlined /> </Button>
+                {/* <Link to="/systemManage/case/update"> */}
+                    <Button type="primary" href='/systemManage/case/update'>上传病例<UploadOutlined /> </Button>
+                {/* </Link> */}
             </div>
             {/* 病例的表格 */}
             <div className='case_box' style={{ margin: 16 }} >

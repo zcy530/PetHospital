@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { MenuProps } from 'antd';
+import { Col, MenuProps, Row } from 'antd';
 import { Menu } from 'antd';
 import { Container } from 'react-bootstrap';
 import { Link, Navigate, Outlet, Route, Routes } from "react-router-dom";
@@ -79,32 +79,42 @@ function SystemManage ()  {
 
 return (
     <Container style={{height:'100%'}}>
-      <div style={{height:'100%'}}>
-        <Menu
-          defaultSelectedKeys={['/case']}
-          mode="inline"
-          items={items}
-          openKeys={openKeys}
-          onOpenChange={onOpenChange}
-          style={{ width: 256, borderRadius : 10, opacity : 0.8, height:'100%' }}>
-        </Menu>
-        <Routes>
-            <Route path="case"  element={<CaseInfo />} />
-            <Route path="disease"  element={<Page2 />} />
-            <Route path="user"  element={<UserInfo />} />
-            <Route path="exercise"  element={<Page2 />} />
-            <Route path="paper"  element={<Page1 />} />
-            <Route path="department"  element={<Page2 />} />
-            <Route path="medicine"  element={<Page1 />} />
-            <Route path="vaccine"  element={<Page2 />} />
-            <Route path="role"  element={<Page1 />} />
-            <Route path="procedure"  element={<Page2 />} />
-            <Route path="" element={<Navigate to ="/systemManage/case" />}/>
-        </Routes>
-        <div>
-          <Outlet/>
-        </div>
-      </div>
+      <Row gutter={8} align="top">
+        <Col span={5}>
+          <div>
+          <Menu
+            defaultSelectedKeys={['/case']}
+            mode="inline"
+            items={items}
+            openKeys={openKeys}
+            onOpenChange={onOpenChange}
+            style={{ width: 256, borderRadius : 10, opacity : 0.8, height:'100%' }}>
+          </Menu>
+          
+          </div>
+        </Col>
+        <Col span={19}>
+          <div style={{height:'100%'}}>
+          <Routes>
+              <Route path="case"  element={<CaseInfo />} />
+              <Route path="disease"  element={<Page2 />} />
+              <Route path="user"  element={<UserInfo />} />
+              <Route path="exercise"  element={<Page2 />} />
+              <Route path="paper"  element={<Page1 />} />
+              <Route path="department"  element={<Page2 />} />
+              <Route path="medicine"  element={<Page1 />} />
+              <Route path="vaccine"  element={<Page2 />} />
+              <Route path="role"  element={<Page1 />} />
+              <Route path="procedure"  element={<Page2 />} />
+              <Route path="" element={<Navigate to ="/systemManage/case" />}/>
+          </Routes>
+            <div>
+              <Outlet/>
+            </div>
+          </div>
+        </Col>
+      </Row>
+      
          
     </Container>
     

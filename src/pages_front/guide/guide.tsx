@@ -1,5 +1,5 @@
 import React from 'react'
-import Model from './model.js'
+import Model from './model/model.js'
 
 const Guide = () => {
   return(

@@ -1,9 +1,45 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Container, Row, Col } from 'react-bootstrap'
 import { AiOutlineArrowLeft } from "react-icons/ai";
 import { Divider } from 'antd';
+import axios from "axios";
+import { diseaseInfo } from './caseConstants';
+
+axios.defaults.baseURL = 'http://172.30.192.51:8080'
 
 const Detail = () => {
+
+  const exampleCase: diseaseInfo = 
+    {
+      typeId: 0,
+      typeName: "111",
+      diseaseDTOList: [
+          {
+              diseaseId: 3,
+              diseaseName: "皮肤过敏",
+              typeName: "皮肤病"
+          }
+      ]
+  }
+
+  const [mycase, setMyCase]= useState<diseaseInfo>(exampleCase);
+
+  const config = {
+    headers:{
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Credentials":"true",
+      "Origin":"http://172.30.192.51:8080/",
+      "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZSI6Im1hbmdlciIsImlzcyI6InNlY3VyaXR5IiwiaWF0IjoxNjc5NjIxNjY0LCJhdWQiOiJzZWN1cml0eS1hbGwiLCJleHAiOjE2Nzk2Mjg4NjR9.zcxcYr08ViITMIir1rGaimY7JcKB_s-0PuqJw_O7xsY",
+    }
+  };
+  
+  useEffect(() => {
+		axios.get("/petHospital/categories", config).then(value => {
+			console.log(value);
+			setMyCase(value.data.result);
+		})
+	},[])
+
   return(
     <Container style={{backgroundColor:'rgb(255,255,255)',borderRadius:'30px',margin:'auto',padding:'50px',width:'1200px'}}>
         <Row>
@@ -11,7 +47,7 @@ const Detail = () => {
              <AiOutlineArrowLeft style={{ fontSize: "2.5em" }} onClick={()=>window.history.back(-1)}/>
             </Col>
             <Col md={8}>
-              <h1>蛔虫病</h1>
+              <h1>{mycase.typeName}</h1>
             </Col>
         </Row>
         <Divider />

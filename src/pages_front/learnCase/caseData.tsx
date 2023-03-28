@@ -1,5 +1,5 @@
-import { cardType } from "./cardType"
-export const caseData: cardType[] = [
+import { diseaseCard } from "./caseConstants.tsx"
+export const caseData: diseaseCard[] = [
     {
       id: 1,
       title: "蛔虫病",

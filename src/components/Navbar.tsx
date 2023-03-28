@@ -42,7 +42,7 @@ function NavBar() {
                 <Nav.Link as={Link} to="/userinfo">Information</Nav.Link>
                 </NavDropdown.Item>
               <NavDropdown.Item>
-                <Nav.Link as={Link} to="/">Management System</Nav.Link>
+                <Nav.Link as={Link} to="/systemManage">Management System</Nav.Link>
                 </NavDropdown.Item>
               <NavDropdown.Item >
                 <Nav.Link as={Link} to="/"> Log Out </Nav.Link>

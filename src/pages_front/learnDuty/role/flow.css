@@ -1,0 +1,7 @@
+.flow{
+    position: absolute;
+    left: 45%;
+    width: 50%;
+    height: calc(2vh + 500px);
+    overflow: scroll;
+}

@@ -1,0 +1,64 @@
+.newDutyLearn{
+    background-image: url('./04364f825091a4776732db4f7230c428.jpg');
+    background-size:cover;
+    width: 100%;
+    height: calc(2vh + 650px);
+    overflow: scroll;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+.dutyLearn-title{
+    position: absolute;
+    margin-top: calc(150px + 2vh);
+    width: 100%;
+    align-items: center;
+    height: 0;
+    color: white;
+}
+.border-left{
+    left: 0;
+    width: 50%;
+    position: absolute;
+    margin-top: 320px;
+    height: 0;
+    border-bottom: calc(2vh + 130px) solid white;
+    opacity: 0.3;
+    border-right: 700px solid transparent;
+}
+.border-right{
+    right:0;
+    width: 50%;
+    position: absolute;
+    margin-top: 320px;
+    height: 0;
+    border-bottom: calc(2vh + 130px) solid white;
+    opacity: 0.3;
+    border-left: 700px solid transparent;
+}
+.bottom-left{
+    left: 0;
+    width: 50%;
+    position: absolute;
+    margin-top: 350px;
+    height: calc(2vh + 100px);
+    opacity:0.8; 
+    background-image: linear-gradient(to top right, white 50%, transparent 50%);
+}
+.bottom-right{
+    right:0;
+    width: 50%;
+    position: absolute;
+    margin-top: 350px;
+    height: calc(2vh + 100px);
+    opacity:0.8; 
+    background-image: linear-gradient(to top left, white 50%, transparent 50%);
+}
+.bottom{
+    width: 100%;
+    position: absolute;
+    margin-top: calc(2vh + 450px);
+    height: 200px;
+    opacity:0.8; 
+    background-color: white;
+}

@@ -1,13 +1,11 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import Cat from "../../Assets/image/cat.svg";
 import { UserOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import {Form, Button} from 'react-bootstrap';
-import { loginInfo } from "./loginType";
-import { useDispatch, useSelector } from "react-redux";
-import { login } from "../../actions/userActions";
+import { loginInfo } from "../login/loginType";
 
-const Login = ({location, history}) => {
+function Register() {
 
     const initailLoginInfo : loginInfo= {
         email:'',
@@ -18,24 +16,16 @@ const Login = ({location, history}) => {
     const [userLoginInfo, setUserLoginInfo] = useState<loginInfo>(initailLoginInfo);
     const [email,setEmail] = useState<string>('');
     const [password,setPassword] = useState<string>('');
+    const [classmate, setClassmate] = useState<string>('');
     const [remember, setRemember] = useState<boolean>(false);
 
-    const dispatch = useDispatch()
-
-    const userLogin = useSelector((state:any) => state.userLogin)
-    const { loading, error, userInfo } = userLogin
-
-    useEffect(() => {
-        if(userInfo) {
-            console.log(userInfo)
-            history.push('/')
+    const handleSubmit = async (e:any) => {
+        e.preventDefault();
+        try {
+            console.log(e);
+        } catch (e) {
+            console.log(e);
         }
-    },[history, userInfo, redirect])
-
-    const submitHandler = (e) => {
-        
-        e.preventDefault()
-        dispatch(login(email, password))
     };
 
     return (
@@ -43,7 +33,7 @@ const Login = ({location, history}) => {
             <Container className="login-content">
             <Row>
                 <Col className="login">
-                <Form onSubmit={submitHandler}>
+                <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3" controlId="useremail">
                     <Form.Label>Email address</Form.Label>
                     <Form.Control 
@@ -60,13 +50,25 @@ const Login = ({location, history}) => {
                       value={password} 
                       onChange={(e)=>setPassword(e.target.value)}/>
                 </Form.Group>
-                <Button type="submit" variant="primary">LOG IN</Button>
+                <Form.Group className="mb-3" controlId="userclass">
+                    <Form.Label>Classmate</Form.Label>
+                    <Form.Control 
+                      type="input"
+                      placeholder="Input your class number" 
+                      value={classmate} 
+                      onChange={(e)=>setClassmate(e.target.value)}/>
+                </Form.Group>
+                <Form.Label>Choose Role</Form.Label>
+                <Form.Select aria-label="Default select example">
+                    <option value="1">User</option>
+                    <option value="2">Administer</option>
+                </Form.Select>
                 <Button type="submit" variant="primary">REGISTER</Button>
                 </Form>
                 </Col>
 
                 <Col>
-                <img src={Cat} style={{ height: '500px' }} />
+                  <img src={Cat} style={{ height: '500px' }} />
                 </Col>
             </Row>
             </Container>
@@ -74,4 +76,4 @@ const Login = ({location, history}) => {
     );
 }
 
-export default Login;
+export default Register;

@@ -1,6 +1,6 @@
 .modelPage{
   width: 100%;
-  height: calc(650px+2vh);
+  height: calc(680px+2vh);
   overflow: scroll;
 }
 .singleModel{
@@ -21,7 +21,6 @@
   left: 65%;
   height: auto;
   width: 28%;
-  /* border: 1px solid white; */
 }
 .department{
   position: relative;

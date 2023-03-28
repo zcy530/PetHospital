@@ -1,7 +1,8 @@
 import React, {useState} from 'react'
 import VrReact from 'vr-react';
 import './model.css';
-import imgUrl from "../../Assets/models/55dee8f88916bb8de33ad883788b424c.jpg"
+import imgUrl from "../../../Assets/models/55dee8f88916bb8de33ad883788b424c.jpg";
+import imgUrl2 from "../../../Assets/models/d8cae3cac1844c5a2598f95db9e3c619.jpg";
 
 function Model() {  
     const config = {
@@ -17,29 +18,15 @@ function Model() {
     },
     twoScene: {
       type: "equirectangular",
-      panorama: imgUrl,
+      panorama: imgUrl2,
     },
       threeScene: {
-        type: "cubemap",
-        CubeMap: [
-            "./hospital/mobile_b.jpg",
-            "./hospital/mobile_d.jpg",
-            "./hospital/mobile_f.jpg",
-            "./hospital/mobile_r.jpg",
-            "./hospital/mobile_u.jpg",
-            "./hospital/mobile_u.jpg",
-        ],
+        type: "equirectangular",
+        panorama: imgUrl,
       },
       fourScene: {
-        type: "cubemap",
-        CubeMap: [
-            "./hospital/mobile_b.jpg",
-            "./hospital/mobile_d.jpg",
-            "./hospital/mobile_f.jpg",
-            "./hospital/mobile_r.jpg",
-            "./hospital/mobile_u.jpg",
-            "./hospital/mobile_u.jpg",
-        ],
+        type: "equirectangular",
+        panorama: imgUrl2,
       },
   };
   const hotSpots = [
@@ -89,18 +76,35 @@ function Model() {
     },
   ];
   const [viewer, setViewer] = useState(null);
+  var department = "诊室", description = "包括诊室的布局介绍；对宠物进行临床基本检查（视、听、触、嗅等）、疾病诊断；与宠物主人交流并根据情况开具处方。", headName = "张三", headDescription = "张三的介绍";
   return (
-    <div className = "singleModel">
-      <VrReact
-        setViewer={setViewer}
-        config={config}
-        width="100%"
-        height="100vh"
-        firstSceneId="oneScene"
-        scenes={scenes}
-        hotSpots={hotSpots}
-        delayTime={0}
-      />
+    <div className = "modelPage">
+      <div className = "singleModel">
+        <VrReact
+          setViewer={setViewer}
+          config={config}
+          width="100%"
+          height="100vh"
+          firstSceneId="oneScene"
+          scenes={scenes}
+          hotSpots={hotSpots}
+          delayTime={0}
+        />
+      </div>
+      <div className = 'modelDescription'>
+        <div className = 'department'>
+          <h3> { department } </h3>
+          <div className = 'departmentDescription'>
+            { description }
+          </div>
+        </div>
+        <div className='headDescription'>
+        <h3> { headName } </h3>
+          <div className = 'departmentDescription'>
+            { headDescription }
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

@@ -5,7 +5,7 @@ import { Divider } from 'antd';
 import axios from "axios";
 import { diseaseInfo } from './caseConstants';
 
-axios.defaults.baseURL = 'http://172.30.192.51:8080'
+axios.defaults.baseURL = 'http://47.120.14.174:80/petHospital'
 
 const Detail = () => {
 
@@ -28,15 +28,14 @@ const Detail = () => {
     headers:{
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Credentials":"true",
-      "Origin":"http://172.30.192.51:8080/",
-      "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZSI6Im1hbmdlciIsImlzcyI6InNlY3VyaXR5IiwiaWF0IjoxNjc5NjIxNjY0LCJhdWQiOiJzZWN1cml0eS1hbGwiLCJleHAiOjE2Nzk2Mjg4NjR9.zcxcYr08ViITMIir1rGaimY7JcKB_s-0PuqJw_O7xsY",
+      "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZSI6Im1hbmFnZXIiLCJpc3MiOiJzZWN1cml0eSIsImlhdCI6MTY3OTk5NDcwMywiYXVkIjoic2VjdXJpdHktYWxsIiwiZXhwIjoxNjgwMDAxOTAzfQ.PsPq0nGMNKFkbyevxSpLxIPQYQkQmuoYTa5NOsdMRSk",
     }
   };
   
   useEffect(() => {
-		axios.get("/petHospital/categories", config).then(value => {
-			console.log(value);
-			setMyCase(value.data.result);
+		axios.get("/categories", config).then(value => {
+			console.log(value.data.result[0].typeName);
+			setMyCase(value.data.result[0]);
 		})
 	},[])
 

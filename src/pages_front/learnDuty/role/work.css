@@ -1,0 +1,41 @@
+.work{
+    position: absolute;
+    left: 0;
+    width: 40%;
+    height: calc(2vh + 500px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 2%;
+    border-right: 1px solid white;
+    font-size: 1rem;
+}
+.work-responsibility{
+    background-image: linear-gradient(white, transparent);
+    opacity: 0.3;
+    border-radius: 1%;
+    border: 1px solid white;
+    display: flex;
+    flex-direction: column;
+    overflow-wrap: break-word;
+    padding: 2%;
+    margin: 5%;
+    text-align: center;
+}
+
+.work-content{
+    background-image: linear-gradient(white, transparent);
+    opacity: 0.3;
+    border-radius: 1%;
+    border: 1px solid white;
+    display: flex;
+    flex-direction: column;
+    overflow-wrap: break-word;
+    padding: 2%;
+    margin: 5%;
+}
+
+.work h1{
+    font-size: 1rem;
+    text-align: center;
+}

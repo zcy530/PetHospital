@@ -1,0 +1,16 @@
+.flowContent{
+    background-color: rgba(255, 255, 255, 0.2);
+}
+.flowPic{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 200px; 
+}
+.flowPic img{
+    width: 200px;
+    height: 200px; 
+    object-fit: fill;
+}

@@ -1,0 +1,16 @@
+.campGate-hot {
+    width: 80px;
+    height: 40px;
+    background-color: #61dafb;
+    font-size: 16px;
+    text-align: center;
+    line-height: 40px;
+    color: #fff;
+  }
+  .campGate-hot::after {
+    content: "跳转场景";
+  }
+  * {
+    margin: 0;
+    padding: 0;
+  }

@@ -1,8 +1,9 @@
 import React from 'react'
+import Model from './model.js'
 
 const Guide = () => {
   return(
-    <h1>guide</h1>
+    <Model />
   )
 }
 export default Guide;

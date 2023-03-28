@@ -21,8 +21,12 @@ function NavBar() {
             </Nav.Item>
 
             <NavDropdown title="Learn">
-              <NavDropdown.Item href="/caselearn">Case Learning</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.2">Duty Learning</NavDropdown.Item>
+              <NavDropdown.Item >
+                <Nav.Link as={Link} to="/caselearn">Case Learning</Nav.Link>
+              </NavDropdown.Item>
+              <NavDropdown.Item >
+                <Nav.Link as={Link} to="/dutyLearn">Duty Learning</Nav.Link>
+              </NavDropdown.Item>
             </NavDropdown>
 
             <Nav.Item>
@@ -34,9 +38,15 @@ function NavBar() {
             </Nav.Item>
 
             <NavDropdown title="User">
-              <NavDropdown.Item href="/userinfo">Information</NavDropdown.Item>
-              <NavDropdown.Item href="/systemManage">Management System</NavDropdown.Item>
-              <NavDropdown.Item href="/">Log Out</NavDropdown.Item>
+              <NavDropdown.Item>
+                <Nav.Link as={Link} to="/userinfo">Information</Nav.Link>
+                </NavDropdown.Item>
+              <NavDropdown.Item>
+                <Nav.Link as={Link} to="/systemManage">Management System</Nav.Link>
+                </NavDropdown.Item>
+              <NavDropdown.Item >
+                <Nav.Link as={Link} to="/"> Log Out </Nav.Link>
+              </NavDropdown.Item>
             </NavDropdown>
           </Nav>
          </Navbar.Collapse>
@@ -44,7 +54,7 @@ function NavBar() {
          <Form className="d-flex">
           <Form.Control
             type="search"
-            placeholder="Pealse input"
+            placeholder="Please input"
             className="me-2"
             aria-label="Search"
           />

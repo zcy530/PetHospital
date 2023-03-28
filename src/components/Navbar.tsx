@@ -7,7 +7,7 @@ function NavBar() {
 
   return (
     <Navbar variant="light" bg="transparent">
-      <Container>
+      <Container className="mynavbar">
         
         <Navbar.Brand>
           <img src={CatAndDog} style={{height:'60px'}}>
@@ -45,7 +45,7 @@ function NavBar() {
                 <Nav.Link as={Link} to="/systemManage">Management System</Nav.Link>
                 </NavDropdown.Item>
               <NavDropdown.Item >
-                <Nav.Link as={Link} to="/"> Log Out </Nav.Link>
+                <Nav.Link as={Link} to="/login"> Log Out </Nav.Link>
               </NavDropdown.Item>
             </NavDropdown>
           </Nav>
@@ -53,12 +53,12 @@ function NavBar() {
 
          <Form className="d-flex">
           <Form.Control
-            type="search"
+            type="input"
             placeholder="Please input"
             className="me-2"
             aria-label="Search"
           />
-          <Button variant="primary" style={{marginRight:'5rem'}}>Search</Button>
+          <Button variant="primary">Search</Button>
         </Form>
        </Container>
      </Navbar>

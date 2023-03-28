@@ -27,6 +27,97 @@ html {
   .navbar-content {
     color: white !important;
   }
+
+  .mynavbar form input{
+    width: 160px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.435);
+    border: 0px solid rgba(255, 255, 255, 0.5);
+    border-radius: 15px;
+    color: #040000;
+    padding: 12px 26px;
+    font-weight: 450;
+    font-size: 15px;
+    transition: 0.3s ease-in-out;
+  }
+
+  .mynavbar form input:focus {
+    background: rgba(255, 255, 255, 1);
+    border: 0;
+  }
+
+  .mynavbar form button {
+    width: 100px;
+    height: 40px;
+    font-weight: 500;
+    color: #ffffff;
+    background-color: #2936c6;
+    border: 0;
+    font-size: 17px;
+    border-radius: 15px;
+    z-index: 1;
+    margin-right:60px;
+    position: relative;
+    transition: 0.3s ease-in-out;
+  }
+
+  /* Login */
+
+  .login-content {
+    padding: 5rem 2rem !important;
+    color: whitesmoke;
+    text-align: left;
+  }
+  
+  .login {
+    padding-top: 0;
+    padding-left: 180px;
+  }
+
+  .login form {
+    justify-content: center;
+  }
+
+  .login form input,.login form select{
+    width: 350px;
+    background: rgba(255, 255, 255, 0.435);
+    border: 0px solid rgba(255, 255, 255, 0.5);
+    border-radius: 20px;
+    color: #040000;
+    margin: 0 0 20px 0;
+    padding: 12px 26px;
+    font-weight: 450;
+    font-size: 20px;
+    letter-spacing: 0.6px;
+    transition: 0.3s ease-in-out;
+  }
+
+  .login form input:focus,.login form select:focus{
+    background: rgba(255, 255, 255, 1);
+    border: 0;
+  }
+
+  .login form input::placeholder,.login form select::placeholder {
+    font-size: 20px;
+    font-weight: 450;
+    color: rgba(0, 0, 0, 0.389);
+  }
+
+  .login form button {
+    font-weight: 500;
+    color: #ffffff;
+    background-color: #2936c6;
+    border: 0;
+    padding: 12px 46px;
+    font-size: 20px;
+    margin-top: 7px;
+    margin-right: 16px;
+    padding-left: 40px;
+    border-radius: 15px;
+    z-index: 1;
+    position: relative;
+    transition: 0.3s ease-in-out;
+  }
   
   /* Home Page */
 
@@ -74,7 +165,7 @@ html {
   }
 
   .home-content {
-    padding: 7rem 2rem !important;
+    padding: 5rem 2rem !important;
     color: whitesmoke;
     text-align: left;
   }
@@ -82,12 +173,6 @@ html {
   .home-header {
     padding-top: 5rem;
   }
-
-  .button-color{
-    background-color: #1a2b5d;
-    border-radius: 10px;
-  }
-
   
   /* --------- */
   /* Footer */

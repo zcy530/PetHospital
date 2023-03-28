@@ -1,0 +1,158 @@
+<krpano>
+    <!-- transition action
+		%1 = name of the hotspot to move
+		%2 = new scene
+		%3 = hlookat startup position in the new scene
+		%4 = vlookat startup position in the new scene
+		%5 = startup fov in the new scene
+	-->
+    <action name="transition">
+        closeMap();
+        <!-- move the hotspot to the destination position -->
+        tween(hotspot[%1].alpha, 0.0, 0.25, default);
+
+        <!-- look at the hotspot position -->
+        looktohotspot(%1);
+
+        set(plugin[loading].visible,true);
+
+        <!-- load and blend to the new scene -->
+        loadscene(%2, null, MERGE, BLEND(2));
+
+        <!-- save the startup view position of the scene-->
+        copy(startview_hlookat, view.hlookat);
+        copy(startview_vlookat, view.vlookat);
+        copy(startview_fov, view.fov);
+
+        <!-- look at the given position and wait for blending -->
+      lookat(%3, %4, %5);
+      wait(LOAD);
+
+      set(plugin[loading].visible,false);
+
+      wait(BLEND);
+
+      if(((scene[%2].title == "前台")), set(layer[current_desc].html, "接待挂号、导医咨询、病历档案发出与回收、收费等。"));
+      if(((scene[%2].title == "手术室")), set(layer[current_desc].html, "消毒流程，手术无菌要求，常规手术、特殊手术等的操作规范。"));
+      if(((scene[%2].title == "档案室")), set(layer[current_desc].html, "病例档案的合理保存、数据统计。"));
+      if(((scene[%2].title == "诊室")), set(layer[current_desc].html, "临床基本检查、疾病诊断；与宠物主人交流；根据情况开具处方。"));
+      if(((scene[%2].title == "住院部")), set(layer[current_desc].html, "护理分级，不同级别的要求，工作流程，消毒流程等。"));
+      if(((scene[%2].title == "影像室")), set(layer[current_desc].html, "X线检查、B超检查以及CT、MRI检查。"));
+      if(((scene[%2].title == "专科检查室")), set(layer[current_desc].html, "眼科、骨科、神经科、心脏科等专科疾病的检查。"));
+      if(((scene[%2].title == "手术准备室")), set(layer[current_desc].html, "术前流程，常见手术器械的介绍。"));
+      if(((scene[%2].title == "注射室")), set(layer[current_desc].html, "注射的操作流程，常见问题的处理方法。"));
+      if(((scene[%2].title == "处置室")), set(layer[current_desc].html, "基本处置操作流程。"));
+      if(((scene[%2].title == "化验室")), set(layer[current_desc].html, "对送检样本的预处理，检查操作流程。"));
+      if(((scene[%2].title == "免疫室")), set(layer[current_desc].html, "接种疫苗，常见并发症的处理，免疫相关问题解答。"));
+      if(((scene[%2].title == "药房")), set(layer[current_desc].html, "药物的存放要求、处方的审核流程、药物的发放流程、使用说明等。"));
+      if(((scene[%2].title == "病理解剖室")), set(layer[current_desc].html, "病死动物剖解的流程，消毒流程，人员要求，人道关怀。"));
+
+
+      set(layer[current_location].html,get(scene[%2].title));
+      <!-- return to startup position -->
+        oninterrupt(break);
+        lookto(get(startview_hlookat), get(startview_vlookat), get(startview_fov), smooth(60,-60,180));
+
+    </action>
+
+    <action name="transition_location">
+        <!-- change the icon status -->
+        <!--layer[%1].loadStyle(spot_location_active|tooltip);-->
+
+        set(plugin[loading].visible,true);
+
+        <!-- load and blend to the new scene -->
+        loadscene(%2, null, MERGE, BLEND(2));
+        closeMap();
+        <!-- save the startup view position of the scene-->
+        copy(startview_hlookat, view.hlookat);
+        copy(startview_vlookat, view.vlookat);
+        copy(startview_fov, view.fov);
+
+        <!-- look at the given position and wait for blending -->
+        lookat(%3, %4, %5);
+        wait(LOAD);
+
+        set(plugin[loading].visible,false);
+
+        wait(BLEND);
+         
+<!--         if((get(scene[%2].title) == "前台"), set(layer[current_desc].html, "前台的描述"), set(layer[current_desc].html, "描述a"));
+        set(layer[current_desc].html,('scene[%2].title' + "描述")); -->
+        set(layer[current_location].html,get(scene[%2].title));
+
+        <!-- return to startup position -->
+        oninterrupt(break);
+        lookto(get(startview_hlookat), get(startview_vlookat), get(startview_fov), smooth(60,-60,180));
+
+    </action>
+    <!-- calc the max. flyout size of a hotspot for the current screen size -->
+    <action name="calc_flyout_size">
+        div(screen_sideaspect, stagewidth, stageheight);
+        div(layer_sideaspect, layer[%1].width,layer[%1].height);
+
+        if(screen_sideaspect LT layer_sideaspect,
+        div(layer[%1].width,stagewidth,stageheight);
+        mul(layer[%1].width,80);
+        txtadd(layer[%1].width,'%');
+        set(layer[%1].height,prop);
+        ,
+        set(layer[%1].width,prop);
+        set(layer[%1].height,80%);
+        );
+    </action>
+
+    <!-- fly in a hotspot = show hotspot fixed at screen -->
+    <action name="flyin">
+        if(layer[%1].flying == 0.0, layer[%1].resetsize(); calc_flyout_size(%1); );
+        if(layer[%1].oldscale === null, copy(layer[%1].oldscale, layer[%1].scale) );
+        if(layer[%1].oldrx === null, copy(layer[%1].oldrx, layer[%1].rx) );
+        if(layer[%1].oldry === null, copy(layer[%1].oldry, layer[%1].ry) );
+        if(layer[%1].oldrz === null, copy(layer[%1].oldrz, layer[%1].rz) );
+        set(layer[%1].enabled,true);
+        set(layer[%1].visible,true);
+        tween(layer[%1].alpha,  1.0);
+        tween(layer[%1].flying, 1.0);
+        tween(layer[%1].scale,  1.0);
+        tween(layer[%1].rx, 0.0);
+        tween(layer[%1].ry, 0.0);
+        tween(layer[%1].rz, 0.0);
+    </action>
+
+    <!-- fly the hotspot out/back -->
+    <action name="flyout">
+        set(layer[%1].enabled,false);
+        tween(layer[%1].alpha,  0.0, 0.5, default, set(layer[%1].visible,false); );
+        tween(layer[%1].flying, 0.0);
+        tween(layer[%1].scale,  get(layer[%1].oldscale));
+        tween(layer[%1].rx,  get(layer[%1].oldrx));
+        tween(layer[%1].ry,  get(layer[%1].oldry));
+        tween(layer[%1].rz,  get(layer[%1].oldrz));
+    </action>
+    
+    <action name="toggleMap">
+<!--         if(layer[thumbsicon].url == 'skin/icon_map.png',set(layer[thumbsicon].url,'skin/icon_map_active.png'),set(layer[thumbsicon].url,'skin/icon_map.png');); -->
+        if(layer[layer_map].visible == false,set(layer[layer_map].visible,true),set(layer[layer_map].visible,false); );
+    </action>
+
+    <action name="closeMap">
+<!--         if(layer[thumbsicon].url == 'skin/icon_map_active.png',set(layer[thumbsicon].url,'skin/icon_map.png');); -->
+        if(layer[layer_map].visible == true,set(layer[layer_map].visible,false); );
+    </action>
+
+    <action name="changeDeviceDescPrev">
+        if(layer[device_video].visible==true,
+           set(layer[device_video].visible,false);
+           set(layer[box_description].visible,true);
+           set(layer[device_title].html,'简介'));
+    </action>
+
+    <action name="changeDeviceDescNext">
+        if(layer[box_description].visible==true,
+           set(layer[box_description].visible,false);
+           set(layer[device_video].visible,true);
+           set(layer[device_title].html,'视频介绍'));
+    </action>
+
+
+</krpano>

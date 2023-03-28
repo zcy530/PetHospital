@@ -38,7 +38,7 @@ function NavBar() {
             </Nav.Item>
 
             <NavDropdown title="User">
-              <NavDropdown.Item href="/userinfo">
+              <NavDropdown.Item>
                 <Nav.Link as={Link} to="/userinfo">Information</Nav.Link>
                 </NavDropdown.Item>
               <NavDropdown.Item>

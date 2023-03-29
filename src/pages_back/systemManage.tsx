@@ -5,6 +5,7 @@ import { Container } from 'react-bootstrap';
 import { Link, Navigate, Outlet, Route, Routes } from "react-router-dom";
 import UserInfo from './userManage/userInfo.tsx';
 import CaseInfo from './caseManage/caseInfo.tsx';
+import DiseaseInfo from './diseaseManage/diseaseInfo.tsx';
 import Page1 from "./systemMenu/Page1.tsx";
 import Page2 from "./systemMenu/Page2.tsx";
 import CaseInsert from './caseManage/caseInsert.tsx';
@@ -98,7 +99,7 @@ return (
           <div style={{height:'100%', opacity: 0.8}}>
           <Routes>
               <Route path="case"  element={<CaseInfo />} />
-              <Route path="disease"  element={<Page2 />} />
+              <Route path="disease"  element={<DiseaseInfo />} />
               <Route path="user"  element={<UserInfo />} />
               <Route path="exercise"  element={<Page2 />} />
               <Route path="paper"  element={<Page1 />} />

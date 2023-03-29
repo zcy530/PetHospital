@@ -117,7 +117,7 @@ const UserInfo: React.FC = () => {
   const [createFormOpen, setCreateFormOpen] = useState(false);
   const [editFormOpen, setEditFormOpen] = useState(false);
   //editRecord用于记录点击的record的信息，传给编辑窗口
-  const [editRecord, setEditRecord] = useState<UserType>({key: [], userId: 0, role: '', email: '', userClass: '' });
+  const [editRecord, setEditRecord] = useState<UserType>({ key: [], userId: 0, role: '', email: '', userClass: '' });
 
   const onCreate = (values: any) => {
     console.log('Received values of form: ', values);
@@ -141,7 +141,6 @@ const UserInfo: React.FC = () => {
         duration: 1,
       })
       .then(() => message.success('操作成功！', 1.5))
-    return;
   };
 
   const fail = () => {
@@ -158,7 +157,7 @@ const UserInfo: React.FC = () => {
   //新增操作
   const addUsers = () => {
     setCreateFormOpen(true); //设置open为true，用于弹出弹出填写用户信息的表单
-    console.log("点击新增：" + createFormOpen)
+    // console.log("点击新增：" + createFormOpen)
   }
 
   //编辑操作
@@ -190,13 +189,14 @@ const UserInfo: React.FC = () => {
       okText: '确定',
       okType: 'danger',
       cancelText: '取消',
-      onOk() {
+      async onOk() {
         console.log('OK');
         //删除的事件 DELETE
-        fetch(`http://localhost:8080/petHospital/users/${id}`, {
+        await fetch(`http://localhost:8080/petHospital/users/${id}`, {
           method: 'DELETE',
         }).then((response) => {
           if (response.status === 200) {
+            //TODO：重新加载页面（好像并不合适）
             console.log('删除成功！')
             //返回删除成功的提示
             success()
@@ -255,6 +255,7 @@ const UserInfo: React.FC = () => {
           } />
           <DeleteTwoTone onClick={() => {
             del(record.userId)
+            //添加filter方法
           }
           } />
         </Space>
@@ -293,9 +294,10 @@ const UserInfo: React.FC = () => {
   const hasSelected = selectedRowKeys.length > 0;
 
   const [posts, setPosts] = useState([]);
+
   useEffect(() => {
     //获取后台数据
-    fetch('http://localhost:8080/petHospital/users',
+    fetch('http://localhost:8080/petHospital/users'
     )
       .then(
         (response) => response.json(),
@@ -321,9 +323,10 @@ const UserInfo: React.FC = () => {
       userClass: posts[i].userClass
     });
   }
+
   return (
     <div>
-      <Space size= {500}>
+      <Space size={500}>
         <Space>
           <Button type="primary" onClick={reload} disabled={!hasSelected} loading={loading}>
             Reload

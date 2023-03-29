@@ -3,26 +3,14 @@ import { Container, Row, Col, Card } from 'react-bootstrap'
 import { AiOutlineArrowLeft } from "react-icons/ai";
 import { Divider } from 'antd';
 import axios from "axios";
-import { diseaseInfo } from './caseConstants';
+import { diseaseInfo } from './caseTypeDefine';
+import { dataFrom_Categories } from './mockData.tsx';
 
 axios.defaults.baseURL = 'http://47.120.14.174:80/petHospital'
 
 const Detail = () => {
 
-  const exampleCase: diseaseInfo = 
-    {
-      typeId: 0,
-      typeName: "皮肤病",
-      diseaseDTOList: [
-          {
-              diseaseId: 3,
-              diseaseName: "皮肤过敏",
-              typeName: "皮肤病"
-          }
-      ]
-  }
-
-  const [mycase, setMyCase]= useState<diseaseInfo>(exampleCase);
+  const [mycase, setMyCase]= useState<diseaseInfo>(dataFrom_Categories);
 
   const config = {
     headers:{

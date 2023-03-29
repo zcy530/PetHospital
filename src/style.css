@@ -219,7 +219,81 @@ html {
     color: #a588c0 !important;
   }
   
-  /* Learn Page */
+  /* Case sLearn Page */
+
+  .learn-case {
+    padding-left: 60px;
+    padding-right: 60px;
+    background-color: transparent;
+  }
+
+  .learn-slider {
+    width: 300px;
+    height: 400px;
+    background-color: transparent;
+    color: #000;
+    border-radius: 20px;
+  }
+
+  .learn-slidermenu {
+    height: 100%; 
+    border-radius: 20px; 
+  }
+
+  .learn-rightarea {
+    margin-left: 40px;
+    margin-right: 30px;
+    padding: 0px;
+    border-radius: 20px;
+    background-color: #ffffff58;
+  }
+
+  .learn-breadcrumb {
+    padding-top: 0px;
+    margin-top: 3px;
+    margin-left: 3px;
+    margin-bottom: 12px;
+    font-size: 15px;
+  }
+
+  .learn-rightcontent {
+    padding: 15px 40px 40px 40px;
+    margin: 0;
+    min-height: 280px;
+    /* background: #271c1c; */
+  }  
+
+  .learn-card{
+    border-radius: 15px;
+    margin-bottom: 15px;
+    height: 250px;
+  }
+
+  .learn-card Img {
+    height: 90px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .ant-menu,.ant-menu-sub,.ant-menu-inline{
+    color: rgb(0, 0, 0);
+    font-weight: 50px;
+    background-color: #ffffff !important;
+  }
+
+  .ant-menu-submenu-title{
+    color: rgb(0, 0, 0) !important;
+    font-weight:bolder;
+  }
+
+  .ant-menu-submenu {
+    text-align:left;
+  }
+  
+  .ant-menu-item-selected {
+    background-color: #2531b7 !important;
+    color: white !important;
+  }
 
   .caseCard {
     border-radius: 15px;

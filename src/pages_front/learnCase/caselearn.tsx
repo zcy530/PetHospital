@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom'
 import {Card, Row, Col, Button, Container, Tab, Nav} from 'react-bootstrap';
-import { diseaseCard } from './caseConstants';
-import { caseData, caseType} from './caseData.tsx'
+import { diseaseCard } from './caseTypeDefine';
+import { caseData, caseType} from './mockData.tsx'
 
 function CaseLearn() {
   return (

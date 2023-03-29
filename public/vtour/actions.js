@@ -11,51 +11,7 @@ Array.prototype.contains = function(obj) {
     }
     return false;
 }
-/******************************************/
-//加载医院平面图热点
-// function action_initMaps(){
-//     for(var i=0;i<sceneData.length;i++){
-//         var layer=sceneData[i];
-//         var str='';
-//         str+='set(ln,'+'spot_location_'+layer.name+');';
-//         str+='addlayer(get(ln));';
-//         str+='copy(lr, layer[get(ln)]);';
-//         str+='set(lr.parent, bd_scroller_container);';
-//         str+='set(lr.keep, true);';
-//         str+='lr.loadstyle('+mapSpotStyle_normal+');';
-//         str+='set(lr.tooltip, '+layer.tooltip+');';
-//         str+='set(lr.width, '+layer.width+');';
-//         str+='set(lr.height,'+layer.height+');';
-//         str+='set(lr.x, '+layer.x+');';
-//         str+='set(lr.y, '+layer.y+');';
-//         str += 'set(lr.onclick,transition_location(spot_location_' + layer.name + ',scene_' + layer.name + ',-98,0,31););';
-//         krpano.call(str);
-//     }
-// }
-//根据角色权限更新医院平面图热点
-// function action_updateMapsWithRole(){
-//     for(var i=0;i<sceneData.length;i++){
-//         var layer=sceneData[i];
-//         var str='';
-//         str+='set(ln,'+'spot_location_'+layer.name+');';
-//         str+='addlayer(get(ln));';
-//         str+='copy(lr, layer[get(ln)]);';
-//         str+='set(lr.parent, bd_scroller_container);';
-//         str+='set(lr.keep, true);';
-//         str+='set(lr.tooltip, '+layer.tooltip+');';
-//         str+='set(lr.width, '+layer.width+');';
-//         str+='set(lr.height,'+layer.height+');';
-//         str+='set(lr.x, '+layer.x+');';
-//         str+='set(lr.y, '+layer.y+');';
-//         if(roles[currentRoleId].room.contains(layer.id)){
-//             str+='lr.loadstyle('+mapSpotStyle_normal+');';
-//             str+='set(lr.onclick,transition_location(spot_location_'+layer.name+',scene_'+layer.name+',-98,0,31););';
-//         }else{
-//             str+='lr.loadstyle('+mapSpotStyle_forbid+');';
-//         }
-//         krpano.call(str);
-//     }
-// }
+
 //跟换角色之后每次都将房间显示属性设置为True
 function action_setAllSceneShow(){
     var str="";
@@ -93,8 +49,12 @@ function action_updateSceneHotspotWithRole(curScene){
             }
         }
     }
-    console.log(curScene);
     krpano.call(str);
+    return_Curscene(curScene);
+}
+
+function return_Curscene(curScene){
+    window.parent.postMessage(curScene);
 }
 //每次切换场景时设置当前active位置
 function action_setCurrentMapLocation(currole){

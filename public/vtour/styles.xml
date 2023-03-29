@@ -9,7 +9,7 @@
     <style name="spot_location_active" url="skin/icon_location_active.png" background="false" />
     <style name="spot_location_forbid" url="skin/icon_location_forbid.png" background="false" />
     <style name="textfield" url="%SWFPATH%/plugins/textfield.swf" background="false" css="font-size:5px; color:#FFFFFF;" />
-    <style name="textTitle" url="%SWFPATH%/plugins/textfield.swf" background="transparent" css="font-size:20px; color:#FFFFFF;letter-spacing:2px;" />
+    <style name="textTitle" url="%SWFPATH%/plugins/textfield.swf" background="false" css="font-size:20px; color:#FFFFFF;letter-spacing:2px;" />
     <style name="scrollarea" url.flash="%SWFPATH%/plugins/scrollarea.swf" url.html5="%SWFPATH%/plugins/scrollarea.js" />
     <style name="dragable" ondown="copy(sx,x);copy(sy,y);copy(mx,mouse.x);copy(my,mouse.y);asyncloop(pressed,set(x,calc(sx-mx+mouse.x));set(y,calc(sy-my+mouse.y)););" />
 

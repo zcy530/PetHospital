@@ -2,8 +2,19 @@ import React, { useState } from "react";
 import { Navbar, Nav,Container, NavDropdown, Form, Button} from "react-bootstrap";
 import CatAndDog from '../Assets/image/catanddog.svg'
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../actions/userActions";
 
-function NavBar() {
+const NavBar = () => {
+
+  const dispatch = useDispatch();
+
+  const userLogin = useSelector((state:any) => state.userLogin)
+  const { userInfo } = userLogin
+
+  const logoutHandler = () => {
+    dispatch(logout())
+  }
 
   return (
     <Navbar variant="light" bg="transparent">
@@ -39,13 +50,16 @@ function NavBar() {
 
             <NavDropdown title="User">
               <NavDropdown.Item>
+                <Nav.Link as={Link} to="/login">Log in</Nav.Link>
+              </NavDropdown.Item>
+              <NavDropdown.Item>
                 <Nav.Link as={Link} to="/userinfo">Information</Nav.Link>
-                </NavDropdown.Item>
+              </NavDropdown.Item>
               <NavDropdown.Item>
                 <Nav.Link as={Link} to="/systemManage">Management System</Nav.Link>
-                </NavDropdown.Item>
-              <NavDropdown.Item >
-                <Nav.Link as={Link} to="/login"> Log Out </Nav.Link>
+              </NavDropdown.Item>
+              <NavDropdown.Item onClick={logoutHandler} >
+                <Nav.Link >Log out</Nav.Link>
               </NavDropdown.Item>
             </NavDropdown>
           </Nav>

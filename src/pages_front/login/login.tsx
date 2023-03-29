@@ -6,6 +6,9 @@ import {Form, Button} from 'react-bootstrap';
 import { loginInfo } from "./loginType";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../actions/userActions";
+import { createHashHistory } from "@remix-run/router";
+
+const customHash = createHashHistory();
 
 const Login = ({location, history}) => {
 
@@ -25,12 +28,15 @@ const Login = ({location, history}) => {
     const userLogin = useSelector((state:any) => state.userLogin)
     const { loading, error, userInfo } = userLogin
 
-    useEffect(() => {
-        if(userInfo) {
-            console.log(userInfo)
-            history.push('/')
-        }
-    },[history, userInfo, redirect])
+    // const redirect = location.search.split('=')[1]
+
+    // useEffect(() => {
+    //     if(userInfo) {
+    //         console.log(userInfo)
+    //         console.log(window.location.href)
+    //         customHash.replace('/guide')
+    //     }
+    // },[history, userInfo])
 
     const submitHandler = (e) => {
         
@@ -42,6 +48,7 @@ const Login = ({location, history}) => {
         <section>
             <Container className="login-content">
             <Row>
+                {!userInfo &&                 
                 <Col className="login">
                 <Form onSubmit={submitHandler}>
                 <Form.Group className="mb-3" controlId="useremail">
@@ -64,6 +71,19 @@ const Login = ({location, history}) => {
                 <Button type="submit" variant="primary">REGISTER</Button>
                 </Form>
                 </Col>
+                }
+                {userInfo &&
+                <Col className="home-header">
+                    <h1 style={{ paddingBottom: 15 }}>
+                        Hi There!{" "} 
+                        <span className="wave" role="img" aria-labelledby="wave">👋🏻</span>
+                    </h1>
+                    <h1 style={{ paddingBottom: 15 }}>
+                        <strong> Weclome to virtual pet hospital</strong>
+                    </h1>
+                </Col>
+                }
+
 
                 <Col>
                 <img src={Cat} style={{ height: '500px' }} />

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Alert } from "react-bootstrap";
 import Cat from "../../Assets/image/cat.svg";
 import { UserOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import {Form, Button} from 'react-bootstrap';
@@ -10,7 +10,7 @@ import { createHashHistory } from "@remix-run/router";
 
 const customHash = createHashHistory();
 
-const Login = ({location, history}) => {
+const Login = () => {
 
     const initailLoginInfo : loginInfo= {
         email:'',
@@ -22,6 +22,7 @@ const Login = ({location, history}) => {
     const [email,setEmail] = useState<string>('');
     const [password,setPassword] = useState<string>('');
     const [remember, setRemember] = useState<boolean>(false);
+    const [show, setShow] = useState<boolean>(true);
 
     const dispatch = useDispatch()
 
@@ -74,6 +75,11 @@ const Login = ({location, history}) => {
                 }
                 {userInfo &&
                 <Col className="home-header">
+                    { show && 
+                    <Alert variant='primary' onClose={() => setShow(false)} dismissible>
+                        Log in successfully!
+                    </Alert>
+                    }
                     <h1 style={{ paddingBottom: 15 }}>
                         Hi There!{" "} 
                         <span className="wave" role="img" aria-labelledby="wave">👋🏻</span>

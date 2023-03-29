@@ -26,7 +26,7 @@ const NavBar = () => {
         </Navbar.Brand>
 
         <Navbar.Collapse>
-          <Nav defaultActiveKey="#home" className="justify-content-center" style={{ flex: 1}}>
+          <Nav defaultActiveKey="home" className="justify-content-center" style={{ flex: 1}}>
             <Nav.Item>
               <Nav.Link as={Link} to="/" >Home</Nav.Link>
             </Nav.Item>

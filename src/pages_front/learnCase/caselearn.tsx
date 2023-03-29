@@ -29,7 +29,7 @@ function CaseLearn() {
                       <Card.Body>
                         <Card.Title>{variant.title}</Card.Title>
                         <Card.Text className='card-content'>{variant.content}</Card.Text>
-                        <Button variant="outline-dark" size="sm" href='/detail'>查看</Button>
+                        <Button variant="outline-dark" size="sm" href='/#/detail'>查看</Button>
                       </Card.Body>
                     </Card>
                   </Col>

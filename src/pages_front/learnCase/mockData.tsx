@@ -1,6 +1,6 @@
-import { diseaseCard, diseaseInfo } from './caseTypeDefine';
+import { diseaseCard, allDiseasesType, oneDiseaseCaseMenu, oneDiseaseCaseDetail } from './caseTypeDefine';
 
-export const dataFrom_Categories : diseaseInfo[] = [
+export const dataFrom_Categories : allDiseasesType[] = [
   {
       "typeId": 0,
       "typeName": "皮肤病",
@@ -39,6 +39,86 @@ export const dataFrom_Categories : diseaseInfo[] = [
       ]
   }
 ]
+
+export const dataFrom_oneDiseaseCaseMenu: oneDiseaseCaseMenu[] = [
+  {
+      "caseId": 1,
+      "caseName": "英短猫胃炎病例",
+      "admissionText": "接诊信息患者是一只成年英短猫，情绪低落，厌食",
+      "frontGraph": require('../../Assets/image/cat2.png')
+  },
+  {
+      "caseId": 2,
+      "caseName": "哈士奇胃炎病例",
+      "admissionText": "接诊信息患者是一只成年哈士奇，情绪低落，厌食",
+      "frontGraph": require('../../Assets/image/cat3.png')
+  },
+  {
+    "caseId": 2,
+    "caseName": "边牧狗狗胃炎病例",
+    "admissionText": "接诊信息患者是一只成年哈士奇，情绪低落，厌食",
+    "frontGraph": require('../../Assets/image/cat4.png')
+}
+]
+
+export const dataFrom_oneDiseaseCaseDetail: oneDiseaseCaseDetail = {
+  "caseId": 1,
+  "caseName": "英短猫胃炎病例",
+  "admissionText": "接诊信息患者是一只成年英短猫，情绪低落，厌食",
+  "admissionGraphList": [
+     require('../../Assets/image/cat2.png'),
+     require('../../Assets/image/cat3.png')
+  ],
+  "inspectionFrontDTOList": [
+      {
+          "inspectionCaseId": 1,
+          "departmentName": "化验室",
+          "itemName": "查血",
+          "result": "无感染",
+          "intro": "验血相关xxxx",
+          "fee": 100.0,
+          "inspectionGraphList": [
+              "xxxi1",
+              "xxxi2"
+          ]
+      },
+      {
+          "inspectionCaseId": 2,
+          "departmentName": "化验室",
+          "itemName": "查血",
+          "result": "血细胞较低",
+          "intro": "验血相关xxxx",
+          "fee": 100.0,
+          "inspectionGraphList": [
+              "xxxi1",
+              "xxxi2"
+          ]
+      },
+      {
+          "inspectionCaseId": 3,
+          "departmentName": "放射室",
+          "itemName": "拍x光",
+          "result": "没有骨折",
+          "intro": "检查胸腔是否骨折",
+          "fee": 200.0,
+          "inspectionGraphList": [
+              "xxxi1"
+          ]
+      }
+  ],
+  "diagnosticInfo": "诊断信息为慢性胃炎",
+  "treatmentInfo": "需要吃一周xx胃炎药，一天一次",
+  "treatmentGraphList": [
+      "xxxt1",
+      "xxxt2"
+  ],
+  "treatmentVideoList": [
+      "xxxtv1",
+      "xxxtv2",
+      "xxxtv3",
+      "http://pet-hospital-back-end.oss-cn-shanghai.aliyuncs.com/67292video_publisher1/%E5%B1%8F%E5%B9%95%E5%BD%95%E5%88%B62023-03-21%2022.52.12.mov?Expires=1994771040&OSSAccessKeyId=LTAI5tCj8qSVUyDFvQG2nZ4A&Signature=vobRITQtLnAIh7VPDj08m3VgKHs%3D"
+  ]
+}
 
 export const caseData: diseaseCard[] = [
     {

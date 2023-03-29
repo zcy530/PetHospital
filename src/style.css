@@ -245,7 +245,7 @@ html {
     margin-right: 30px;
     padding: 0px;
     border-radius: 20px;
-    background-color: #ffffff58;
+    background-color: #ffffff70;
   }
 
   .learn-breadcrumb {
@@ -266,11 +266,11 @@ html {
   .learn-card{
     border-radius: 15px;
     margin-bottom: 15px;
-    height: 250px;
+    height: 280px;
   }
 
   .learn-card Img {
-    height: 90px;
+    height: 110px;
     margin-left: auto;
     margin-right: auto;
   }
@@ -311,3 +311,40 @@ html {
       -webkit-box-orient: vertical;
       color: rgb(36, 30, 30);
   }
+
+  /* Details */
+  .detail-area {
+    border-radius:20px;
+    margin:auto;
+    margin-top: 20px;
+    background-color: transparent;
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+
+  .detail-table {
+    border-radius: 20px;
+    background-color: #ffffffcb;
+    margin-bottom: 20px;
+  }
+
+  .detail-table-2 {
+    margin-top: 10px;
+    border-radius: 20px;
+    background-color: #ffffffcb;
+  }
+
+  .ant-descriptions-item-label {
+    font-size: 18px !important;
+    font-weight: bold !important;
+    color: #000 !important;
+    width: 150px;
+    /* background-color: rgba(242, 245, 251, 0.793) !important;  */
+  }
+
+  .ant-descriptions-item-content {
+    width: 150px;
+    font-size: 15px !important;
+    background-color: transparent !important;
+  }
+

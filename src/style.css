@@ -6,7 +6,7 @@ html {
 
   .navbar {
     margin-top: 20px;
-    margin-bottom: 50px;
+    margin-bottom: 20px;
     padding: 0.3rem 2rem !important;
     font-size: 30px !important;
   }
@@ -59,6 +59,16 @@ html {
     margin-right:60px;
     position: relative;
     transition: 0.3s ease-in-out;
+  }
+
+  .navbar-alert {
+    width: 908px;
+    margin: auto;
+    /* margin-left:360px ; */
+    margin-top: 0;
+    margin-bottom: 0;
+    border-radius: 20px !important; 
+    /* background-color: #646db2 !important; */
   }
 
   /* Login */

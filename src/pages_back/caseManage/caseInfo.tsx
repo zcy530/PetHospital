@@ -155,20 +155,12 @@ const CaseInfo: React.FC = () => {
         },
     ];
 
-
-
-    //点击上传病例
-    const upLoadCase = (e) => {
-        console.log('跳转至上传病例页面');
-        navigateTo('/systemManage/case/update');
-    }
-
     return (
         <Container>
             <div style={{ margin: 16 }}>
-                {/* <Link to="/systemManage/case/update"> */}
-                    <Button type="primary"  href='/systemManage/case/insert'>上传病例<UploadOutlined /> </Button>
-                {/* </Link> */}
+                <Link to="/systemManage/case/insert">
+                    <Button type="primary">上传病例<UploadOutlined /> </Button>
+                </Link>
             </div>
             {/* 病例的表格 */}
             <div className='case_box' style={{ margin: 16 }} >

@@ -4,6 +4,9 @@ import {Card, Row, Col, Button, Container, Tab, Nav} from 'react-bootstrap';
 import { diseaseCard } from './caseTypeDefine';
 import { caseData, caseType} from './mockData.tsx'
 
+// 因需求变更，此组件不再使用
+// 新的版本在 caseLearnVer2.tsx
+
 function CaseLearn() {
   return (
     <Container>

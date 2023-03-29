@@ -15,7 +15,6 @@ const CaseLearnVer2 = () => {
   const [showDetail, setShowDetail] = useState<boolean>(false)
   const [detailID, setDetailID] = useState<number>(0)
 
-
   const tabItems: MenuProps['items'] = dataFrom_Categories.map((info, index) => {
       const key = index+1;
       return {

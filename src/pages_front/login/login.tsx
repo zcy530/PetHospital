@@ -22,7 +22,6 @@ const Login = () => {
     const [email,setEmail] = useState<string>('');
     const [password,setPassword] = useState<string>('');
     const [remember, setRemember] = useState<boolean>(false);
-    const [show, setShow] = useState<boolean>(true);
 
     const dispatch = useDispatch()
 
@@ -75,11 +74,6 @@ const Login = () => {
                 }
                 {userInfo &&
                 <Col className="home-header">
-                    { show && 
-                    <Alert variant='primary' onClose={() => setShow(false)} dismissible>
-                        Log in successfully!
-                    </Alert>
-                    }
                     <h1 style={{ paddingBottom: 15 }}>
                         Hi There!{" "} 
                         <span className="wave" role="img" aria-labelledby="wave">👋🏻</span>

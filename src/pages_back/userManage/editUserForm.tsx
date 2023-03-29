@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Form, Input, Select, Modal, message } from 'antd';
 import { MailOutlined } from '@ant-design/icons';
 import { UserType } from './userType.tsx';
+import { toFormData } from 'axios';
 
 const { Option } = Select;
 
@@ -18,34 +19,31 @@ const UserEditForm: React.FC<CollectionCreateFormProps> = ({
     onCreate,
     onCancel,
 }) => {
-     //全局消息提示
-     const [messageApi, contextHolder] = message.useMessage();
+    //全局消息提示
+    const [messageApi, contextHolder] = message.useMessage();
 
-     const success = () => {
-         messageApi
-             .open({
-                 type: 'loading',
-                 content: 'Action in progress..',
-                 duration: 1,
-             })
-             .then(() => message.success('操作成功！', 1.5))
-         return;
-     };
- 
-     const fail = () => {
-         messageApi
-             .open({
-                 type: 'loading',
-                 content: 'Action in progress..',
-                 duration: 1,
-             })
-             .then(() => message.error('操作失败，请重试！', 1.5))
-     }
+    const success = () => {
+        messageApi
+            .open({
+                type: 'loading',
+                content: 'Action in progress..',
+                duration: 1,
+            })
+            .then(() => message.success('操作成功！', 1.5))
+        return;
+    };
+
+    const fail = () => {
+        messageApi
+            .open({
+                type: 'loading',
+                content: 'Action in progress..',
+                duration: 1,
+            })
+            .then(() => message.error('操作失败，请重试！', 1.5))
+    }
     const [form] = Form.useForm();
-    const [email, setEmail] = useState('');
-    //为什么这里不能直接set去给它初始化一个值？
-    const [role, setRole] = useState('');
-    const [userClass, setUserClass] = useState('');
+
     console.log('要修改：' + record.userId + ' ' + record.email + ' ' + record.role + ' ' + record.userClass);
 
     return (
@@ -62,35 +60,38 @@ const UserEditForm: React.FC<CollectionCreateFormProps> = ({
                     .then((values) => {
                         form.resetFields();
                         onCreate(values);
-                        setEmail(values.email);
-                        setRole(values.role);
-                        setUserClass(values.userClass);
-                        console.log('修改后：' + email + ' ' + role + ' ' + userClass)
+                        //TODO: fetch update 
+                        fetch(`http://localhost:8080/petHospital/users/` + record.userId, {
+                            method: 'PATCH',
+                            body: JSON.stringify({
+                                "userId": record.userId,
+                                "email": values.email,
+                                "role": values.role,
+                                "userClass": values.userClass
+                            }),
+                            headers: {
+                                'Content-type': 'application/json; charset=UTF-8',
+                            }
+                        })
+                            .then((response) => response.json())
+                            .then((data) => {
+                                console.log(data)
+                                // 获取实际修改的数目
+                                let res = data.result.modifiedRecordCount;
+                                console.log(res)
+                                if (res === 1) {
+                                    success();
+                                }
+                                else fail();
+                            })
+                            .catch((err) => {
+                                console.log(err.message);
+                            });
+                        console.log('修改后：' + values.email + ' ' + values.role + ' ' + values.userClass)
+                        
                     })
                     .catch((info) => {
                         console.log('Validate Failed:', info);
-                    });
-                //TODO: fetch update 
-                fetch(`http://localhost:8080/users/` + record.userId, {
-                    method: 'PATCH',
-                    body: JSON.stringify({
-                        email: email,
-                        role: role,
-                        userClass: userClass
-                    }),
-                    headers: {
-                        'Content-type': 'application/json; charset=UTF-8',
-                        'Access-Control-Allow-Origin': '*',
-                        "Access-Control-Allow-Methods": "POST, PATCH, GET, OPTIONS, PUT, DELETE"
-                    },
-                    mode: "cors"
-                })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        console.log(data.result);
-                    })
-                    .catch((err) => {
-                        console.log(err.message);
                     });
             }}
         >

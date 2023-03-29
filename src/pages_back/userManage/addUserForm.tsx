@@ -42,10 +42,6 @@ const UserCreateForm: React.FC<CollectionCreateFormProps> = ({
     }
     const [form] = Form.useForm();
     const [passwordVisible, setPasswordVisible] = useState(false);
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [role, setRole] = useState('');
-    const [userClass, setUserClass] = useState('');
     return (
         //用Modal弹出表单
         <Modal
@@ -60,38 +56,32 @@ const UserCreateForm: React.FC<CollectionCreateFormProps> = ({
                     .then((values) => {
                         form.resetFields();
                         onCreate(values);
-                        //value赋值给record
-                        setEmail(values.email);
-                        setPassword(values.password);
-                        setRole(values.role);
-                        setUserClass(values.userClass);
+                        //TODO: fetch post
+                        fetch('http://localhost:8080/petHospital/users', {
+                            method: 'POST',
+                            headers: {
+                                'Content-type': 'application/json; charset=UTF-8',
+                            },
+                            body: JSON.stringify({
+                                "email": values.email,
+                                "password": values.password,
+                                "role": values.role,
+                                "userClass": values.userClass
+                            })
+                        })
+                            .then((response) => response.json())
+                            .then((data) => {
+                                console.log(data);
+                                let res = data.success;
+                                if (res === true) success();
+                                else fail();
+                            })
+                            .catch((err) => {
+                                console.log(err.message);
+                            });
                     })
                     .catch((info) => {
                         console.log('Validate Failed:', info);
-                    });
-                success();
-                //TODO: fetch post
-                fetch('http://localhost:8080/users', {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        email: email,
-                        password: password,
-                        role: role,
-                        userClass: userClass
-                    }),
-                    headers: {
-                        'Content-type': 'application/json; charset=UTF-8',
-                        'Access-Control-Allow-Origin': '*',
-                        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, PUT, DELETE"
-                    },
-                    mode: "cors"
-                })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        console.log(data.result);
-                    })
-                    .catch((err) => {
-                        console.log(err.message);
                     });
             }}
         >

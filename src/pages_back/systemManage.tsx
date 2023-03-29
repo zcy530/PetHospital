@@ -108,7 +108,7 @@ return (
               <Route path="role"  element={<Page1 />} />
               <Route path="procedure"  element={<Page2 />} />
               <Route path="" element={<Navigate to ="/systemManage/case" />}/>
-              <Route path="/case/insert" element={<CaseInsert />}/>
+              <Route path="case/insert" element={<CaseInsert />}/>
           </Routes>
             <div>
               <Outlet/>

@@ -1,6 +1,7 @@
 .modelPage{
+  position: relative;
   width: 100%;
-  height: calc(680px+2vh);
+  height: calc(750px+2vh);
   overflow: scroll;
 }
 .singleModel{
@@ -8,11 +9,11 @@
   width: 60%;
   margin: 20px;
   padding: 20px;
-  height: calc(650px + 2vh);
-  overflow: scroll;
+  height: calc(730px + 2vh);
   box-shadow: inset 0 -3em 3em rgba(0,0,0,0.1),
   0 0  0 2px rgb(255,255,255),
   0.3em 0.3em 1em rgba(0,0,0,0.3);
+  z-index: 999;
 }
 .modelDescription{
   position: relative;

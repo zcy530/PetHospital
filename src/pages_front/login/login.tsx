@@ -7,6 +7,7 @@ import { loginInfo } from "./loginType";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../actions/userActions";
 import { createHashHistory } from "@remix-run/router";
+import { Link } from "react-router-dom";
 
 const customHash = createHashHistory();
 
@@ -68,8 +69,11 @@ const Login = () => {
                       onChange={(e)=>setPassword(e.target.value)}/>
                 </Form.Group>
                 <Button type="submit" variant="primary">LOG IN</Button>
-                <Button type="submit" variant="primary">REGISTER</Button>
+                <Button type="button" variant="primary">FORGET PWD</Button>
                 </Form>
+                <div className="login-option">
+                  New user having no account? <Link to="/register">Register</Link>
+                </div>
                 </Col>
                 }
                 {userInfo &&

@@ -66,7 +66,7 @@ html {
     margin: auto;
     /* margin-left:360px ; */
     margin-top: 0;
-    margin-bottom: 0;
+    margin-bottom: 10px;
     border-radius: 20px !important; 
     /* background-color: #646db2 !important; */
   }
@@ -89,7 +89,7 @@ html {
   }
 
   .login form input,.login form select{
-    width: 350px;
+    width: 380px;
     background: rgba(255, 255, 255, 0.435);
     border: 0px solid rgba(255, 255, 255, 0.5);
     border-radius: 20px;
@@ -120,13 +120,18 @@ html {
     border: 0;
     padding: 12px 46px;
     font-size: 20px;
-    margin-top: 7px;
+    margin-top: 10px;
     margin-right: 16px;
     padding-left: 40px;
     border-radius: 15px;
     z-index: 1;
     position: relative;
     transition: 0.3s ease-in-out;
+  }
+
+  .login-option {
+    font-size: 20px;
+    margin-top: 20px;
   }
   
   /* Home Page */

@@ -3,29 +3,34 @@ import { Container, Row, Col } from "react-bootstrap";
 import Cat from "../../Assets/image/cat.svg";
 import { UserOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import {Form, Button} from 'react-bootstrap';
-import { loginInfo } from "../login/loginType";
+import { Link } from "react-router-dom";
+import { registerInfo } from "./registerType";
+import { useDispatch, useSelector } from "react-redux";
+import { register } from "../../actions/userActions";
 
 function Register() {
 
-    const initailLoginInfo : loginInfo= {
+    const initailRegisterInfo : registerInfo = {
         email:'',
         password:'',
-        rememberMe:false,
+        role:'',
+        user_class:''
     }
 
-    const [userLoginInfo, setUserLoginInfo] = useState<loginInfo>(initailLoginInfo);
+    const [userRegisterInfo, setUserRegisterInfo] = useState<registerInfo>(initailRegisterInfo);
     const [email,setEmail] = useState<string>('');
     const [password,setPassword] = useState<string>('');
-    const [classmate, setClassmate] = useState<string>('');
-    const [remember, setRemember] = useState<boolean>(false);
+    const [role, setRole] = useState<string>('');
+    const [userClass, setUserClass] = useState<string>('');
 
-    const handleSubmit = async (e:any) => {
-        e.preventDefault();
-        try {
-            console.log(e);
-        } catch (e) {
-            console.log(e);
-        }
+    const dispatch = useDispatch()
+
+    const userRegister = useSelector((state:any) => state.userRegister)
+    const { error, userInfo } = userRegister
+
+    const submitHandler = (e) => {
+        e.preventDefault()
+        dispatch(register(email, password, role, userClass))
     };
 
     return (
@@ -33,7 +38,7 @@ function Register() {
             <Container className="login-content">
             <Row>
                 <Col className="login">
-                <Form onSubmit={handleSubmit}>
+                <Form onSubmit={submitHandler}>
                 <Form.Group className="mb-3" controlId="useremail">
                     <Form.Label>Email address</Form.Label>
                     <Form.Control 
@@ -51,20 +56,25 @@ function Register() {
                       onChange={(e)=>setPassword(e.target.value)}/>
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="userclass">
-                    <Form.Label>Classmate</Form.Label>
+                    <Form.Label>Input your class</Form.Label>
                     <Form.Control 
                       type="input"
-                      placeholder="Input your class number" 
-                      value={classmate} 
-                      onChange={(e)=>setClassmate(e.target.value)}/>
+                      placeholder="Input your class" 
+                      value={userClass} 
+                      onChange={(e)=>setUserClass(e.target.value)}/>
                 </Form.Group>
                 <Form.Label>Choose Role</Form.Label>
-                <Form.Select aria-label="Default select example">
+                <Form.Select 
+                    aria-label="Default select example"
+                    value={role}>
                     <option value="1">User</option>
                     <option value="2">Administer</option>
                 </Form.Select>
                 <Button type="submit" variant="primary">REGISTER</Button>
                 </Form>
+                <div className="login-option">
+                  Have an Account? <Link to="/login">Login</Link>
+                </div>
                 </Col>
 
                 <Col>

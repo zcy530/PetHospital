@@ -63,6 +63,7 @@ html {
 
   .navbar-alert {
     width: 908px;
+    font-weight: bold;
     margin: auto;
     /* margin-left:360px ; */
     margin-top: 0;
@@ -132,6 +133,15 @@ html {
   .login-option {
     font-size: 20px;
     margin-top: 20px;
+  }
+
+  .login-alert {
+    width: 380px;
+    font-weight: bold !important;
+    /* margin-left:360px ; */
+    margin-top: 0;
+    margin-bottom: 30px;
+    border-radius: 20px !important; 
   }
   
   /* Home Page */
@@ -338,15 +348,15 @@ html {
   }
 
   .detail-table {
-    border-radius: 20px;
-    background-color: #ffffffcb;
+    border-radius: 10px;
+    background-color: #ffffff;
     margin-bottom: 20px;
   }
 
   .detail-table-2 {
     margin-top: 10px;
-    border-radius: 20px;
-    background-color: #ffffffcb;
+    border-radius: 10px;
+    background-color: #ffffff;
   }
 
   .ant-descriptions-item-label {

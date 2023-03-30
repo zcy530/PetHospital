@@ -64,7 +64,7 @@ export const register = (email, password, role, user_class) => async (dispatch) 
             payload: data,
         })
 
-        localStorage.setItem('userInfo', JSON.stringify(data))
+        localStorage.setItem('userRegisterInfo', JSON.stringify(data))
     } catch (error) {
         dispatch({
             type: 'USER_REGISTER_FAIL',

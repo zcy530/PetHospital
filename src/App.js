@@ -1,5 +1,5 @@
 import React,{ useEffect } from 'react'
-import { HashRouter, Routes, Route, Link } from "react-router-dom"
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom"
 import Home from './pages_front/home/home.tsx';
 import CaseLearn from './pages_front/learnCase/caselearn.tsx';
 import CaseLearnVer2 from './pages_front/learnCase/caseLearnVer2.tsx';
@@ -20,7 +20,7 @@ import "./App.css";
 function App() {
   
   return (
-		<HashRouter>
+		<BrowserRouter>
 			<NavBar />
 			<div className="App">
 			<Routes >
@@ -37,7 +37,7 @@ function App() {
 			</Routes>
 			</div>
 			<Footer />
-		</HashRouter>
+		</BrowserRouter>
   );
 }
 

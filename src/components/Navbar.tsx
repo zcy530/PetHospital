@@ -124,7 +124,7 @@ const NavBar = () => {
         className="navbar-alert" 
         onClose={() => setShow(false)}
         dismissible>
-        Warning: You must login first you visit this website!
+        Warning: You must login first, then you can visit this website!
       </Alert>
       }
 

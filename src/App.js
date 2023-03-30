@@ -13,6 +13,7 @@ import Role from './pages_front/learnDuty/role/newRole.js'
 import SystemManage from "./pages_back/systemManage.tsx";
 import Register from './pages_front/register/register.tsx';
 import Login from './pages_front/login/login.tsx';
+import ExamDetail from './pages_front/exam/examDetail.tsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./style.css";
 import "./App.css";
@@ -31,6 +32,7 @@ function App() {
 				<Route path='/detail' element={<Detail />} />
 				<Route path='/login' element={<Login />} />
 				<Route path='/register' element={<Register  />} />
+				<Route path='/examdetail' element={<ExamDetail />} />
 				<Route path='/dutyLearn' element={<DutyLearn />}/>
 				<Route path="/dutyLearn/role/:roleName" element={<Role />} /> 
 				<Route path='/systemManage/*' element={<SystemManage />} />

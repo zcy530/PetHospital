@@ -98,6 +98,11 @@ if(currentMode==0){//3D导览
 function doProcess(){
     //将实参转化为数组
     var slice = Array.prototype.slice,
-　　  params = slice.apply(arguments);
-    interact.showRoomProcess(params);
+    params = slice.apply(arguments);
+    console.log(arguments);
+    let res = "";
+    for(var i = 0; i < arguments.length; i++){
+        res += arguments[i];
+    }
+    alert(res);
 }

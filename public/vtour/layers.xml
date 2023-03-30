@@ -1,6 +1,6 @@
 <krpano>
     <!--医院平面图-->
-  <layer name="layer_map" keep="true" type="container" width="775" height="335" align="center" bgcolor="0x333333" bgalpha="0.7" x="0" y="0" visible="false">
+  <layer name="layer_map" keep="true" type="container" width="775" height="335" align="center" bgcolor="0xE0FFFF" bgalpha="0.7" x="0" y="0" visible="false">
     <layer name="current_location0" style="textTitle" html="前台" align="left" x="30" y="0" width="100"  background="false" enabled="false" />
     <layer name="current_location1" style="textTitle" html="手术室" align="left" x="130" y="0" width="100"  background="false" enabled="false" />
     <layer name="current_location2" style="textTitle" html="档案室" align="left" x="240" y="0" width="100"  background="false" enabled="false" />

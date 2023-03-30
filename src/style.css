@@ -63,6 +63,7 @@ html {
 
   .navbar-alert {
     width: 908px;
+    font-weight: bold;
     margin: auto;
     /* margin-left:360px ; */
     margin-top: 0;
@@ -132,6 +133,15 @@ html {
   .login-option {
     font-size: 20px;
     margin-top: 20px;
+  }
+
+  .login-alert {
+    width: 380px;
+    font-weight: bold !important;
+    /* margin-left:360px ; */
+    margin-top: 0;
+    margin-bottom: 30px;
+    border-radius: 20px !important; 
   }
   
   /* Home Page */
@@ -245,12 +255,13 @@ html {
   .learn-slider {
     width: 300px;
     height: 400px;
-    background-color: transparent;
-    color: #000;
+    background-color: transparent !important;
+    color: transparent !important;
     border-radius: 20px;
   }
 
   .learn-slidermenu {
+    background-color: #000 !important;
     height: 100%; 
     border-radius: 20px; 
   }
@@ -293,12 +304,17 @@ html {
   .ant-menu,.ant-menu-sub,.ant-menu-inline{
     color: rgb(0, 0, 0);
     font-weight: 50px;
-    background-color: #ffffff !important;
+    background-color: #ffffffe2 !important;
+  }
+
+  .ant-menu-sub {
+    background-color: transparent !important;
   }
 
   .ant-menu-submenu-title{
+    font-size: 18px;
     color: rgb(0, 0, 0) !important;
-    font-weight:bolder;
+    font-weight: bolder;
   }
 
   .ant-menu-submenu {
@@ -338,15 +354,15 @@ html {
   }
 
   .detail-table {
-    border-radius: 20px;
-    background-color: #ffffffcb;
+    border-radius: 10px;
+    background-color: #ffffff;
     margin-bottom: 20px;
   }
 
   .detail-table-2 {
     margin-top: 10px;
-    border-radius: 20px;
-    background-color: #ffffffcb;
+    border-radius: 10px;
+    background-color: #ffffff;
   }
 
   .ant-descriptions-item-label {
@@ -363,3 +379,23 @@ html {
     background-color: transparent !important;
   }
 
+
+  /* Exam */
+
+  .exam-list {
+    text-align: left !important;
+  }
+
+  .exam-slidermenu {
+    font-size: 17px;
+    color: #ffffff;
+    background-color: transparent !important;
+  }
+
+  .exam-rightarea {
+    margin-left: 40px;
+    margin-right: 30px;
+    padding: 0px;
+    border-radius: 20px;
+    background-color: #fffffff2;
+  }

@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
-import { Divider, Layout, Row, Col, Badge, Descriptions } from 'antd';
+import { Divider, Layout, Row, Col, Badge, Descriptions, Image } from 'antd';
 import axios from "axios";
 import { oneDiseaseCaseDetail } from './caseTypeDefine';
 import { dataFrom_oneDiseaseCaseDetail } from './mockData.tsx';
-
-
+import Cat from "../../Assets/image/cat2.png";
 
 export interface detailsProps {
   id: number;
@@ -68,7 +67,17 @@ const Detail = (props : detailsProps) => {
             <Descriptions.Item label="收费">120元</Descriptions.Item>
             <Descriptions.Item label="住址">太极大道32号</Descriptions.Item>
             <Descriptions.Item label="图片描述">
-              {dataFrom_oneDiseaseCaseDetail.admissionGraphList[1]}
+            <Image.PreviewGroup
+              preview={{
+                onChange: (current, prev) => 
+                  console.log(`current index: ${current}, prev index: ${prev}`),
+              }}
+            >
+              <Image width={300} src={Cat}/>
+              <Image width={300} src={Cat}/>
+              <Image width={300} src={Cat}/>
+              <Image width={300} src={Cat}/>
+            </Image.PreviewGroup>
             </Descriptions.Item>
           </Descriptions>
         </Layout>

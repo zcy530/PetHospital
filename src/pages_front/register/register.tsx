@@ -84,6 +84,7 @@ function Register() {
                 </Form.Group>
                 <Form.Label>Choose Role</Form.Label>
                 <Form.Select 
+                    onChange={(e)=>setRole(e.target.value)}
                     aria-label="Default select example"
                     value={role}>
                     <option value="1">User</option>

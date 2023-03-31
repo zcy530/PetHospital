@@ -1,13 +1,21 @@
-import React, { useState } from 'react';
-import { FormOutlined, ClockCircleOutlined, MessageOutlined} from '@ant-design/icons';
-import type { MenuProps } from 'antd';
+import React, { Component, useState } from 'react';
+import { FormOutlined, ClockCircleOutlined, TagsOutlined} from '@ant-design/icons';
+import { MenuProps, Modal } from 'antd';
 import { Breadcrumb, Layout, Menu, Avatar, List, Space} from 'antd';
 import { examCardData } from './mockExamData.tsx';
 import { Tab } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import ExamDetail from './examDetail.tsx';
+import ExamList from './examList.tsx';
+import ExamEnd from './examEnd.tsx';
+import ExamAnswerCheck from './examAnswerCheck.tsx';
 
 const Exam = () => {
 
   const { Content, Sider } = Layout;
+  const [startExam, setStartExam] = useState<boolean>(false);
+  const [endExam, setEndExam] = useState<boolean>(false);
+  const [checkExamAnser, setCheckExamAnser] = useState<boolean>(false);
 
   const tabItems: MenuProps['items'] = ['所有考试','我的考试'].map((info, index) => {
       return {
@@ -16,13 +24,17 @@ const Exam = () => {
       };
   });
 
-  const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
-    <Space>
-      {React.createElement(icon)}
-      {text}
-    </Space>
-  );
-  
+  const renderRightComponent = () => {
+    if(startExam) {
+      return <ExamDetail id={1} setStartExam={setStartExam} setEndExam={setEndExam}/>
+    } else if(endExam) {
+      return <ExamEnd setEndExam={setEndExam} setCheckExamAnser={setCheckExamAnser} />
+    } else if(checkExamAnser) {
+      return <ExamAnswerCheck />
+    } else {
+      return <ExamList setStartExam={setStartExam}/>
+    }
+  }
 
   return (
     <Tab.Container>
@@ -32,56 +44,18 @@ const Exam = () => {
           <Menu
             className='exam-slidermenu'
             mode="inline"
-            defaultSelectedKeys={['0']}
-            defaultOpenKeys={['0']}
+            defaultSelectedKeys={['1']}
             items={tabItems}
           />
+          <div className='exam-tag-choose'>
+            <b>选择tag筛选题目</b>
+          </div>
         </Sider>
 
         {/* 右边的内容 */}
         <Layout className='exam-rightarea'>
           <Content className='learn-rightcontent'>
-          <List
-            itemLayout="vertical"
-            size="large"
-            className='exam-list'
-            pagination={{
-              onChange: (page) => {
-                console.log(page);
-              },
-              pageSize: 3,
-            }}
-            dataSource={examCardData}
-            footer={
-              <div>
-                <b>请选择试题进入考试</b>
-              </div>
-            }
-            renderItem={(item:any) => (
-              <List.Item
-                key={item.title}
-                actions={[
-                  <IconText icon={FormOutlined} text="共23道题" key="list-vertical-star-o" />,
-                  <IconText icon={ClockCircleOutlined} text="时长120分钟" key="list-vertical-like-o" />,
-                  <IconText icon={MessageOutlined} text="2" key="list-vertical-message" />,
-                ]}
-                extra={
-                  <img
-                    width={272}
-                    alt="logo"
-                    src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
-                  />
-                }
-              >
-                <List.Item.Meta
-                  avatar={<Avatar src={item.avatar} />}
-                  title={<a href={item.href}>{item.title}</a>}
-                  description={item.description}
-                />
-                {item.content}
-              </List.Item>
-            )}
-          />
+            {renderRightComponent()}
           </Content>
         </Layout>
 

@@ -388,8 +388,9 @@ html {
 
   .exam-slidermenu {
     font-size: 17px;
+    color: #000 !important;
     color: #ffffff;
-    background-color: transparent !important;
+    border-radius: 15px;
   }
 
   .exam-rightarea {
@@ -398,4 +399,31 @@ html {
     padding: 0px;
     border-radius: 20px;
     background-color: #fffffff2;
+  }
+
+  .exam-tag-choose {
+    width: 200px;
+    height: 400px;
+    margin-top: 20px;
+    background-color: #ebebeb8a;
+    border-radius: 15px;
+    color: #000;
+    padding: 20px;
+  }
+
+  /* 开始答题界面  */
+  .exam-container {
+    font-size: 18px;
+    margin-top: 30px;
+  }
+
+  .exam-container Form Button {
+    align-items: center;
+    background-color: #2531b7;
+    margin: auto !important;
+    width: 200px !important;
+    color: #ffffff !important;
+    font-weight: bold;
+    font-size: 17.5px;
+    border-radius: 15px !important;
   }

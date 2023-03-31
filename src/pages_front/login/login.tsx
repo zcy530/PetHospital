@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import { Container, Row, Col, Alert } from "react-bootstrap";
 import Cat from "../../Assets/image/cat.svg";
-import {Form, Button} from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import { loginInfo } from "./loginType";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../actions/userActions";
@@ -24,7 +24,7 @@ const Login = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    // 从 reduc 拿到全局的 state
+    // 从 redux 拿到全局的 userInfo state
     const userLogin = useSelector((state:any) => state.userLogin)
     const { error, userInfo } = userLogin
     const userRegister = useSelector((state:any) => state.userRegister)
@@ -39,8 +39,8 @@ const Login = () => {
     },[userInfo])
 
     const submitHandler = (e) => {
-        
         e.preventDefault()
+        // 执行登录动作
         dispatch(login(email, password))
     };
 
@@ -52,7 +52,7 @@ const Login = () => {
                 {!userInfo &&                 
                 <Col className="login">
                 
-                { show && userRegisterInfo && 
+                    { show && userRegisterInfo && 
                     <Alert 
                         variant='success' 
                         className="login-alert" 
@@ -61,6 +61,16 @@ const Login = () => {
                         Register successfully! You can login and visit the website now!
                     </Alert>
                     }
+
+                    { show && error &&
+                    <Alert 
+                        variant='danger' 
+                        className="login-alert" 
+                        onClose={() => setShow(false)}
+                        dismissible>
+                        Error: Wrong password!
+                    </Alert>
+                    } 
                     <Form onSubmit={submitHandler}>
                     <Form.Group className="mb-3" controlId="useremail">
                         <Form.Label>Email address</Form.Label>

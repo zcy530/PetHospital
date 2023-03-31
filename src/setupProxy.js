@@ -2,7 +2,7 @@ const {createProxyMiddleware } = require('http-proxy-middleware')
  
 module.exports = function(app) {
  app.use(createProxyMiddleware('/petHospital', { 
-     target: 'https://139.224.190.111:443',
+     target: 'http://47.120.14.174:80',
      pathRewrite: {
        '^/petHospital': '',
      },
@@ -10,7 +10,7 @@ module.exports = function(app) {
      secure: false
    }));
    app.use(createProxyMiddleware('/client', {
-       target: 'https://139.224.190.111:443',
+       target: 'http://47.120.14.174:80',
        pathRewrite: {
          '^/client': '',
        },

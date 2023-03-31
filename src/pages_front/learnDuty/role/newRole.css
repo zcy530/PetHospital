@@ -1,7 +1,7 @@
 .newRole{
     width: 100%;
-    height: calc(2vh + 600px);
-    overflow: scroll;
+    height: calc(2vh + 650px);
+    overflow: hidden;
 }
 .Navi_Bar{
     padding-left: 5%;

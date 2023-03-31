@@ -30,7 +30,7 @@ function Model() {
           id="childFrame"
           title="医院导览"
           src="/vtour/walkthrough.html"
-          style={{ width: "100%", height: "100vh" }}
+          style={{ width: "100%", height: "calc(700px + 2vh)" }}
         ></iframe>
       </div>
       <div className = 'modelDescription'>

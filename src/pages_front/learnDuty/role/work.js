@@ -1,20 +1,55 @@
 import React, {useState, useEffect} from 'react'
 import axios from "axios";
+import { useSelector } from "react-redux";
 import './work.css'
 
-function Work({roleName}) {
+function Work({roleName, getChildData}) {
   const [respon, setRespon] = useState("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
   const [content, setContent] = useState("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
+  const [roleId, setroleID] = useState(0);
+  const userLogin = useSelector(state => state.userLogin)
+  const token = userLogin.userInfo.headers.authorization;
   useEffect(() => {
-    // axios({
-    //   url: "/roles/1",
-    //   method: "get",
-    //   headers: {'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZSI6Im1hbmdlciIsImlzcyI6InNlY3VyaXR5IiwiaWF0IjoxNjc5NjI2NDY1LCJhdWQiOiJzZWN1cml0eS1hbGwiLCJleHAiOjE2Nzk2MzM2NjV9.ohYtyue_0tBR1JyQqfGSZHspbPP6R6bYhAG9K0uHQfw'},
-    // }).then(res => {
-    //   console.log(res);
-    // }).catch(err => {
-    //   console.log(err);
-    // })
+    if(roleName === "兽医师"){
+        axios({
+        url: "/roles/1",
+        method: "get",
+        headers: {'Authorization':token},
+      }).then(res => {
+        setContent(res.data.result.content);
+        setRespon(res.data.result.responsibility);
+        setroleID(res.data.result.roleId);
+      }).catch(err => {
+        console.log(err);
+      })
+    }
+    else if(roleName === "前台"){
+      axios({
+        url: "/roles/2",
+        method: "get",
+        headers: {'Authorization':token},
+      }).then(res => {
+        setContent(res.data.result.content);
+        setRespon(res.data.result.responsibility);
+        setroleID(res.data.result.roleId);
+      }).catch(err => {
+        console.log(err);
+      })
+    }
+    else if(roleName === "医助"){
+      axios({
+        url: "/roles/3",
+        method: "get",
+        headers: {'Authorization':token},
+      }).then(res => {
+        setContent(res.data.result.content);
+        setRespon(res.data.result.responsibility);
+        setroleID(res.data.result.roleId);
+      }).catch(err => {
+        console.log(err);
+      })
+    }
+    getChildData(roleId);
   })
   return (
     <div className = "work">

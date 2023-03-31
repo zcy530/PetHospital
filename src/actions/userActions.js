@@ -15,7 +15,7 @@ export const login = (email, password) => async (dispatch) => {
 
         const remember = false
         const  data  = await axios.patch(
-            'https://139.224.190.111:443/petHospital/user/login',
+            'http://47.120.14.174:80/petHospital/user/login',
             { email, password ,remember },
             config
         )

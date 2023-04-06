@@ -1,5 +1,12 @@
 .singleFlow{
-    margin-bottom: 5%
+    margin-bottom: 5%;
+    width: auto;
+    height: auto;
+}
+
+.singleFlow h3{
+    /* padding-left: 20%; */
+    text-align: left;
 }
 .flow-icon{
     display: flex;

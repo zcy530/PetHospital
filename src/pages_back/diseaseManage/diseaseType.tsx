@@ -4,6 +4,34 @@ export type DiseaseInfo = {
   typeName: string;
 }
 
+interface diseaseOption {
+  text: string,
+  value: string
+}
+
+const getDiseaseList = () => {
+  //获取后台数据
+  fetch("http://localhost:8080/petHospital/categories"
+  )
+    .then(
+      (response) => response.json(),
+    )
+    .then((data) => {
+      console.log(data.result);
+      const lists = data.result;
+      const diseaseList: diseaseOption[] = []; //初始化diseaseList
+      lists.map(list => {
+        console.log(list.typeName)
+        diseaseList.push({ "text": list.typeName, "value": list.typeName })
+      })
+      console.log(diseaseList)
+    })
+    .catch((err) => {
+      console.log(err.message);
+    });
+  return getDiseaseList;
+}
+
 //疾病类别
 export const diseaseType = [
   {

@@ -28,11 +28,6 @@ const DiseaseManage: React.FC = () => {
     const [messageApi, contextHolder] = message.useMessage();
 
     const success = () => {
-        // messageApi.open({
-        //   type: 'success',
-        //   content: '操作成功！',
-        //   duration: 1.5,
-        // });
         messageApi
             .open({
                 type: 'loading',
@@ -54,7 +49,7 @@ const DiseaseManage: React.FC = () => {
 
     const [createOpenForm, setCreateFormOpen] = useState(false);
     const [editFormOpen, setEditFormOpen] = useState(false);
-    const [editRecord, setEditRecord] = useState<DiseaseType>([]);
+    const [editRecord, setEditRecord] = useState<DiseaseInfo>([]);
 
 
     const onCreate = (values: any) => {
@@ -450,7 +445,6 @@ const DiseaseManage: React.FC = () => {
         <div>
             {contextHolder}
             <Button type="primary" ghost onClick={addDisease}>新增病种</Button>
-
             <DiseaseCreateForm
                 open={createOpenForm}
                 onCreate={onCreate}

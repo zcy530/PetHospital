@@ -6,9 +6,13 @@ import { Link, Navigate, Outlet, Route, Routes } from "react-router-dom";
 import UserInfo from './userManage/userInfo.tsx';
 import CaseInfo from './caseManage/caseInfo.tsx';
 import DiseaseInfo from './diseaseManage/diseaseInfo.tsx';
+import ExamQuestion from './examManage/questionManage/examQuestionInfo.tsx';
 import Page1 from "./systemMenu/Page1.tsx";
 import Page2 from "./systemMenu/Page2.tsx";
 import CaseInsert from './caseManage/caseInsert.tsx';
+import QuestionInsert from './examManage/questionManage/questionInsert.tsx';
+import TestInfo from './examManage/testManage/testInfo.tsx';
+import TestInsert from './examManage/testManage/testInsert.tsx';
 
 import {
   ContainerOutlined,
@@ -101,8 +105,8 @@ return (
               <Route path="case"  element={<CaseInfo />} />
               <Route path="disease"  element={<DiseaseInfo />} />
               <Route path="user"  element={<UserInfo />} />
-              <Route path="exercise"  element={<Page2 />} />
-              <Route path="paper"  element={<Page1 />} />
+              <Route path="exercise"  element={<ExamQuestion />} />
+              <Route path="paper"  element={<TestInfo />} />
               <Route path="department"  element={<Page2 />} />
               <Route path="medicine"  element={<Page1 />} />
               <Route path="vaccine"  element={<Page2 />} />
@@ -110,6 +114,9 @@ return (
               <Route path="procedure"  element={<Page2 />} />
               <Route path="" element={<Navigate to ="/systemManage/case" />}/>
               <Route path="case/insert" element={<CaseInsert />}/>
+              <Route path="exercise/insert" element={<QuestionInsert />}/>
+              <Route path="paper/insert" element={<TestInsert />}/>
+
           </Routes>
             <div>
               <Outlet/>

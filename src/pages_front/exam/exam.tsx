@@ -3,7 +3,7 @@ import { FormOutlined, ClockCircleOutlined, TagsOutlined} from '@ant-design/icon
 import { MenuProps, Modal } from 'antd';
 import { Breadcrumb, Layout, Menu, Avatar, List, Space} from 'antd';
 import { examCardData } from './mockExamData.tsx';
-import { Tab } from 'react-bootstrap';
+import { Form, Tab } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import ExamDetail from './examDetail.tsx';
 import ExamList from './examList.tsx';
@@ -15,7 +15,7 @@ const Exam = () => {
   const { Content, Sider } = Layout;
   const [startExam, setStartExam] = useState<boolean>(false);
   const [endExam, setEndExam] = useState<boolean>(false);
-  const [checkExamAnser, setCheckExamAnser] = useState<boolean>(false);
+  const [checkExamAnswer, setCheckExamAnswer] = useState<boolean>(false);
 
   const tabItems: MenuProps['items'] = ['所有考试','我的考试'].map((info, index) => {
       return {
@@ -28,8 +28,8 @@ const Exam = () => {
     if(startExam) {
       return <ExamDetail id={1} setStartExam={setStartExam} setEndExam={setEndExam}/>
     } else if(endExam) {
-      return <ExamEnd setEndExam={setEndExam} setCheckExamAnser={setCheckExamAnser} />
-    } else if(checkExamAnser) {
+      return <ExamEnd setEndExam={setEndExam} setExamAnswerCheck={setCheckExamAnswer} />
+    } else if(checkExamAnswer) {
       return <ExamAnswerCheck />
     } else {
       return <ExamList setStartExam={setStartExam}/>
@@ -49,6 +49,15 @@ const Exam = () => {
           />
           <div className='exam-tag-choose'>
             <b>选择tag筛选题目</b>
+            <div className='exam-tag-choose-item'>
+            {['全部','肠胃病','皮肤病'].map((tags,subindex) => (
+                <Form.Check  
+                type="checkbox"
+                id={tags}
+                label={tags}
+                />
+            ))}
+            </div>
           </div>
         </Sider>
 

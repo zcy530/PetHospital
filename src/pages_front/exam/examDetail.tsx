@@ -62,7 +62,7 @@ const ExamDetail = (props: examDetailsProps) => {
                     {question.choice.map((choice,subindex) => (
                         <Form.Check  
                         type="checkbox"
-                        id={subindex}
+                        id={choice}
                         label={choice}
                         />
                     ))}

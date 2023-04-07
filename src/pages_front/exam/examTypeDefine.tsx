@@ -1,3 +1,12 @@
+export type examList = {
+    testId: number;
+    testName: string;
+    intro: string;
+    tag: string;
+    beginDate: string;
+    endDate: string;
+}
+
 export type examQuestion = {
     questionId: number;
     choice: string[];

@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FormOutlined, ClockCircleOutlined, TagsOutlined} from '@ant-design/icons';
 import { Modal } from 'antd';
 import { List, Space} from 'antd';
 import { examCardData } from './mockExamData.tsx';
+import { examList } from './examTypeDefine.js';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 export interface examListProps {
   setStartExam: (startExam: boolean) => void;
@@ -11,15 +13,57 @@ export interface examListProps {
 
 const ExamList = ( props: examListProps) => {
 
+  const initial_examList:examList[] = []
   const navigate = useNavigate()
   const [ modalOpen, setModalOpen ] = useState<boolean>(false);
+  const [ startHour, setStartHour ] = useState<string>('');
+  const [ startMinute, setStartMinute ] = useState<string>('');
+  const [ endHour, setEndHour ] = useState<string>('');
+  const [ endMinute, setEndMinute ] = useState<string>('');
+  const [ day, setDay ] = useState<string>('');
+  const [ month, setMonth ] = useState<string>('');
+  const [ year, setYear ] = useState<string>('');
+  const [ examList, setExamList ]= useState<examList[]>(initial_examList);
 
+  const config = {
+    headers:{
+      "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZSI6Im1hbmFnZXIiLCJpc3MiOiJzZWN1cml0eSIsImlhdCI6MTY4MDgzNDk0MSwiYXVkIjoic2VjdXJpdHktYWxsIiwiZXhwIjoxNjgwODQyMTQxfQ.fgfYniJr66oDg156Dwm8D5ThBXpXIPBfFRP-v9zRT64",
+    }
+  };
+  
+  useEffect(() => {
+		const fetchDetail = async() => {
+      
+      const { data } = await axios.get('https://47.120.14.174:443/petHospital/mytest/category',config);
+      setExamList(data.result);
+      console.log(data.result);
+    }
+    fetchDetail();
+	},[])
+  
   const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
     <Space>
       {React.createElement(icon)}
       {text}
     </Space>
   );
+
+  // "2023-04-07T10:00:00.000+00:00"
+  const getDateAndTimeFromString = (whenstart: string, whenend: string) => {
+    const date = whenstart.split('T')[0];
+    const startime = whenstart.split('T')[1].split('.')[0];
+    const endtime = whenend.split('T')[1].split('.')[0];
+
+    setYear(date.split('-')[0]);
+    setMonth(date.split('-')[1]);
+    setDay(date.split('-')[1]);
+
+    setStartHour(startime.split(':')[0])
+    setStartMinute(startime.split(':')[1])
+
+    setEndHour(endtime.split(':')[0])
+    setEndMinute(endtime.split(':')[1])
+  }
 
   return (
     <>
@@ -33,7 +77,7 @@ const ExamList = ( props: examListProps) => {
               },
               pageSize: 3,
             }}
-            dataSource={examCardData}
+            dataSource={examList}
             footer={
               <div>
                 <b>请选择试题进入考试</b>
@@ -41,26 +85,22 @@ const ExamList = ( props: examListProps) => {
             }
             renderItem={(item:any) => (
               <List.Item
-                key={item.title}
-                onClick={() => setModalOpen(true)}
+                key={item.testId}
+                onClick={() => {
+                  setModalOpen(true);
+                }}
                 actions={[
-                  <IconText icon={FormOutlined} text="共23道题" key="list-vertical-star-o" />,
-                  <IconText icon={ClockCircleOutlined} text="时长120分钟" key="list-vertical-like-o" />,
-                  <IconText icon={TagsOutlined} text="肠胃病" key="list-vertical-message" />,
+                  // <IconText icon={FormOutlined} text="共23道题" key="list-vertical-star-o" />,
+                  <IconText icon={ClockCircleOutlined} text={`时长150分钟`} key="list-vertical-like-o" />,
+                  <IconText icon={TagsOutlined} text={item.tag} key="list-vertical-message" />,
                 ]}
-                extra={
-                  <img
-                    width={250}
-                    alt="logo"
-                    src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
-                  />
-                }
+                extra={ <img width={250} alt="logo" src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"/>}
               >
+                {getDateAndTimeFromString(item.beginDate,item.endDate)}
                 <List.Item.Meta
-                  title={<a href={item.href}>{item.title}</a>}
-                  description={item.description}
-                />
-                {item.content}
+                  title={<a>{item.testName}</a>}
+                  description={`考试时间：${year}-${month}-${day} ${startHour}:${startMinute}-${endHour}:${endMinute}`}
+                /> {item.intro}
               </List.Item>
             )}
           />

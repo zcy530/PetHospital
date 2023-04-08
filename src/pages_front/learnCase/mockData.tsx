@@ -1,4 +1,4 @@
-import { diseaseCard, allDiseasesType, oneDiseaseCaseMenu, oneDiseaseCaseDetail } from './caseTypeDefine';
+import { diseaseCard, allDiseasesType, oneDiseaseCaseMenu, oneDiseaseCaseDetail } from './caseTypeDefine.tsx';
 
 export const dataFrom_Categories : allDiseasesType[] = [
   {

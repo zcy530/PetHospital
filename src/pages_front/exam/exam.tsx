@@ -50,7 +50,7 @@ const Exam = () => {
           <div className='exam-tag-choose'>
             <b>选择tag筛选题目</b>
             <div className='exam-tag-choose-item'>
-            {['全部','肠胃病','皮肤病'].map((tags,subindex) => (
+            {['肠胃病','皮肤病'].map((tags,subindex) => (
                 <Form.Check  
                 type="checkbox"
                 id={tags}

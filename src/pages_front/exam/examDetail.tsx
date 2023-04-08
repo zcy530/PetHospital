@@ -4,6 +4,7 @@ import { Button, Col, Container, Form } from "react-bootstrap";
 import { oneExamQuestions } from "./mockExamData.tsx";
 import { oneQuestionAnswer, examPaper } from "./examTypeDefine.tsx";
 import axios from "axios";
+import { mytoken } from "../token.js";
 
 export interface examDetailsProps {
     id: number;
@@ -19,7 +20,7 @@ const ExamDetail = (props: examDetailsProps) => {
 
     const config = {
         headers:{
-          "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZSI6Im1hbmFnZXIiLCJpc3MiOiJzZWN1cml0eSIsImlhdCI6MTY4MDEwMzQ2MiwiYXVkIjoic2VjdXJpdHktYWxsIiwiZXhwIjoxNjgwMTEwNjYyfQ.y-zKf4y5Ip3ySS1kwwtzR7mPm-LCiWrPn2reV5O6Yl8",
+          "Authorization": "Bearer " + mytoken,
         }
       };
       

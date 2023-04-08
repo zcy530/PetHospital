@@ -6,6 +6,7 @@ import { examCardData } from './mockExamData.tsx';
 import { examList } from './examTypeDefine.js';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { mytoken } from '../token.js';
 
 export interface examListProps {
   setStartExam: (startExam: boolean) => void;
@@ -27,7 +28,7 @@ const ExamList = ( props: examListProps) => {
 
   const config = {
     headers:{
-      "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZSI6Im1hbmFnZXIiLCJpc3MiOiJzZWN1cml0eSIsImlhdCI6MTY4MDgzNDk0MSwiYXVkIjoic2VjdXJpdHktYWxsIiwiZXhwIjoxNjgwODQyMTQxfQ.fgfYniJr66oDg156Dwm8D5ThBXpXIPBfFRP-v9zRT64",
+      "Authorization": "Bearer " + mytoken,
     }
   };
   
@@ -79,7 +80,7 @@ const ExamList = ( props: examListProps) => {
             }}
             dataSource={examList}
             footer={
-              <div>
+              <div style={{fontSize:'18px'}}>
                 <b>请选择试题进入考试</b>
               </div>
             }
@@ -97,8 +98,8 @@ const ExamList = ( props: examListProps) => {
                 extra={ <img width={250} alt="logo" src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"/>}
               >
                 {getDateAndTimeFromString(item.beginDate,item.endDate)}
-                <List.Item.Meta
-                  title={<a>{item.testName}</a>}
+                <List.Item.Meta className='exam-card-title'
+                  title={<div style={{fontSize:'24px'}}><a>{item.testName}</a></div>}
                   description={`考试时间：${year}-${month}-${day} ${startHour}:${startMinute}-${endHour}:${endMinute}`}
                 /> {item.intro}
               </List.Item>

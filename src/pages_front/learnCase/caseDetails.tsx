@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
 import { Divider, Layout, Row, Col, Badge, Descriptions, Image } from 'antd';
 import axios from "axios";
-import { oneDiseaseCaseDetail } from './caseTypeDefine';
+import { oneDiseaseCaseDetail } from './caseTypeDefine.tsx';
 import { dataFrom_oneDiseaseCaseDetail } from './mockData.tsx';
 import Cat from "../../Assets/image/cat2.png";
 
@@ -12,7 +12,7 @@ export interface detailsProps {
   setShowDetail: (showDetail: boolean) => void;
 }
 
-const Detail = (props : detailsProps) => {
+const CaseDetail = (props : detailsProps) => {
 
   const [caseDetail, setCaseDetail]= useState<oneDiseaseCaseDetail>(dataFrom_oneDiseaseCaseDetail);
 
@@ -107,4 +107,4 @@ const Detail = (props : detailsProps) => {
     </Layout>
   )
 }
-export default Detail;
+export default CaseDetail;

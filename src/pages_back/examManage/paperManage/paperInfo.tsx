@@ -1,26 +1,22 @@
-//测试管理的页面
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react'
 import { SearchOutlined, DeleteTwoTone, EditTwoTone, } from '@ant-design/icons';
 import type { InputRef } from 'antd';
-import { Button, Input, Space, Table, Tag, message } from 'antd';
-import type { ColumnsType, ColumnType, TableProps } from 'antd/es/table';
-import type { FilterConfirmProps } from 'antd/es/table/interface';
+import { Button, Input, Space, Table, message } from 'antd';
 import Highlighter from 'react-highlight-words';
-import { Link } from 'react-router-dom';
+import { ColumnsType } from 'antd/es/table';
+import { FilterConfirmProps } from 'antd/es/table/interface';
 
-interface TestType {
-    testId: number;
-    beginDate: string;
-    endDate: string;
-    testName: string;
-    intro: string;
-    tag: string;
-    paperId: number
+
+interface PaperType {
+    paperId: number,
+    paperName: string,
+    score: number
 }
 
-type DataIndex = keyof TestType;
+type DataIndex = keyof PaperType;
 
-const Test: React.FC = () => {
+const Paper: React.FC = () => {
+
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef<InputRef>(null);
@@ -40,7 +36,7 @@ const Test: React.FC = () => {
         setSearchText('');
     };
 
-    const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<TestType> => ({
+    const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<PaperType> => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
             <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
                 <Input
@@ -112,55 +108,65 @@ const Test: React.FC = () => {
                     autoEscape
                     textToHighlight={text ? text.toString() : ''}
                 />
-            ) : (
-                text
-            ),
+            ) : (text),
     });
 
-    const columns: ColumnsType<TestType> = [
+
+
+    //删除试卷
+    const del = (id: number) => {
+
+    }
+
+    //获取全部试卷
+    const [paperData, setPaperData] = useState<PaperType[]>([]);
+
+    useEffect(() => {
+        //获取后台数据
+        fetch('http://localhost:8080/petHospital/papers'
+        )
+            .then(
+                (response) => response.json(),
+            )
+            .then((data) => {
+                console.log(data.result);
+                let records = data.result;
+                let paperDataTmp: PaperType[] = [];
+                //设置posts值为data
+                records.map((record, index) => (
+                    paperDataTmp.push({
+                        paperId: record.paperId,
+                        paperName: record.paperName,
+                        score: record.score
+                    })
+                ));
+                setPaperData(paperDataTmp);
+            })
+            .catch((err) => {
+                console.log(err.message);
+            });
+    }, []);
+
+
+    const columns: ColumnsType<PaperType> = [
         {
-            title: '测试名称',
-            dataIndex: 'testName',
-            key: 'testName',
-            ...getColumnSearchProps('testName'),
+            title: '试卷名称',
+            dataIndex: 'paperName',
+            key: 'paperName',
             align: 'center',    // 设置文本居中的属性
+            ...getColumnSearchProps('paperName'),
             // TODO 点击查看试卷详情
             render: (text, record) => (
                 <a href='/systemMenu/paper/id='>{text}</a> //点击跳转到试卷详情页
             ),
         },
         {
-            title: '简介',
-            dataIndex: 'intro',
-            key: 'intro',
-            align: 'center',    // 设置文本居中的属性
-            width: '30%',
-        },
-        {
-            title: '标签',
-            dataIndex: 'tag',
-            key: 'tag',
-            align: 'center',    // 设置文本居中的属性
-            render: (text, record) => (
-                <Tag color="geekblue" >{text} </Tag>
-            ),
-
-        },
-        {
-            title: '开始时间',
-            dataIndex: 'beginDate',
-            key: 'beginDate',
+            title: '试卷总分',
+            dataIndex: 'score',
+            key: 'score',
             align: 'center',    // 设置文本居中的属性
             // sort 
-            sorter: (a, b) => (a.beginDate > b.beginDate) ? 1 : -1,
-        },
-        {
-            title: '结束时间',
-            dataIndex: 'endDate',
-            key: 'endDate',
-            align: 'center',    // 设置文本居中的属性
-            // sort
-            sorter: (a, b) => (a.endDate > b.endDate) ? 1 : -1,
+            sorter: (a, b) => a.score - b.score
         },
         {
             title: '操作',
@@ -177,58 +183,21 @@ const Test: React.FC = () => {
                     }
                     } />
                     <DeleteTwoTone onClick={() => {
-                        // del(record.userId)
+                        del(record.paperId)
                         //添加filter方法
                     }
                     } />
                 </Space>
             ),
         },
+
     ];
-
-     //获取全部考题数据
-     const [testData, setTestData] = useState<TestType[]>([]);
-
-     useEffect(() => {
-         //获取后台数据
-         fetch('http://localhost:8080/petHospital/tests'
-         )
-             .then(
-                 (response) => response.json(),
-             )
-             .then((data) => {
-                 console.log(data.result);
-                 let records = data.result;
-                 let testDataTmp: TestType[] = [];
-                 //设置posts值为data
-                 records.map((record, index) => (
-                     testDataTmp.push({
-                         testId: record.testId,
-                         testName: record.testName,
-                         intro: record.intro,
-                         tag: record.tag,
-                         paperId: record.paperId,
-                         beginDate: record.beginDate,
-                         endDate: record.endDate
-                     }
-                     )
-                 ));
-                 setTestData(testDataTmp);
-             })
-             .catch((err) => {
-                 console.log(err.message);
-             });
-     }, []);
 
     return (
         <div>
-            {/* 新增考试 button */}
-            <Link to="/systemManage/test/insert">
-                <Button type="primary">新增考试场次</Button>
-            </Link>
-            <Table style={{ margin: 16 }} columns={columns} dataSource={testData} pagination={{ position: ['bottomCenter'] }} />;
+            <Table style={{ margin: 16 }} columns={columns} dataSource={paperData} pagination={{ position: ['bottomCenter'] }} />;
         </div>
     )
-};
+}
 
-export default Test;
+export default Paper;

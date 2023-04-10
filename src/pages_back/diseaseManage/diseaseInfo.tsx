@@ -4,7 +4,7 @@ import type { ColumnsType, ColumnType } from 'antd/es/table';
 import { DeleteTwoTone, EditTwoTone, SearchOutlined, ExclamationCircleFilled } from '@ant-design/icons';
 import type { FilterConfirmProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
-import { DiseaseInfo, diseaseType } from './diseaseType.tsx'
+import { DiseaseInfo, diseaseCategory } from './diseaseType.tsx'
 
 type DataIndex = keyof DiseaseInfo;
 const { Option } = Select;
@@ -28,23 +28,19 @@ const DiseaseManage: React.FC = () => {
     const [messageApi, contextHolder] = message.useMessage();
 
     const success = () => {
-        messageApi
-            .open({
-                type: 'loading',
-                content: 'Action in progress..',
-                duration: 1,
-            })
-            .then(() => message.success('操作成功！', 1.5))
+        messageApi.open({
+            type: 'success',
+            content: '操作成功',
+            duration: 1,
+          });
     };
 
     const fail = () => {
-        messageApi
-            .open({
-                type: 'loading',
-                content: 'Action in progress..',
-                duration: 1,
-            })
-            .then(() => message.error('操作失败，请重试！', 1.5))
+        messageApi.open({
+            type: 'error',
+            content: '操作失败，请重试！',
+            duration: 1
+          });
     }
 
     const [createOpenForm, setCreateFormOpen] = useState(false);
@@ -127,8 +123,8 @@ const DiseaseManage: React.FC = () => {
                         <Select placeholder="Select type">
                             {/* 循环遍历渲染数组对象 */}
                             {
-                                diseaseType.map(disease => (
-                                    <Option value={disease.value}>{disease.text}</Option>
+                                diseaseCategory.map(disease => (
+                                    <Option value={disease.text}>{disease.text}</Option>
                                 ))
                             }
                         </Select>
@@ -211,7 +207,7 @@ const DiseaseManage: React.FC = () => {
                         <Select placeholder={record.typeName}>
                             {/* 循环遍历渲染数组对象 */}
                             {
-                                diseaseType.map(disease => (
+                                diseaseCategory.map(disease => (
                                     <Option value={disease.value}>{disease.text}</Option>
                                 ))
                             }
@@ -400,11 +396,13 @@ const DiseaseManage: React.FC = () => {
         {
             title: '疾病id',
             dataIndex: 'diseaseId',
+            align: 'center',
             // key: 'userId',
         },
         {
             title: '疾病名称',
             dataIndex: 'diseaseName',
+            align: 'center',
             // 该列添加搜索功能
             ...getColumnSearchProps('diseaseName'),
             // key: 'email',
@@ -413,14 +411,16 @@ const DiseaseManage: React.FC = () => {
         {
             title: '疾病类别',
             dataIndex: 'typeName',
+            align: 'center',
             // 该列添加筛选功能
-            filters: diseaseType,
+            filters: diseaseCategory,
             filterMode: 'tree',
             filterSearch: true,
-            onFilter: (value: string, record) => record.name.startsWith(value),
+            onFilter: (text: string, record) => record.typeName.startsWith(text),
         },
         {
             title: '操作',
+            align: 'center',
             // key: 'action',
             render: (_, record) => (
                 <Space size="middle">
@@ -462,7 +462,7 @@ const DiseaseManage: React.FC = () => {
                 }} />
 
             {/* 表单 */}
-            <Table columns={columns} dataSource={posts} style={{ margin: 16 }} />
+            <Table columns={columns} dataSource={posts} style={{ margin: 16 }} pagination={{ position: ['bottomCenter']}} />
         </div>
 
     )

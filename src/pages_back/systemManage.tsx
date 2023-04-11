@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Col, MenuProps, Row } from 'antd';
+import { Col, Layout, MenuProps, Row } from 'antd';
 import { Menu } from 'antd';
 import { Container } from 'react-bootstrap';
 import { Link, Navigate, Outlet, Route, Routes } from "react-router-dom";
@@ -9,10 +9,12 @@ import DiseaseInfo from './diseaseManage/diseaseInfo.tsx';
 import ExamQuestion from './examManage/questionManage/examQuestionInfo.tsx';
 import Page1 from "./systemMenu/Page1.tsx";
 import Page2 from "./systemMenu/Page2.tsx";
-import CaseInsert from './caseManage/caseInsert.tsx';
 import QuestionInsert from './examManage/questionManage/questionInsert.tsx';
 import TestInfo from './examManage/testManage/testInfo.tsx';
 import TestInsert from './examManage/testManage/testInsert.tsx';
+import CaseInsert from './caseManage/caseInsert/caseInsert.tsx';
+import CaseTest from './caseManage/caseInsert/casetest.tsx';
+import CaseDetail from './caseManage/caseDetail.tsx';
 import PaperInfo from './examManage/paperManage/paperInfo.tsx';
 import PaperGenerate from './examManage/questionManage/generatePaper.tsx';
 
@@ -76,6 +78,10 @@ const items: MenuItem[] = [
 const rootSubmenuKeys = ['/case', '/disease', '/user', 'exam', 'hospital', 'study'];
 
 function SystemManage() {
+
+  // 布局相关
+  const { Content, Sider } = Layout;
+
   const [openKeys, setOpenKeys] = useState(['/case']);
   const onOpenChange: MenuProps['onOpenChange'] = (keys) => {
     const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
@@ -87,7 +93,48 @@ function SystemManage() {
   };
 
   return (
-    <Container style={{ height: '100%' }}>
+    <Layout className='system-manage'>
+      <Sider className='system-manage-sider '>
+        <Menu
+          defaultSelectedKeys={['/case']}
+          mode="inline"
+          items={items}
+          openKeys={openKeys}
+          onOpenChange={onOpenChange}
+          style={{ width: '200px', borderRadius: 10, opacity: 1, height: '660px' }}>
+        </Menu>
+      </Sider>
+
+      <Layout className="system-manage-right">
+        <Content >
+          <Routes>
+            <Route path="case" element={<CaseInfo />} />
+            <Route path="disease" element={<DiseaseInfo />} />
+            <Route path="user" element={<UserInfo />} />
+            <Route path="exercise" element={<ExamQuestion />} />
+            <Route path="exercise/generate" element={<PaperGenerate />} />
+            <Route path="paper" element={<TestInfo />} />
+            <Route path="test" element={<TestInfo />} />
+            <Route path="test/insert" element={<TestInsert />} />
+            <Route path="department" element={<Page2 />} />
+            <Route path="medicine" element={<Page1 />} />
+            <Route path="vaccine" element={<Page2 />} />
+            <Route path="role" element={<Page1 />} />
+            <Route path="procedure" element={<Page2 />} />
+            <Route path="" element={<Navigate to="/systemManage/case" />} />
+            <Route path="case/insert" element={<CaseInsert />} />
+            <Route path="case/detail/:case_id" element={<CaseDetail />} />
+            <Route path="exercise/insert" element={<QuestionInsert />} />
+            <Route path="paper/insert" element={<TestInsert />} />
+
+          </Routes>
+
+          <Outlet />
+
+        </Content>
+      </Layout>
+
+      {/* <Container style={{ height: '100%' }}>
       <Row gutter={8} align="top">
         <Col span={5}>
           <div>
@@ -127,10 +174,12 @@ function SystemManage() {
             </div>
           </div>
         </Col>
-      </Row>
+      </Row >
 
 
-    </Container>
+    </Container > */}
+    </Layout >
+
 
   );
 };

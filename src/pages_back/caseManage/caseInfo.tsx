@@ -1,10 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
     UploadOutlined,
 } from '@ant-design/icons';
 import type { ColumnsType, ColumnType } from 'antd/es/table';
-import { DeleteTwoTone, SearchOutlined, EditTwoTone } from '@ant-design/icons';
-import { Button, Input, InputRef, Space, Table } from 'antd'
+import { DeleteTwoTone, SearchOutlined, EditTwoTone, ExclamationCircleFilled, EyeOutlined } from '@ant-design/icons';
+import { Button, Input, InputRef, Modal, Space, Table, message } from 'antd'
 import type { FilterConfirmProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
 //导入CaseData & CaseType
@@ -17,7 +17,42 @@ import { Container } from 'react-bootstrap';
 type DataIndex = keyof CaseType;
 
 const CaseInfo: React.FC = () => {
-    const navigateTo = useNavigate(); //定义一个跳转遍历
+
+    //定义表格数据使用
+    const [caseData, setCaseData] = useState<CaseType[]>([]);
+    useEffect(() => {
+        //获取后台数据
+        fetch('http://localhost:8080/petHospital/cases'
+        )
+            .then(
+                (response) => response.json(),
+            )
+            .then((data) => {
+                console.log(data.result);
+                const posts = data.result;
+                const data1: CaseType[] = [];
+                for (let i = 0; i < posts.length; i++) {
+                    console.log(typeof (posts[i].disease))
+                    data1.push({
+                        key: i,
+                        case_id: posts[i].illCaseId,
+                        case_name: posts[i].illCaseName,
+                        disease_name: posts[i].disease ? posts[i].disease.diseaseName : 'null',
+                        disease_type: posts[i].disease ? posts[i].disease.typeName : 'null'
+                    });
+                }
+                setCaseData(data1);
+                //设置posts值为data
+            })
+            .catch((err) => {
+                console.log(err.message);
+            });
+    }, []);
+
+
+
+
+
 
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
@@ -35,7 +70,7 @@ const CaseInfo: React.FC = () => {
         setSearchedColumn(dataIndex);
     };
 
-    //重置
+    //重置搜索框
     const handleReset = (clearFilters: () => void) => {
         clearFilters();
         setSearchText('');
@@ -120,6 +155,57 @@ const CaseInfo: React.FC = () => {
             ),
     });
 
+
+
+    //删除操作
+    const del = (id: number) => {
+        console.log("点击删除id为" + id + "的病例");
+        //弹出对话框 是否删除？
+        showDeleteConfirm(id);
+    }
+    const { confirm } = Modal;
+    const showDeleteConfirm = (id: number) => {
+        confirm({
+            title: '确认删除该病例吗？',
+            icon: <ExclamationCircleFilled />,
+            // content: '用户id为:' + id,
+            okText: '确定',
+            okType: 'danger',
+            cancelText: '取消',
+            async onOk() {
+                console.log('OK');
+                //删除的事件 DELETE
+                const data: CaseType[] = caseData.filter((item: CaseType) => item.case_id !== id);
+                setCaseData(data);
+                fetch(`http://localhost:8080/petHospital/cases/${id}`, {
+                    method: 'DELETE',
+                }).then((response) => {
+                    if (response.status === 200) {
+                        //TODO：重新加载页面（好像并不合适）
+                        console.log('删除成功！')
+                        message.success("操作成功！");
+                        //返回删除成功的提示
+                    } else {
+                        console.log('删除失败！')
+                        fail()
+                    }
+                }).catch(e => {
+                    console.log('错误:', e)
+                    fail()
+                });
+            },
+            onCancel() {
+                console.log('Cancel');
+            },
+        });
+    };
+
+    //查看详情
+    const detail = (id: number) => {
+        console.log("点击查看id为" + id + "的病例");
+
+    }
+
     // 定义列
     const columns: ColumnsType<CaseType> = [
         {
@@ -128,7 +214,7 @@ const CaseInfo: React.FC = () => {
             key: 'key',
         },
         {
-            title: '疾病名',
+            title: '疾病名称',
             dataIndex: 'disease_name',
             key: 'disease_name',
             // width: '30%',
@@ -137,36 +223,92 @@ const CaseInfo: React.FC = () => {
             // render: (text) => <a>{text}</a>,
         },
         {
-            title: '病例名',
+            title: '病例名称',
             dataIndex: 'case_name',
             key: 'case_name',
             // width: '50%',
             ...getColumnSearchProps('case_name'),
         },
         {
+            title: '疾病类型',
+            dataIndex: 'disease_type',
+            key: 'disease_type',
+            // width: '50%',
+            ...getColumnSearchProps('disease_type'),
+        },
+        {
             title: '操作',
             key: 'action',
             render: (_, record) => (
                 <Space size="middle">
+                    {/* /systemManage/case/insert */}
+                    <Link to={`/systemManage/case/detail/${record.case_id}`}>
+                        <EyeOutlined />
+                    </Link>
                     <EditTwoTone />
-                    <DeleteTwoTone />
+                    <DeleteTwoTone onClick={() => {
+                        del(record.case_id)
+                    }} />
+
                 </Space>
             ),
         },
     ];
 
+    //用于多选的变量和函数
+    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+    const [loading, setLoading] = useState(false);
+
+    //重置选择状态
+    const reload = () => {
+        setLoading(true);
+        // ajax request after empty completing
+        setTimeout(() => {
+            setSelectedRowKeys([]);
+            setLoading(false);
+        }, 1000);
+    };
+
+    //监听选择框编号
+    const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+        console.log('selectedRowKeys changed: ', newSelectedRowKeys);
+        setSelectedRowKeys(newSelectedRowKeys);
+    };
+
+
+    //定义每行前面的选择框
+    const rowSelection = {
+        selectedRowKeys,
+        onChange: onSelectChange,
+    };
+    //被选的行数
+    const hasSelected = selectedRowKeys.length > 0;
+
+    //批量删除
+    const batchDel = () => {
+
+    }
+
     return (
-        <Container>
-            <div style={{ margin: 16 }}>
-                <Link to="/systemManage/case/insert">
-                    <Button type="primary">上传病例<UploadOutlined /> </Button>
-                </Link>
-            </div>
-            {/* 病例的表格 */}
-            <div className='case_box' style={{ margin: 16 }} >
-                <Table className="case_table" columns={columns} dataSource={CaseData} />;
-            </div>
-        </Container>
+        <div>
+            <Space size={500}>
+                <Space>
+                    <Button type="primary" onClick={reload} disabled={!hasSelected} loading={loading}>
+                        Reload
+                    </Button>
+                    <span style={{ marginLeft: 8 }}>
+                        {hasSelected ? `选择了 ${selectedRowKeys.length} 个病例` : ''}
+                    </span>
+                </Space>
+                <Space wrap>
+                    <Link to="/systemManage/case/insert">
+                        <Button type="primary" ghost>新增病例</Button>
+                    </Link>
+                    <Button type="primary" danger ghost onClick={batchDel}>删除用户</Button>
+                </Space>
+            </Space>
+            <Table rowSelection={rowSelection} columns={columns} dataSource={caseData} style={{ margin: 16 }} rowKey="case_id" />
+        </div >
     );
 };
 

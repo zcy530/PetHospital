@@ -3,7 +3,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import './flow.css'
 import SingleFlow from './singleFlow.js'
-import { resolveComponentProps } from '@mui/base';
+
 
 
 function Flow({roleId}) {
@@ -14,7 +14,7 @@ function Flow({roleId}) {
   const token = userLogin.userInfo.headers.authorization;
   useEffect(() => {
     axios({
-      url: `/roles/${roleId}/processes`,
+      url: `https://47.120.14.174:443/petHospital/roles/${roleId}/processes`,
       method: "get",
       headers: {'Authorization':token},
     }).then(res => {

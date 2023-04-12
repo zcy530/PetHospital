@@ -6,7 +6,7 @@ import { Button } from '@mui/material';
 import FlowContent from './flowContent.js'
 
 function SingleFlow({flowName, flowsArr, content}) {
-    var items = [], arrLength = flowsArr.length, imgUrl = "./04364f825091a4776732db4f7230c428.jpg";
+    var items = [], arrLength = flowsArr.length;
     const [count, setCount] = useState(1);
     const [opeState, setOpeState] = useState([]);
     useEffect(() => {
@@ -55,7 +55,7 @@ function SingleFlow({flowName, flowsArr, content}) {
             <div className='flow-button'>
                 <Button variant="outlined" onClick={() => changeState()}>Next Step</Button>
             </div>
-            {count !== 1 ? <FlowContent name = {flowName} imgUrl = {flowsArr[(count + 3) % arrLength].url} content = {content}/> : null}
+            {count !== 1 ? <FlowContent name = {flowName} imgUrl = {flowsArr[(count + 3) % arrLength].url} content = {flowsArr[(count) % arrLength].intro}/> : null}
         </div>
     )
 }

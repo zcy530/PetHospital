@@ -12,7 +12,7 @@ function Work({roleName, getChildData}) {
   useEffect(() => {
     if(roleName === "兽医师"){
         axios({
-        url: "/roles/1",
+        url: "https://47.120.14.174:443/petHospital/roles/1",
         method: "get",
         headers: {'Authorization':token},
       }).then(res => {
@@ -25,7 +25,7 @@ function Work({roleName, getChildData}) {
     }
     else if(roleName === "前台"){
       axios({
-        url: "/roles/2",
+        url: "https://47.120.14.174:443/petHospital/roles/3",
         method: "get",
         headers: {'Authorization':token},
       }).then(res => {
@@ -38,7 +38,7 @@ function Work({roleName, getChildData}) {
     }
     else if(roleName === "医助"){
       axios({
-        url: "/roles/3",
+        url: "https://47.120.14.174:443/petHospital/roles/2",
         method: "get",
         headers: {'Authorization':token},
       }).then(res => {

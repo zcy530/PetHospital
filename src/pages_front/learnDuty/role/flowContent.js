@@ -1,5 +1,6 @@
 import React from 'react'
 import './flowContent.css'
+import imgUrl2 from "./04364f825091a4776732db4f7230c428.jpg";
 
 function flowContent({name, imgUrl, content}) {
     return (
@@ -8,7 +9,7 @@ function flowContent({name, imgUrl, content}) {
                 <h1>{name}</h1>
             </div>
             <div className='flowPic'>
-                <img url={imgUrl} alt=''/>
+                <img src={imgUrl} alt=''/>
             </div>
             <div className='opeContent'>
                 {content}

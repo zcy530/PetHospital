@@ -13,6 +13,8 @@ import InspectionTable from './caseInsert/inspectionTable.tsx';
 import VideoUpload from './caseInsert/videoUpload.tsx';
 import { CaseData } from './caseData.js';
 
+import { Switch } from 'antd';
+
 export interface detailsProps {
     id: number;
     showDetail: boolean;
@@ -121,6 +123,7 @@ const CaseDetail = () => {
 
     //设置表单禁用
     const [componentDisabled, setComponentDisabled] = useState<boolean>(true);
+    const [readonly, setReadonly] = useState(false);
 
     return (
         <Layout>
@@ -133,6 +136,15 @@ const CaseDetail = () => {
                         >
                             Form disabled
                         </Checkbox>
+                        {/* <Switch
+                            style={{
+                                marginBlockEnd: 16,
+                            }}
+                            checked={readonly}
+                            checkedChildren="编辑"
+                            unCheckedChildren="只读"
+                            onChange={setReadonly}
+                        /> */}
                         <Form
                             labelCol={{ span: 4 }}
                             wrapperCol={{ span: 14 }}
@@ -140,15 +152,17 @@ const CaseDetail = () => {
                             disabled={componentDisabled}
                             style={{ maxWidth: 600, textAlign: 'left' }}
                             form={form}
+
+
                         >
-                            <Form.Item name="case_title" label="病例名称">
-                                <Input />
+                            <Form.Item name="case_title" label="病例名称" >
+                                <Input readOnly={readonly} />
                             </Form.Item>
                             <Form.Item name="front_graph" label="病例封面图">
                                 <ImageUpload num={1} mult={false} />
                             </Form.Item>
                             <Form.Item name="diseaseId" label="疾病名称">
-                                <Select optionLabelProp="key" defaultValue={formData ? formData.disease_id : null}>
+                                <Select optionLabelProp="key" defaultValue={formData ? formData.disease_id : null} >
                                     {options.map(item => (
                                         <Option key={item.diseaseName} value={item.diseaseId}>{item.diseaseName}</Option>
                                     ))}

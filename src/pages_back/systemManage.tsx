@@ -17,6 +17,9 @@ import CaseTest from './caseManage/caseInsert/casetest.tsx';
 import CaseDetail from './caseManage/caseDetail.tsx';
 import PaperInfo from './examManage/paperManage/paperInfo.tsx';
 import PaperGenerate from './examManage/questionManage/generatePaper.tsx';
+import ProcessInfo from './learnManage/processManage/processInfo.tsx';
+import ProcessDetail from './learnManage/processManage/processDetail.tsx';
+import ProcessInsert from './learnManage/processManage/processInsert.tsx';
 
 import {
   ContainerOutlined,
@@ -70,7 +73,7 @@ const items: MenuItem[] = [
   ]),
   getItem('职能学习管理', 'study', <IdcardOutlined />, [
     getItem(<Link to="/systemManage/role" style={{ textDecoration: 'none' }}>岗位角色管理</Link>, '/role', <TeamOutlined />),
-    getItem(<Link to="/systemManage/procedure" style={{ textDecoration: 'none' }}>流程管理</Link>, '/procedure', <PartitionOutlined />),
+    getItem(<Link to="/systemManage/process" style={{ textDecoration: 'none' }}>流程管理</Link>, '/process', <PartitionOutlined />),
   ])
 ];
 
@@ -120,7 +123,9 @@ function SystemManage() {
             <Route path="medicine" element={<Page1 />} />
             <Route path="vaccine" element={<Page2 />} />
             <Route path="role" element={<Page1 />} />
-            <Route path="procedure" element={<Page2 />} />
+            <Route path="process" element={<ProcessInfo />} />
+            <Route path="process/insert" element={<ProcessInsert />} />
+            <Route path="process/detail/:processId" element={<ProcessDetail />} />
             <Route path="" element={<Navigate to="/systemManage/case" />} />
             <Route path="case/insert" element={<CaseInsert />} />
             <Route path="case/detail/:case_id" element={<CaseDetail />} />

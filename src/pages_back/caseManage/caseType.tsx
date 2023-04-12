@@ -1,4 +1,5 @@
 //这里定义病例数据属性
+//病例table类型
 export type CaseType = {
   key: number;
   case_id: number;
@@ -7,6 +8,7 @@ export type CaseType = {
   disease_type: string;
 }
 
+//病例中检查类型
 export type InspectionType = {
   inspection_item_id: number;
   inspection_name: string;
@@ -14,6 +16,7 @@ export type InspectionType = {
   inspection_graphs: [];
 }
 
+//病例详细信息，form类型
 export type CaseFormType = {
   admission_graphs: string[],
   admission_text: string,

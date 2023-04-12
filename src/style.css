@@ -478,3 +478,13 @@ html {
   /* background-color:  #ffffff70; */
   border-radius: 10px;
 }
+
+.ant-input[disabled] {
+  color: rgb(4, 4, 4);
+  background-color: #f9f9f9;
+}
+ 
+.ant-select-disabled .ant-select-selection {
+  background: #f9f9f9;
+  cursor: not-allowed;
+}

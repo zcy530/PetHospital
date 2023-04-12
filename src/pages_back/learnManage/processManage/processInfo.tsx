@@ -1,59 +1,84 @@
-import React, { useState, useRef, useEffect } from 'react';
-import {
-    UploadOutlined,
-} from '@ant-design/icons';
-import type { ColumnsType, ColumnType } from 'antd/es/table';
-import { DeleteTwoTone, SearchOutlined, EditTwoTone, ExclamationCircleFilled, EyeOutlined } from '@ant-design/icons';
-import { Button, Input, InputRef, Modal, Space, Table, UploadFile, message } from 'antd'
-import type { FilterConfirmProps } from 'antd/es/table/interface';
-import Highlighter from 'react-highlight-words';
-//导入CaseData & CaseType
-import { CaseData } from './caseData.tsx';
-import { CaseType } from "./caseType";
+import { Button, Input, InputRef, Modal, Space, Table, message } from "antd";
+import { ColumnsType } from "antd/es/table";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { Container } from 'react-bootstrap';
-import { diseaseCategory } from '../diseaseManage/diseaseType.tsx';
+import { DeleteTwoTone, SearchOutlined, EditTwoTone, ExclamationCircleFilled, EyeOutlined } from '@ant-design/icons';
+import { ColumnType, FilterConfirmProps } from "antd/es/table/interface";
+import { ProcessType } from "./processType.js";
+import Highlighter from 'react-highlight-words';
 
-//列的下标
-type DataIndex = keyof CaseType;
 
-const CaseInfo: React.FC = () => {
+const ProcessInfo: React.FC = () => {
+
+    /**
+     * 定义表格数据
+     */
 
     //定义表格数据使用
-    const [caseData, setCaseData] = useState<CaseType[]>([]);
+    const [processData, setProcessData] = useState<ProcessType[]>([]);
     useEffect(() => {
         //获取后台数据
-        fetch('http://localhost:8080/petHospital/cases'
+        fetch('http://localhost:8080/petHospital/processes'
         )
             .then(
                 (response) => response.json(),
             )
             .then((data) => {
                 console.log(data.result);
-                const posts = data.result;
-                const data1: CaseType[] = [];
-                for (let i = 0; i < posts.length; i++) {
-                    console.log(typeof (posts[i].disease))
-                    data1.push({
-                        key: i,
-                        case_id: posts[i].illCaseId,
-                        case_name: posts[i].illCaseName,
-                        disease_name: posts[i].disease ? posts[i].disease.diseaseName : 'null',
-                        disease_type: posts[i].disease ? posts[i].disease.typeName : 'null'
-                    });
-                    // const admissionGraphList: UploadFile[] = [];
-                    // posts[i].admissionGraphList.forEach(element => {
-                    //     const tempfile:UploadFile = {};
-
-                    // });
-                }
-                setCaseData(data1);
+                setProcessData(data.result);
                 //设置posts值为data
             })
             .catch((err) => {
                 console.log(err.message);
             });
     }, []);
+
+    /**
+     * 多选部分
+     */
+
+    //用于多选的变量和函数
+    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+    const [loading, setLoading] = useState(false);
+
+    //重置选择状态
+    const reload = () => {
+        setLoading(true);
+        // ajax request after empty completing
+        setTimeout(() => {
+            setSelectedRowKeys([]);
+            setLoading(false);
+        }, 1000);
+    };
+
+    //监听选择框编号
+    const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+        console.log('selectedRowKeys changed: ', newSelectedRowKeys);
+        setSelectedRowKeys(newSelectedRowKeys);
+    };
+
+    //定义每行前面的选择框
+    const rowSelection = {
+        selectedRowKeys,
+        onChange: onSelectChange,
+    };
+    //被选的行数
+    const hasSelected = selectedRowKeys.length > 0;
+
+    //批量删除
+    const batchDel = () => {
+
+    }
+
+
+    /**
+    * 定义表格列和表格搜索
+    */
+
+
+    //表格列搜索功能
+    //列的下标
+    type DataIndex = keyof ProcessType;
 
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
@@ -78,7 +103,7 @@ const CaseInfo: React.FC = () => {
     };
 
     //获取列
-    const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<CaseType> => ({
+    const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<ProcessType> => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
             <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
                 <Input
@@ -157,17 +182,65 @@ const CaseInfo: React.FC = () => {
     });
 
 
+    // 定义列
+    const columns: ColumnsType<ProcessType> = [
+        {
+            title: '流程id',
+            dataIndex: 'processId',
+            key: 'processId',
+            align: 'center',
+        },
+        {
+            title: '流程名称',
+            dataIndex: 'processName',
+            key: 'processName',
+            align: 'center',
+            // width: '50%',
+            // 该列添加搜索功能
+            ...getColumnSearchProps('processName'),
+        },
+        {
+            title: '流程简介',
+            dataIndex: 'intro',
+            key: 'intro',
+            align: 'center',
+            // width: '30%',
+        },
+        {
+            title: '操作',
+            key: 'action',
+            align: 'center',
+            render: (_, record) => (
+                <Space size="middle">
+                    {/* /systemManage/case/insert */}
+                    <Link to={`/systemManage/process/detail/${record.processId}`}>
+                        <EyeOutlined />
+                    </Link>
+                    <EditTwoTone />
+                    <DeleteTwoTone onClick={() => {
+                        del(record.processId)
+                    }} />
+
+                </Space>
+            ),
+        },
+    ];
+
+
+    /**
+     * 删除操作
+     */
 
     //删除操作
     const del = (id: number) => {
-        console.log("点击删除id为" + id + "的病例");
+        console.log("点击删除id为" + id + "的流程");
         //弹出对话框 是否删除？
         showDeleteConfirm(id);
     }
     const { confirm } = Modal;
     const showDeleteConfirm = (id: number) => {
         confirm({
-            title: '确认删除该病例吗？',
+            title: '确认删除该流程吗？',
             icon: <ExclamationCircleFilled />,
             // content: '用户id为:' + id,
             okText: '确定',
@@ -176,13 +249,12 @@ const CaseInfo: React.FC = () => {
             async onOk() {
                 console.log('OK');
                 //删除的事件 DELETE
-                const data: CaseType[] = caseData.filter((item: CaseType) => item.case_id !== id);
-                setCaseData(data);
-                fetch(`http://localhost:8080/petHospital/cases/${id}`, {
+                const data: ProcessType[] = processData.filter((item: ProcessType) => item.processId !== id);
+                setProcessData(data);
+                fetch(`http://localhost:8080/petHospital/processes/${id}`, {
                     method: 'DELETE',
                 }).then((response) => {
                     if (response.status === 200) {
-                        //TODO：重新加载页面（好像并不合适）
                         console.log('删除成功！')
                         message.success("操作成功！");
                         //返回删除成功的提示
@@ -201,103 +273,7 @@ const CaseInfo: React.FC = () => {
         });
     };
 
-    // 定义列
-    const columns: ColumnsType<CaseType> = [
-        {
-            title: '序号',
-            dataIndex: 'key',
-            key: 'key',
-            align: 'center',
-        },
-        {
-            title: '病例名称',
-            dataIndex: 'case_name',
-            key: 'case_name',
-            align: 'center',
-            // width: '50%',
-            ...getColumnSearchProps('case_name'),
-        },
-        {
-            title: '疾病名称',
-            dataIndex: 'disease_name',
-            key: 'disease_name',
-            align: 'center',
-            // width: '30%',
-            // 该列添加搜索功能
-            ...getColumnSearchProps('disease_name'),
-            // render: (text) => <a>{text}</a>,
-        },
-        {
-            title: '疾病类型',
-            dataIndex: 'disease_type',
-            key: 'disease_type',
-            align: 'center',
-            // width: '50%',
-            filters: diseaseCategory,
-            filterMode: 'tree',
-            filterSearch: true,
-            onFilter: (value: string, record) => record.disease_type.startsWith(value),
-        },
-        {
-            title: '疾病类型',
-            dataIndex: 'disease_type',
-            key: 'disease_type',
-            // width: '50%',
-            ...getColumnSearchProps('disease_type'),
-        },
-        {
-            title: '操作',
-            key: 'action',
-            align: 'center',
-            render: (_, record) => (
-                <Space size="middle">
-                    {/* /systemManage/case/insert */}
-                    <Link to={`/systemManage/case/detail/${record.case_id}`}>
-                        <EyeOutlined />
-                    </Link>
-                    <EditTwoTone />
-                    <DeleteTwoTone onClick={() => {
-                        del(record.case_id)
-                    }} />
 
-                </Space>
-            ),
-        },
-    ];
-
-    //用于多选的变量和函数
-    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-    const [loading, setLoading] = useState(false);
-
-    //重置选择状态
-    const reload = () => {
-        setLoading(true);
-        // ajax request after empty completing
-        setTimeout(() => {
-            setSelectedRowKeys([]);
-            setLoading(false);
-        }, 1000);
-    };
-
-    //监听选择框编号
-    const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-        console.log('selectedRowKeys changed: ', newSelectedRowKeys);
-        setSelectedRowKeys(newSelectedRowKeys);
-    };
-
-
-    //定义每行前面的选择框
-    const rowSelection = {
-        selectedRowKeys,
-        onChange: onSelectChange,
-    };
-    //被选的行数
-    const hasSelected = selectedRowKeys.length > 0;
-
-    //批量删除
-    const batchDel = () => {
-
-    }
 
     return (
         <div>
@@ -307,19 +283,19 @@ const CaseInfo: React.FC = () => {
                         Reload
                     </Button>
                     <span style={{ marginLeft: 8 }}>
-                        {hasSelected ? `选择了 ${selectedRowKeys.length} 个病例` : ''}
+                        {hasSelected ? `选择了 ${selectedRowKeys.length} 个流程` : ''}
                     </span>
                 </Space>
                 <Space wrap>
-                    <Link to="/systemManage/case/insert">
-                        <Button type="primary" ghost>新增病例</Button>
+                    <Link to="/systemManage/process/insert">
+                        <Button type="primary" ghost>新增流程</Button>
                     </Link>
-                    <Button type="primary" danger ghost onClick={batchDel}>删除用户</Button>
+                    <Button type="primary" danger ghost onClick={batchDel}>删除流程</Button>
                 </Space>
             </Space>
-            <Table rowSelection={rowSelection} columns={columns} dataSource={caseData} style={{ margin: 16 }} rowKey="case_id" />
+            <Table rowSelection={rowSelection} columns={columns} dataSource={processData} style={{ margin: 16 }} rowKey="processId" />
         </div >
     );
 };
 
-export default CaseInfo;
+export default ProcessInfo;

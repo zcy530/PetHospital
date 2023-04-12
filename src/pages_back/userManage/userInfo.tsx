@@ -1,17 +1,58 @@
 import React, { useEffect, useRef, useState } from 'react';
 import type { ColumnsType, ColumnType } from 'antd/es/table';
-import { DeleteTwoTone, EditTwoTone, SearchOutlined, ExclamationCircleFilled } from '@ant-design/icons';
-import { Button, Input, InputRef, Space, Table, Modal, message } from 'antd';
+import {
+  DeleteTwoTone,
+  EditTwoTone,
+  SearchOutlined,
+  MailOutlined,
+  ExclamationCircleFilled,
+  LockOutlined,
+
+} from '@ant-design/icons';
+import { Button, Input, Select, Form, InputRef, Space, Table, Tag, Modal, message } from 'antd';
 import type { FilterConfirmProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
 import { UserType } from './userType';
-import UserCreateForm from './addUserForm.tsx';
-import UserEditForm from './editUserForm.tsx'
 
 
 type DataIndex = keyof UserType;
+const { Option } = Select;
+
+//------------------------------------------
+interface CollectionCreateFormProps {
+  open: boolean;
+  onCreate: (values: UserType) => void;
+  onCancel: () => void;
+}
+
+interface CollectionEditFormProps {
+  open: boolean;
+  record: UserType;
+  onCreate: (values: UserType) => void;
+  onCancel: () => void;
+}
+//----------------------------------------------
 
 const UserInfo: React.FC = () => {
+  //全局消息提示
+  const [messageApi, contextHolder] = message.useMessage();
+
+  const success = () => {
+    messageApi.open({
+      type: 'success',
+      content: '操作成功',
+      duration: 1,
+    });
+  };
+
+  const fail = () => {
+    messageApi.open({
+      type: 'error',
+      content: '操作失败，请重试！',
+      duration: 1
+    });
+  }
+
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   // 搜索输入框
@@ -113,11 +154,41 @@ const UserInfo: React.FC = () => {
       ),
   });
 
+  // 记录用户数据
+  const [userData, setUserData] = useState<UserType[]>([]);
+  useEffect(() => {
+    //获取后台数据
+    fetch('http://localhost:8080/petHospital/users'
+    )
+      .then(
+        (response) => response.json(),
+      )
+      .then((data) => {
+        console.log(data.result);
+        let records = data.result;
+        let userDataTmp = [...userData]; //浅拷贝？
+        for (let i = 0; i < records.length; i++) {
+          console.log(records[i]);
+          userDataTmp.push({
+            key: i,
+            userId: records[i].userId,
+            email: records[i].email,
+            role: records[i].role,
+            userClass: records[i].userClass
+          });
+        }
+        setUserData(userDataTmp);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, []);
+
   //定义两个变量 一个对应创建的窗口 一个对应编辑的窗口
   const [createFormOpen, setCreateFormOpen] = useState(false);
   const [editFormOpen, setEditFormOpen] = useState(false);
   //editRecord用于记录点击的record的信息，传给编辑窗口
-  const [editRecord, setEditRecord] = useState<UserType>({ key: [], userId: 0, role: '', email: '', userClass: '' });
+  const [editRecord, setEditRecord] = useState<UserType>({ key: 0, userId: 0, role: '', email: '', userClass: '' });
 
   const onCreate = (values: any) => {
     console.log('Received values of form: ', values);
@@ -125,40 +196,113 @@ const UserInfo: React.FC = () => {
     setEditFormOpen(false);
   };
 
-  //全局消息提示
-  const [messageApi, contextHolder] = message.useMessage();
-
-  const success = () => {
-    // messageApi.open({
-    //   type: 'success',
-    //   content: '操作成功！',
-    //   duration: 1.5,
-    // });
-    messageApi
-      .open({
-        type: 'loading',
-        content: 'Action in progress..',
-        duration: 1,
-      })
-      .then(() => message.success('操作成功！', 1.5))
-  };
-
-  const fail = () => {
-    messageApi
-      .open({
-        type: 'loading',
-        content: 'Action in progress..',
-        duration: 1,
-      })
-      .then(() => message.error('操作失败，请重试！', 1.5))
-  }
-
-
   //新增操作
   const addUsers = () => {
     setCreateFormOpen(true); //设置open为true，用于弹出弹出填写用户信息的表单
-    // console.log("点击新增：" + createFormOpen)
   }
+
+  //创建用户的表单
+  const UserCreateForm: React.FC<CollectionCreateFormProps> = ({
+    open,
+    onCreate,
+    onCancel,
+  }) => {
+    const [form] = Form.useForm();
+    const [passwordVisible, setPasswordVisible] = useState(false);
+    return (
+      //用Modal弹出表单
+      <Modal
+        open={open} //是
+        title="创建新用户"
+        okText="确定"
+        cancelText="取消"
+        onCancel={onCancel}
+        onOk={() => {
+          form
+            .validateFields()
+            .then((values) => {
+              form.resetFields();
+              onCreate(values);
+              fetch('http://localhost:8080/petHospital/users', {
+                method: 'POST',
+                headers: {
+                  'Content-type': 'application/json; charset=UTF-8',
+                },
+                body: JSON.stringify({
+                  "email": values.email,
+                  "password": values.password,
+                  "role": values.role,
+                  "userClass": values.userClass
+                })
+              })
+                .then((response) => response.json())
+                .then((data) => {
+                  console.log(data);
+                  let res = data.success;
+                  if (res === true) success();
+                  else fail();
+                  setUserData(userData.filter((data) => {
+                    return data.userId !== 0
+                  }));
+                })
+                .catch((err) => {
+                  console.log(err.message);
+                });
+            })
+            .catch((info) => {
+              console.log('Validate Failed:', info);
+            });
+        }}
+      >
+        {/* {contextHolder} */}
+        <Form
+          form={form}
+          layout="vertical"
+          name="form_in_modal"
+          initialValues={{ modifier: 'public' }}
+        >
+          {/* 填写邮箱 */}
+          <Form.Item
+            name="email"
+            label="邮箱"
+            rules={[{ required: true, message: 'Please input email!' }]}
+          >
+            <Input prefix={<MailOutlined className="site-form-item-icon" />} placeholder="Email" />
+          </Form.Item>
+          {/* 填写密码 */}
+          <Form.Item name="password" label="密码"
+            rules={[{ required: true, message: 'Please input password!' }]}
+          >
+            <Input.Password
+              prefix={<LockOutlined />}
+              placeholder="Password"
+              visibilityToggle={{ visible: passwordVisible, onVisibleChange: setPasswordVisible }}
+            />
+          </Form.Item>
+          {/* 选择角色 */}
+          <Form.Item
+            name="role"
+            label="角色"
+            rules={[{ required: true, message: 'Please select role!' }]}
+          >
+            <Select placeholder="Select role">
+              <Option value="student">student</Option>
+              <Option value="manager">manager</Option>
+            </Select>
+          </Form.Item>
+          {/* 选择班级 */}
+          <Form.Item
+            name="userClass"
+            label="班级"
+            rules={[{ required: true, message: 'Please input class!' }]}
+          >
+            <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
+    )
+  };
+
 
   //编辑操作
   const edit = (record: UserType) => {
@@ -167,6 +311,107 @@ const UserInfo: React.FC = () => {
     setEditFormOpen(true); //设置open为true，用于弹出弹出修改用户信息的表单
   };
 
+
+  const UserEditForm: React.FC<CollectionEditFormProps> = ({
+    open,
+    record,
+    onCreate,
+    onCancel,
+}) => {
+    const [form] = Form.useForm();
+
+    console.log('要修改：' + record.userId + ' ' + record.email + ' ' + record.role + ' ' + record.userClass);
+
+    return (
+        //用Modal弹出表单
+        <Modal
+            open={open} //是
+            title="修改用户信息"
+            okText="确定"
+            cancelText="取消"
+            onCancel={onCancel}
+            onOk={() => {
+                form
+                    .validateFields()
+                    .then((values) => {
+                        form.resetFields();
+                        onCreate(values);
+                        //TODO: fetch update 
+                        fetch(`http://localhost:8080/petHospital/users/` + record.userId, {
+                            method: 'PATCH',
+                            body: JSON.stringify({
+                                "userId": record.userId,
+                                "email": values.email,
+                                "role": values.role,
+                                "userClass": values.userClass
+                            }),
+                            headers: {
+                                'Content-type': 'application/json; charset=UTF-8',
+                            }
+                        })
+                            .then((response) => response.json())
+                            .then((data) => {
+                                console.log(data)
+                                // 获取实际修改的数目
+                                let res = data.result.modifiedRecordCount;
+                                console.log(res)
+                                if (res === 1) {
+                                    success();
+                                }
+                                else fail();
+                            })
+                            .catch((err) => {
+                                console.log(err.message);
+                            });
+                        console.log('修改后：' + values.email + ' ' + values.role + ' ' + values.userClass)
+                        
+                    })
+                    .catch((info) => {
+                        console.log('Validate Failed:', info);
+                    });
+            }}
+        >
+            {contextHolder}
+            <Form
+                form={form}
+                layout="vertical"
+                name="form_in_modal"
+                initialValues={{ modifier: 'public' }}
+            >
+                {/* 填写邮箱 */}
+                <Form.Item
+                    name="email"
+                    label="邮箱"
+                    rules={[{ required: true, message: 'Please input email!' }]}
+                >
+                    <Input prefix={<MailOutlined className="site-form-item-icon" />} placeholder={record.email} />
+                </Form.Item>
+
+                {/* 选择角色 */}
+                <Form.Item
+                    name="role"
+                    label="角色"
+                    rules={[{ required: true, message: 'Please select role!' }]}
+                >
+                    <Select placeholder={record.role}>
+                        <Option value="student">student</Option>
+                        <Option value="manager">manager</Option>
+                    </Select>
+                </Form.Item>
+
+                {/* 选择班级 */}
+                <Form.Item
+                    name="userClass"
+                    label="班级"
+                    rules={[{ required: true, message: 'Please input class!' }]}
+                >
+                    <Input placeholder={record.userClass} />
+                </Form.Item>
+            </Form>
+        </Modal>
+    )
+};
+
   //删除操作
   const del = (id: number) => {
     console.log("点击删除id为" + id + "的用户");
@@ -174,7 +419,7 @@ const UserInfo: React.FC = () => {
     showDeleteConfirm(id);
   }
 
-  //批量删除
+  // TODO: 批量删除
   const batchDel = () => {
 
   }
@@ -196,7 +441,12 @@ const UserInfo: React.FC = () => {
           method: 'DELETE',
         }).then((response) => {
           if (response.status === 200) {
-            //TODO：重新加载页面（好像并不合适）
+            //DONE：重新加载数据 filter一下
+            setUserData(
+              userData.filter((data) => {
+                return data.userId !== id
+              })
+            )
             console.log('删除成功！')
             //返回删除成功的提示
             success()
@@ -221,27 +471,36 @@ const UserInfo: React.FC = () => {
     {
       title: '用户id',
       dataIndex: 'userId',
+      align: 'center',
       // key: 'userId',
-      // 该列添加搜索功能
       ...getColumnSearchProps('userId'),
       // render: (text) => <a>{text}</a>,
     },
     {
       title: '邮箱',
       dataIndex: 'email',
+      align: 'center',
       // key: 'email',
       ...getColumnSearchProps('email'),
     },
     {
       title: '班级',
       dataIndex: 'userClass',
+      align: 'center',
     },
     {
       title: '角色',
       dataIndex: 'role',
+      align: 'center',
+      render: (text, record) => (
+        <Tag color={text === 'manager' ? 'green' : 'blue'}>
+          {text}
+        </Tag>
+      )
     },
     {
       title: '操作',
+      align: 'center',
       // key: 'action',
       render: (_, record) => (
         <Space size="middle">
@@ -293,40 +552,9 @@ const UserInfo: React.FC = () => {
   //被选的行数
   const hasSelected = selectedRowKeys.length > 0;
 
-  const [posts, setPosts] = useState([]);
-
-  useEffect(() => {
-    //获取后台数据
-    fetch('http://localhost:8080/petHospital/users'
-    )
-      .then(
-        (response) => response.json(),
-      )
-      .then((data) => {
-        console.log(data.result);
-        setPosts(data.result);
-        //设置posts值为data
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
-  }, []);
-
-  //后台获取的posts赋值给userData。加上key
-  const userData: UserType[] = [];
-  for (let i = 0; i < posts.length; i++) {
-    userData.push({
-      key: i,
-      userId: posts[i].userId,
-      email: posts[i].email,
-      role: posts[i].role,
-      userClass: posts[i].userClass
-    });
-  }
-
   return (
     <div>
-      <Space size={500}>
+      <Space size={600}>
         <Space>
           <Button type="primary" onClick={reload} disabled={!hasSelected} loading={loading}>
             Reload
@@ -360,7 +588,7 @@ const UserInfo: React.FC = () => {
           setEditFormOpen(false);
         }} />
 
-      <Table rowSelection={rowSelection} columns={columns} dataSource={userData} style={{ margin: 16 }} />
+      <Table rowSelection={rowSelection} rowKey={record => record.key} columns={columns} dataSource={userData} style={{ margin: 16 }} pagination={{ position: ['bottomCenter'] }} />
     </div >
   );
 };

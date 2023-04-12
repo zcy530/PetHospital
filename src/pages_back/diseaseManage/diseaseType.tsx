@@ -1,15 +1,19 @@
-export type DiseaseInfo = {
+
+export interface DiseaseInfo {
   diseaseId: number;
   diseaseName: string;
   typeName: string;
 }
 
 interface diseaseOption {
+  id: number,
   text: string,
   value: string
 }
 
-const getDiseaseList = () => {
+//获取疾病的类别目录
+const getCategoryList = () => {
+  let diseaseList: diseaseOption[] =[];
   //获取后台数据
   fetch("http://localhost:8080/petHospital/categories"
   )
@@ -19,36 +23,48 @@ const getDiseaseList = () => {
     .then((data) => {
       console.log(data.result);
       const lists = data.result;
-      const diseaseList: diseaseOption[] = []; //初始化diseaseList
+      
       lists.map(list => {
-        console.log(list.typeName)
-        diseaseList.push({ "text": list.typeName, "value": list.typeName })
+        // console.log(list.typeName)
+        diseaseList.push({"id": list.typeId, "text": list.typeName, "value": list.typeName })
       })
       console.log(diseaseList)
     })
     .catch((err) => {
       console.log(err.message);
     });
-  return getDiseaseList;
+
+  return diseaseList;
 }
 
-//疾病类别
-export const diseaseType = [
-  {
-    text: '寄生虫病',
-    value: '寄生虫病',
-  },
-  {
-    text: '内科病',
-    value: '内科病',
-  },
-  {
-    text: '肠胃病',
-    value: '肠胃病',
-  },
-  {
-    text: '皮肤病',
-    value: '皮肤病',
-  }
-]
+//获取疾病/病种列表
+const getDiseaseList = () => {
+  let diseaseList: diseaseOption[] =[];
+  //获取后台数据
+  fetch("http://localhost:8080/petHospital/diseases"
+  )
+    .then(
+      (response) => response.json(),
+    )
+    .then((data) => {
+      console.log(data.result);
+      const lists = data.result;
+      
+      lists.map(list => {
+        // console.log(list.typeName)
+        diseaseList.push({"id": list.diseaseId, "text": list.diseaseName, "value": list.diseaseName })
+      })
+      console.log(diseaseList)
+    })
+    .catch((err) => {
+      console.log(err.message);
+    });
 
+  return diseaseList;
+}
+
+
+//疾病类别
+export const diseaseType = getDiseaseList();
+
+export const diseaseCategory = getCategoryList();

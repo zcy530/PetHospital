@@ -5,6 +5,8 @@ import { oneExamQuestions } from "./mockExamData.tsx";
 import { oneQuestionAnswer, examPaper } from "./examTypeDefine.tsx";
 import axios from "axios";
 import { mytoken } from "../token.js";
+import { useSelector } from "react-redux";
+
 
 export interface examDetailsProps {
     id: number;
@@ -14,13 +16,25 @@ export interface examDetailsProps {
 
 const ExamDetail = (props: examDetailsProps) => {
 
-    const [allQuestionAnswer, setAllQuestionAnswer] = useState<oneExamQuestions[]>([]);
+    const userLogin = useSelector((state:any) => state.userLogin)
+    const { userInfo } = userLogin
+  
+    const initial_answer: oneQuestionAnswer = {
+      questionId: 0,
+      ans: '',
+      score: '',
+    } 
+
+    const initial_paperAnswer: oneQuestionAnswer[]= []
+
+    const [allQuestionAnswer, setAllQuestionAnswer] = useState<oneQuestionAnswer[]>(initial_paperAnswer);
+    const [thisQuestionAnswer, setThisQuestionAnswer] = useState<oneQuestionAnswer>(initial_answer);
     const [submitStatus, setSubmitStatus] = useState<boolean>(false);
     const [examPaperData, setExampaperData] = useState<examPaper>(null);
 
     const config = {
         headers:{
-          "Authorization": "Bearer " + mytoken,
+          "Authorization": userInfo.data.result.token,
         }
       };
       

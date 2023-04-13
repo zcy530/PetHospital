@@ -151,7 +151,7 @@ const InspectionTable = (props) => {
 
     const onCreate = (values: InspectionType) => {
         // console.log('Received values of form: ', values);
-        addInspection(values)
+        addInspection(values);
         setOpen(false);
     };
 

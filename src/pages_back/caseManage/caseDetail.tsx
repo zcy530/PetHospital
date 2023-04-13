@@ -24,23 +24,7 @@ export interface detailsProps {
 
 const CaseDetail = () => {
 
-    const [caseDetail, setCaseDetail] = useState<oneDiseaseCaseDetail>();
     const [formData, setFormData] = useState<CaseFormType>();
-
-    // const config = {
-    //     headers: {
-    //         "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZSI6Im1hbmFnZXIiLCJpc3MiOiJzZWN1cml0eSIsImlhdCI6MTY4MDEwMzQ2MiwiYXVkIjoic2VjdXJpdHktYWxsIiwiZXhwIjoxNjgwMTEwNjYyfQ.y-zKf4y5Ip3ySS1kwwtzR7mPm-LCiWrPn2reV5O6Yl8",
-    //     }
-    // };
-
-    // useEffect(() => {
-    //     const fetchDetail = async () => {
-    //         const { data } = await axios.get(`/cases/${props.id}?front=1`, config);
-    //         setCaseDetail(data.result);
-    //         console.log(data.result);
-    //     }
-    //     fetchDetail();
-    // }, [])
 
     const params = useParams();
     const [form] = useForm();
@@ -53,16 +37,8 @@ const CaseDetail = () => {
             )
             .then(async (data) => {
                 console.log(data.result);
-                setCaseDetail(data.result);
                 //设置posts值为data
                 const rst = data.result;
-
-                // const inspections: InspectionType = {
-                //     inspection_item_id: ;
-                //     inspection_name: string;
-                //     inspection_result_text: string;
-                //     inspection_graphs: [];
-                // }
 
                 const formData1: CaseFormType = {
                     admission_graphs: rst.admissionGraphList.map(item => { return item.url }),
@@ -123,8 +99,6 @@ const CaseDetail = () => {
 
     //设置表单禁用
     const [componentDisabled, setComponentDisabled] = useState<boolean>(true);
-    const [readonly, setReadonly] = useState(false);
-
     return (
         <Layout>
             {
@@ -152,11 +126,9 @@ const CaseDetail = () => {
                             disabled={componentDisabled}
                             style={{ maxWidth: 600, textAlign: 'left' }}
                             form={form}
-
-
                         >
                             <Form.Item name="case_title" label="病例名称" >
-                                <Input readOnly={readonly} />
+                                <Input />
                             </Form.Item>
                             <Form.Item name="front_graph" label="病例封面图">
                                 <ImageUpload num={1} mult={false} />

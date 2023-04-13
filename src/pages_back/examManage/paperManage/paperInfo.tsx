@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { SearchOutlined, DeleteTwoTone, EditTwoTone, } from '@ant-design/icons';
-import type { InputRef } from 'antd';
+import { SearchOutlined, DeleteTwoTone, EditTwoTone, ExclamationCircleFilled } from '@ant-design/icons';
+import { InputRef, Modal } from 'antd';
 import { Button, Input, Space, Table, message } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnsType } from 'antd/es/table';
 import { FilterConfirmProps } from 'antd/es/table/interface';
+import { Link } from 'react-router-dom';
 
 
 interface PaperType {
@@ -16,6 +17,24 @@ interface PaperType {
 type DataIndex = keyof PaperType;
 
 const Paper: React.FC = () => {
+    //全局消息提示
+    const [messageApi, contextHolder] = message.useMessage();
+
+    const success = () => {
+        messageApi.open({
+            type: 'success',
+            content: '操作成功',
+            duration: 1,
+        });
+    };
+
+    const fail = () => {
+        messageApi.open({
+            type: 'error',
+            content: '操作失败，请重试！',
+            duration: 1
+        });
+    }
 
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
@@ -115,8 +134,49 @@ const Paper: React.FC = () => {
 
     //删除试卷
     const del = (id: number) => {
-
+        showDeleteConfirm(id);
     }
+
+    const { confirm } = Modal;
+
+    const showDeleteConfirm = (id: number) => {
+        confirm({
+            title: '确认删除该试卷吗？',
+            icon: <ExclamationCircleFilled />,
+            // content: '用户id为:' + id,
+            okText: '确定',
+            okType: 'danger',
+            cancelText: '取消',
+            async onOk() {
+                console.log('OK');
+                //删除的事件 DELETE
+                await fetch(`http://localhost:8080/petHospital/papers/${id}`, {
+                    method: 'DELETE',
+                }).then((response) => {
+                    if (response.status === 200) {
+                        //DONE：重新加载数据 filter一下
+                        setPaperData(
+                            paperData.filter((data) => {
+                                return data.paperId !== id
+                            })
+                        )
+                        console.log('删除成功！')
+                        //返回删除成功的提示
+                        success()
+                    } else {
+                        console.log('删除失败！')
+                        fail()
+                    }
+                }).catch(e => {
+                    console.log('错误:', e)
+                    fail()
+                });
+            },
+            onCancel() {
+                console.log('Cancel');
+            },
+        });
+    };
 
     //获取全部试卷
     const [paperData, setPaperData] = useState<PaperType[]>([]);
@@ -157,7 +217,9 @@ const Paper: React.FC = () => {
             ...getColumnSearchProps('paperName'),
             // TODO 点击查看试卷详情
             render: (text, record) => (
-                <a href='/systemMenu/paper/id='>{text}</a> //点击跳转到试卷详情页
+                <Link to={`/systemManage/paper/detail/${record.paperId}`}>
+                    {text}
+                </Link>
             ),
         },
         {
@@ -195,6 +257,7 @@ const Paper: React.FC = () => {
 
     return (
         <div>
+            {contextHolder}
             <Table style={{ margin: 16 }} columns={columns} dataSource={paperData} pagination={{ position: ['bottomCenter'] }} />;
         </div>
     )

@@ -469,11 +469,11 @@ const UserInfo: React.FC = () => {
   // 定义列
   const columns: ColumnsType<UserType> = [
     {
-      title: '用户id',
-      dataIndex: 'userId',
+      title: '序号',
+      dataIndex: 'key',
       align: 'center',
       // key: 'userId',
-      ...getColumnSearchProps('userId'),
+      // ...getColumnSearchProps('userId'),
       // render: (text) => <a>{text}</a>,
     },
     {
@@ -554,7 +554,7 @@ const UserInfo: React.FC = () => {
 
   return (
     <div>
-      <Space size={600}>
+      <Space size={800}>
         <Space>
           <Button type="primary" onClick={reload} disabled={!hasSelected} loading={loading}>
             Reload

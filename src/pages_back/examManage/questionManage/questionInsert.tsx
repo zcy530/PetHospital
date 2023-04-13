@@ -13,7 +13,8 @@ import {
 } from 'antd';
 import { Container } from 'react-bootstrap';
 import { diseaseType } from '../../diseaseManage/diseaseType.tsx'
-
+import { Link } from 'react-router-dom';
+import BackButton from '../../global/backButton.tsx';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -28,7 +29,7 @@ const QuestionInsert: React.FC = () => {
             type: 'success',
             content: '操作成功',
             duration: 1,
-          });
+        });
     };
 
     const fail = () => {
@@ -36,7 +37,7 @@ const QuestionInsert: React.FC = () => {
             type: 'error',
             content: '操作失败，请重试！',
             duration: 1
-          });
+        });
     }
 
     const [form] = Form.useForm();
@@ -145,6 +146,7 @@ const QuestionInsert: React.FC = () => {
         <Container style={{ width: '100%', height: '100%' }}>
             {contextHolder}
             <div style={{ textAlign: 'left', backgroundColor: 'white', padding: 50, borderRadius: 10 }}>
+                <BackButton />
                 <Form
                     form={form}
                     onFinish={onFinish}
@@ -237,9 +239,11 @@ const QuestionInsert: React.FC = () => {
                     </Form.Item>
 
                     <Form.Item style={{ textAlign: 'center' }}>
-                        <Button type="primary" htmlType="submit" onClick={submitQuestion}>
-                            提交
-                        </Button>
+                        <Link to={`/systemManage/exercise`}>
+                            <Button type="primary" htmlType="submit" onClick={submitQuestion}>
+                                提交
+                            </Button>
+                        </Link>
                     </Form.Item>
                 </Form>
             </div>

@@ -32,7 +32,7 @@ const DiseaseManage: React.FC = () => {
             type: 'success',
             content: '操作成功',
             duration: 1,
-          });
+        });
     };
 
     const fail = () => {
@@ -40,7 +40,7 @@ const DiseaseManage: React.FC = () => {
             type: 'error',
             content: '操作失败，请重试！',
             duration: 1
-          });
+        });
     }
 
     const [createOpenForm, setCreateFormOpen] = useState(false);
@@ -157,7 +157,7 @@ const DiseaseManage: React.FC = () => {
                             form.resetFields();
                             onCreate(values);
                             console.log(values.diseaseName + ' ' + values.typeName)
-                            fetch('http://localhost:8080/petHospital/diseases/'+ record.diseaseId, {
+                            fetch('http://localhost:8080/petHospital/diseases/' + record.diseaseId, {
                                 method: 'PUT',
                                 headers: {
                                     'Content-type': 'application/json; charset=UTF-8',
@@ -321,7 +321,7 @@ const DiseaseManage: React.FC = () => {
     });
 
     //获取全部病种数据
-    const [posts, setPosts] = useState([]);
+    const [diseaseData, setDiseaseData] = useState([]);
 
     useEffect(() => {
         //获取后台数据
@@ -332,7 +332,7 @@ const DiseaseManage: React.FC = () => {
             )
             .then((data) => {
                 console.log(data.result);
-                setPosts(data.result);
+                setDiseaseData(data.result);
                 //设置posts值为data
             })
             .catch((err) => {
@@ -376,6 +376,11 @@ const DiseaseManage: React.FC = () => {
                         console.log('删除成功！')
                         //返回删除成功的提示
                         success()
+                        setDiseaseData(
+                            diseaseData.filter((data) => {
+                                return data.diseaseId !== id
+                            })
+                        )
                     } else {
                         console.log('删除失败！')
                         fail()
@@ -462,7 +467,7 @@ const DiseaseManage: React.FC = () => {
                 }} />
 
             {/* 表单 */}
-            <Table columns={columns} dataSource={posts} style={{ margin: 16 }} pagination={{ position: ['bottomCenter']}} />
+            <Table columns={columns} dataSource={diseaseData} style={{ margin: 16 }} pagination={{ position: ['bottomCenter'] }} />
         </div>
 
     )

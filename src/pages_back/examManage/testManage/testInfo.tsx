@@ -1,10 +1,10 @@
 //测试管理的页面
 import React, { useEffect, useRef, useState } from 'react';
-import { SearchOutlined, DeleteTwoTone, EditTwoTone, } from '@ant-design/icons';
-import type { InputRef } from 'antd';
+import { SearchOutlined, DeleteTwoTone, EditTwoTone, ExclamationCircleFilled } from '@ant-design/icons';
+import { InputRef, Modal } from 'antd';
 import { Button, Input, Space, Table, Tag, message } from 'antd';
 import type { ColumnsType, ColumnType, TableProps } from 'antd/es/table';
-import type { FilterConfirmProps } from 'antd/es/table/interface';
+import type { FilterConfirmProps, } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
 import { Link } from 'react-router-dom';
 
@@ -21,6 +21,24 @@ interface TestType {
 type DataIndex = keyof TestType;
 
 const Test: React.FC = () => {
+    //全局消息提示
+    const [messageApi, contextHolder] = message.useMessage();
+
+    const success = () => {
+        messageApi.open({
+            type: 'success',
+            content: '操作成功',
+            duration: 1,
+        });
+    };
+
+    const fail = () => {
+        messageApi.open({
+            type: 'error',
+            content: '操作失败，请重试！',
+            duration: 1
+        });
+    }
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef<InputRef>(null);
@@ -117,6 +135,54 @@ const Test: React.FC = () => {
             ),
     });
 
+
+    //删除场次
+    const del = (id: number) => {
+        showDeleteConfirm(id);
+    }
+
+    const { confirm } = Modal;
+
+    const showDeleteConfirm = (id: number) => {
+        confirm({
+            title: '确认删除该考试场次吗？',
+            icon: <ExclamationCircleFilled />,
+            // content: '用户id为:' + id,
+            okText: '确定',
+            okType: 'danger',
+            cancelText: '取消',
+            async onOk() {
+                console.log('OK');
+                //删除的事件 DELETE
+                await fetch(`http://localhost:8080/petHospital/tests/${id}`, {
+                    method: 'DELETE',
+                }).then((response) => {
+                    if (response.status === 200) {
+                        //DONE：重新加载数据 filter一下
+                        setTestData(
+                            testData.filter((data) => {
+                                return data.testId !== id
+                            })
+                        )
+                        console.log('删除成功！')
+                        //返回删除成功的提示
+                        success()
+                    } else {
+                        console.log('删除失败！')
+                        fail()
+                    }
+                }).catch(e => {
+                    console.log('错误:', e)
+                    fail()
+                });
+            },
+            onCancel() {
+                console.log('Cancel');
+            },
+        });
+    };
+
+
     const columns: ColumnsType<TestType> = [
         {
             title: '测试名称',
@@ -126,7 +192,9 @@ const Test: React.FC = () => {
             align: 'center',    // 设置文本居中的属性
             // TODO 点击查看试卷详情
             render: (text, record) => (
-                <a href='/systemMenu/paper/id='>{text}</a> //点击跳转到试卷详情页
+                <Link to={`/systemManage/paper/detail/${record.paperId}`}>
+                    {text}
+                </Link>
             ),
         },
         {
@@ -177,7 +245,7 @@ const Test: React.FC = () => {
                     }
                     } />
                     <DeleteTwoTone onClick={() => {
-                        // del(record.userId)
+                        del(record.testId)
                         //添加filter方法
                     }
                     } />
@@ -186,45 +254,46 @@ const Test: React.FC = () => {
         },
     ];
 
-     //获取全部考题数据
-     const [testData, setTestData] = useState<TestType[]>([]);
+    //获取全部考题数据
+    const [testData, setTestData] = useState<TestType[]>([]);
 
-     useEffect(() => {
-         //获取后台数据
-         fetch('http://localhost:8080/petHospital/tests'
-         )
-             .then(
-                 (response) => response.json(),
-             )
-             .then((data) => {
-                 console.log(data.result);
-                 let records = data.result;
-                 let testDataTmp: TestType[] = [];
-                 //设置posts值为data
-                 records.map((record, index) => (
-                     testDataTmp.push({
-                         testId: record.testId,
-                         testName: record.testName,
-                         intro: record.intro,
-                         tag: record.tag,
-                         paperId: record.paperId,
-                         beginDate: record.beginDate,
-                         endDate: record.endDate
-                     }
-                     )
-                 ));
-                 setTestData(testDataTmp);
-             })
-             .catch((err) => {
-                 console.log(err.message);
-             });
-     }, []);
+    useEffect(() => {
+        //获取后台数据
+        fetch('http://localhost:8080/petHospital/tests'
+        )
+            .then(
+                (response) => response.json(),
+            )
+            .then((data) => {
+                console.log(data.result);
+                let records = data.result;
+                let testDataTmp: TestType[] = [];
+                //设置posts值为data
+                records.map((record, index) => (
+                    testDataTmp.push({
+                        testId: record.testId,
+                        testName: record.testName,
+                        intro: record.intro,
+                        tag: record.tag,
+                        paperId: record.paperId,
+                        beginDate: record.beginDate,
+                        endDate: record.endDate
+                    }
+                    )
+                ));
+                setTestData(testDataTmp);
+            })
+            .catch((err) => {
+                console.log(err.message);
+            });
+    }, []);
 
     return (
         <div>
+            {contextHolder}
             {/* 新增考试 button */}
             <Link to="/systemManage/test/insert">
-                <Button type="primary">新增考试场次</Button>
+                <Button type="primary" ghost>新增考试场次</Button>
             </Link>
             <Table style={{ margin: 16 }} columns={columns} dataSource={testData} pagination={{ position: ['bottomCenter'] }} />;
         </div>

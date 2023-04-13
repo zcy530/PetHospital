@@ -7,7 +7,7 @@ import type { ColumnsType, ColumnType, TableProps } from 'antd/es/table';
 import type { FilterConfirmProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
 import { diseaseType } from '../../diseaseManage/diseaseType.tsx'
-import { Link } from 'react-router-dom';
+import { Link, useLocation, } from 'react-router-dom';
 import TextArea from 'antd/es/input/TextArea';
 import { QuestionType, QuestionDetailType } from '../../examManage/questionManage/questionType.tsx'
 
@@ -21,6 +21,7 @@ interface CollectionShowFormProps {
 type DataIndex = keyof QuestionType;
 
 const { Option } = Select;
+
 
 
 const QuestionInfo: React.FC = () => {
@@ -149,9 +150,6 @@ const QuestionInfo: React.FC = () => {
         setFormOpen(false);
         setEditOpen(false);
     };
-
-
-
 
     //展示考题的详情
     const ShowQuestionForm: React.FC<CollectionShowFormProps> = ({
@@ -356,97 +354,95 @@ const QuestionInfo: React.FC = () => {
                 }}
             >
                 <Form>
-                <Form.Item label="选择题型" name="questionType"
-                    rules={[{ required: true, message: 'Question type is required' }]}>
-                    <Radio.Group name="questionType" value={type} onChange={typeChange}>
-                        <Radio.Button value="单选">单选</Radio.Button>
-                        <Radio.Button value="多选">多选</Radio.Button>
-                        <Radio.Button value="判断">判断</Radio.Button>
-                    </Radio.Group>
-                </Form.Item>
+                    <Form.Item label="选择题型" name="questionType"
+                        rules={[{ required: true, message: 'Question type is required' }]}>
+                        <Radio.Group name="questionType" value={type} onChange={typeChange}>
+                            <Radio.Button value="单选">单选</Radio.Button>
+                            <Radio.Button value="多选">多选</Radio.Button>
+                            <Radio.Button value="判断">判断</Radio.Button>
+                        </Radio.Group>
+                    </Form.Item>
 
-                <Form.Item label="选择疾病类别" name="diseaseId"
-                    rules={[{ required: true, message: 'Disease  type is required' }]}>
-                    <Select placeholder="Select a disease type" defaultValue={detail.deseaseName}>
-                        {
-                            diseaseType.map(disease => (
-                                <Option value={disease.id}>{disease.text}</Option>
-                            ))
-                        }
-                    </Select>
-                </Form.Item>
+                    <Form.Item label="选择疾病类别" name="diseaseId"
+                        rules={[{ required: true, message: 'Disease  type is required' }]}>
+                        <Select placeholder="Select a disease type" defaultValue={detail.deseaseName}>
+                            {
+                                diseaseType.map(disease => (
+                                    <Option value={disease.id}>{disease.text}</Option>
+                                ))
+                            }
+                        </Select>
+                    </Form.Item>
 
-                <Form.Item label="题目描述" name="description"
-                    rules={[{ required: true, message: 'Required' }]}>
-                    <TextArea rows={3} defaultValue={record.description} onChange={(e) => { console.log(e.target) }} />
-                </Form.Item>
+                    <Form.Item label="题目描述" name="description"
+                        rules={[{ required: true, message: 'Required' }]}>
+                        <TextArea rows={3} defaultValue={record.description} onChange={(e) => { console.log(e.target) }} />
+                    </Form.Item>
 
-                <Form.Item label="关键词" name="keyword"
-                >
-                    <Input defaultValue={record.keyword} />
-                </Form.Item>
+                    <Form.Item label="关键词" name="keyword"
+                    >
+                        <Input defaultValue={record.keyword} />
+                    </Form.Item>
 
-                <Form.Item label="题目选项">
-                
-                    <Form.List name="choices">
-                        {(fields, { add, remove }) => (
-                            <>
-                                {/* 怎么设置默认选项 */}
-                                {fields.map(({ key, name, ...restField }) => (
-                                    <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
-                                        <Form.Item
-                                            {...restField}
-                                            name={[name, 'choice']}
-                                            rules={[{ required: true, message: '请填写选项内容' }]}
-                                        >
-                                            <Input placeholder="选项" />
-                                        </Form.Item>
-                                        <MinusCircleOutlined onClick={() => remove(name)} />
-                                    </Space>
-                                ))}
-                                <Form.Item>
-                                    <Button disabled={!judge} type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                                        添加选项
-                                        {/* TODO: 限制加4个选项 */}
-                                    </Button>
-                                </Form.Item>
-                            </>
-                        )}
-                    </Form.List>
-                </Form.Item>
+                    <Form.Item label="题目选项">
 
-                <Form.Item label="单选题答案" name="single_ans">
-                    <Radio.Group disabled={single}>
-                        <Radio value="0">A</Radio>
-                        <Radio value="1">B</Radio>
-                        <Radio value="2">C</Radio>
-                        <Radio value="3">D</Radio>
-                    </Radio.Group>
-                </Form.Item>
+                        <Form.List name="choices">
+                            {(fields, { add, remove }) => (
+                                <>
+                                    {/* 怎么设置默认选项 */}
+                                    {fields.map(({ key, name, ...restField }) => (
+                                        <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
+                                            <Form.Item
+                                                {...restField}
+                                                name={[name, 'choice']}
+                                                rules={[{ required: true, message: '请填写选项内容' }]}
+                                            >
+                                                <Input placeholder="选项" />
+                                            </Form.Item>
+                                            <MinusCircleOutlined onClick={() => remove(name)} />
+                                        </Space>
+                                    ))}
+                                    <Form.Item>
+                                        <Button disabled={!judge} type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                                            添加选项
+                                            {/* TODO: 限制加4个选项 */}
+                                        </Button>
+                                    </Form.Item>
+                                </>
+                            )}
+                        </Form.List>
+                    </Form.Item>
 
-                <Form.Item label="多选题答案" name="multi_ans">
-                    <Checkbox.Group disabled={multiple}>
-                        <Checkbox value="0">A</Checkbox>
-                        <Checkbox value="1">B</Checkbox>
-                        <Checkbox value="2">C</Checkbox>
-                        <Checkbox value="3">D</Checkbox>
-                    </Checkbox.Group>
-                </Form.Item>
+                    <Form.Item label="单选题答案" name="single_ans">
+                        <Radio.Group disabled={single}>
+                            <Radio value="0">A</Radio>
+                            <Radio value="1">B</Radio>
+                            <Radio value="2">C</Radio>
+                            <Radio value="3">D</Radio>
+                        </Radio.Group>
+                    </Form.Item>
 
-                <Form.Item label="判断题答案" name="judge_ans">
-                    <Radio.Group disabled={judge}>
-                        <Radio value="0"> 对 </Radio>
-                        <Radio value="1"> 错 </Radio>
-                    </Radio.Group>
-                </Form.Item>
+                    <Form.Item label="多选题答案" name="multi_ans">
+                        <Checkbox.Group disabled={multiple}>
+                            <Checkbox value="0">A</Checkbox>
+                            <Checkbox value="1">B</Checkbox>
+                            <Checkbox value="2">C</Checkbox>
+                            <Checkbox value="3">D</Checkbox>
+                        </Checkbox.Group>
+                    </Form.Item>
+
+                    <Form.Item label="判断题答案" name="judge_ans">
+                        <Radio.Group disabled={judge}>
+                            <Radio value="0"> 对 </Radio>
+                            <Radio value="1"> 错 </Radio>
+                        </Radio.Group>
+                    </Form.Item>
 
                 </Form>
-                
+
             </Modal>
         );
     };
-
-
 
     //删除考题
     const del = (id: number) => {
@@ -496,6 +492,8 @@ const QuestionInfo: React.FC = () => {
 
     //表格前面的选择框
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+    //选中的问题
+    const [questionList, setQuestionList] = useState<number[]>([]);
     const [loading, setLoading] = useState(false);
 
     //重置选择状态
@@ -511,6 +509,14 @@ const QuestionInfo: React.FC = () => {
     const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
         console.log('selectedRowKeys changed: ', newSelectedRowKeys);
         setSelectedRowKeys(newSelectedRowKeys);
+        let questionIdList: number[] = [];
+        newSelectedRowKeys.map((key) => {
+            console.log("对应的问题的id：" + questionData[key].questionId)
+            let id = questionData[key].questionId;
+            questionIdList.push(id); //加入问题id的列表
+        })
+        console.log('selectedQuestion changed: ', questionIdList);
+        setQuestionList(questionIdList)
     };
 
     const rowSelection = {
@@ -520,18 +526,7 @@ const QuestionInfo: React.FC = () => {
 
     const hasSelected = selectedRowKeys.length > 0;
 
-    const generatePaper = () => {
-        let questionIdList: number[] = [];
-        console.log("选择了" + selectedRowKeys); //打印出key的列表
-        //根据selectedRowKeys获取题目id
-        selectedRowKeys.map((key) => {
-            console.log("对应的问题的id：" + questionData[key].questionId)
-            let id = questionData[key].questionId;
-            questionIdList.push(id); //加入问题id的列表
-        })
-        console.log(questionIdList);
-    }
-
+  
     //定义列
     const columns: ColumnsType<QuestionType> = [
         {
@@ -657,10 +652,17 @@ const QuestionInfo: React.FC = () => {
             });
     }, []);
 
+
+    const path = {
+        pathname: '/systemManage/exercise/generate',
+        state: { "questionlist": questionList },
+    }
+    const { state } = useLocation();
+
     return (
         <div>
             {contextHolder}
-            <Space wrap size={600}>
+            <Space wrap size={800}>
                 <Space>
                     <Button type="primary" onClick={reload} disabled={!hasSelected} loading={loading}>
                         Reload
@@ -674,8 +676,15 @@ const QuestionInfo: React.FC = () => {
                     <Link to="/systemManage/exercise/insert">
                         <Button type="primary" ghost>新增考题</Button>
                     </Link>
-                    <Link to="/systemManage/exercise/generate">
-                        <Button type="primary" onClick={generatePaper}>生成试卷</Button>
+
+                    {/* 点击事件后的执行 */}
+                    <Link to='/systemManage/exercise/generate'
+                        state={{ questionList: questionList }}
+                    >
+                        <Button type="primary">
+                            生成试卷
+                        </Button>
+
                     </Link>
                 </Space>
             </Space>

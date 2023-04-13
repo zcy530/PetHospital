@@ -16,6 +16,7 @@ import CaseInsert from './caseManage/caseInsert/caseInsert.tsx';
 import CaseTest from './caseManage/caseInsert/casetest.tsx';
 import CaseDetail from './caseManage/caseDetail.tsx';
 import PaperInfo from './examManage/paperManage/paperInfo.tsx';
+import PaperDetail from './examManage/paperManage/paperDetail.tsx';
 import PaperGenerate from './examManage/questionManage/generatePaper.tsx';
 import ProcessInfo from './learnManage/processManage/processInfo.tsx';
 import ProcessDetail from './learnManage/processManage/processDetail.tsx';
@@ -116,7 +117,8 @@ function SystemManage() {
             <Route path="user" element={<UserInfo />} />
             <Route path="exercise" element={<ExamQuestion />} />
             <Route path="exercise/generate" element={<PaperGenerate />} />
-            <Route path="paper" element={<TestInfo />} />
+            <Route path="paper" element={<PaperInfo />} />
+            <Route path="paper/detail/:paper_id" element={<PaperDetail />} />
             <Route path="test" element={<TestInfo />} />
             <Route path="test/insert" element={<TestInsert />} />
             <Route path="department" element={<Page2 />} />

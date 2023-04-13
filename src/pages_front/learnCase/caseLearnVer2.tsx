@@ -11,6 +11,7 @@ import CaseDetail from './caseDetails.tsx';
 import axios from 'axios';
 import CaseCards from './caseCards.tsx';
 import { mytoken } from '../token.js';
+import { useSelector } from 'react-redux';
 
 const CaseLearnVer2 = () => {
 
@@ -18,7 +19,6 @@ const CaseLearnVer2 = () => {
   const { Content, Sider } = Layout;
   // 初始数据
   const initial_category:allDiseasesType[]=[]
-
   const [showDetail, setShowDetail] = useState<boolean>(false)
   const [detailID, setDetailID] = useState<number>(0)
   const [category, setCategory] = useState<allDiseasesType[]>(initial_category)
@@ -27,9 +27,12 @@ const CaseLearnVer2 = () => {
   const [smallDiseaseName, setSmallDiseaseName] = useState<string>('胃炎')
 
   // 发送请求相关
+  const userLogin = useSelector((state:any) => state.userLogin)
+  const { userInfo } = userLogin
+
   const config = {
     headers:{
-      "Authorization": "Bearer " + mytoken,
+      "Authorization": userInfo.data.result.token,
     }
   };
   

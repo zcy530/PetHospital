@@ -7,13 +7,20 @@ import { examList } from './examTypeDefine.js';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { mytoken } from '../token.js';
+import cat from '../../Assets/image/cat2.png'
+import cat2 from '../../Assets/image/cat3.png'
+import { useSelector } from 'react-redux';
 
 export interface examListProps {
+  chooseTab: number;
   setStartExam: (startExam: boolean) => void;
 }  
 
 const ExamList = ( props: examListProps) => {
 
+  const userLogin = useSelector((state:any) => state.userLogin)
+  const { userInfo } = userLogin
+  
   const initial_examList:examList[] = []
   const navigate = useNavigate()
   const [ modalOpen, setModalOpen ] = useState<boolean>(false);
@@ -28,19 +35,23 @@ const ExamList = ( props: examListProps) => {
 
   const config = {
     headers:{
-      "Authorization": "Bearer " + mytoken,
+      "Authorization": userInfo.data.result.token,
     }
   };
   
   useEffect(() => {
 		const fetchDetail = async() => {
-      
-      const { data } = await axios.get('https://47.120.14.174:443/petHospital/mytest/category',config);
+      const url_notdone='https://47.120.14.174:443/petHospital/mytest/category'
+      const url_record='https://47.120.14.174:443/petHospital/mytest/records/category'
+
+      const url = props.chooseTab == 1? url_notdone : url_record;
+
+      const { data } = await axios.get(url,config);
       setExamList(data.result);
       console.log(data.result);
     }
     fetchDetail();
-	},[])
+	},[props.chooseTab])
   
   const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
     <Space>
@@ -95,7 +106,7 @@ const ExamList = ( props: examListProps) => {
                   <IconText icon={ClockCircleOutlined} text={`时长150分钟`} key="list-vertical-like-o" />,
                   <IconText icon={TagsOutlined} text={item.tag} key="list-vertical-message" />,
                 ]}
-                extra={ <img width={250} alt="logo" src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"/>}
+                extra={ <img width={200} alt="logo" src={props.chooseTab==1?cat:cat2}/>}
               >
                 {getDateAndTimeFromString(item.beginDate,item.endDate)}
                 <List.Item.Meta className='exam-card-title'

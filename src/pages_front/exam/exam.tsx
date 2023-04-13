@@ -16,6 +16,7 @@ const Exam = () => {
   const [startExam, setStartExam] = useState<boolean>(false);
   const [endExam, setEndExam] = useState<boolean>(false);
   const [checkExamAnswer, setCheckExamAnswer] = useState<boolean>(false);
+  const [chooseTab, setChooseTab] = useState<number>(1);
 
   const tabItems: MenuProps['items'] = ['所有考试','我的考试'].map((info, index) => {
       return {
@@ -32,7 +33,7 @@ const Exam = () => {
     } else if(checkExamAnswer) {
       return <ExamAnswerCheck />
     } else {
-      return <ExamList setStartExam={setStartExam}/>
+      return <ExamList chooseTab={chooseTab} setStartExam={setStartExam}/>
     }
   }
 
@@ -44,6 +45,9 @@ const Exam = () => {
           <Menu
             className='exam-slidermenu'
             mode="inline"
+            onSelect={(item)=> {
+              setChooseTab(parseInt(item.key));
+            }}
             defaultSelectedKeys={['1']}
             items={tabItems}
           />

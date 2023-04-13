@@ -25,5 +25,5 @@ export type examPaper = {
 export type oneQuestionAnswer = {
     questionId: number;
     ans: string;
-    score: number;
+    score: string;
 }

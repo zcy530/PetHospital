@@ -5,6 +5,7 @@ import axios from "axios";
 import { oneDiseaseCaseDetail } from './caseTypeDefine.tsx';
 import { dataFrom_oneDiseaseCaseDetail } from './mockData.tsx';
 import Cat from "../../Assets/image/cat2.png";
+import { useSelector } from 'react-redux';
 
 export interface detailsProps {
   id: number;
@@ -13,12 +14,13 @@ export interface detailsProps {
 }
 
 const CaseDetail = (props : detailsProps) => {
-
+  const userLogin = useSelector((state:any) => state.userLogin)
+  const { userInfo } = userLogin
   const [caseDetail, setCaseDetail]= useState<oneDiseaseCaseDetail>(dataFrom_oneDiseaseCaseDetail);
 
   const config = {
     headers:{
-      "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZSI6Im1hbmFnZXIiLCJpc3MiOiJzZWN1cml0eSIsImlhdCI6MTY4MDEwMzQ2MiwiYXVkIjoic2VjdXJpdHktYWxsIiwiZXhwIjoxNjgwMTEwNjYyfQ.y-zKf4y5Ip3ySS1kwwtzR7mPm-LCiWrPn2reV5O6Yl8",
+      "Authorization": userInfo.data.result.token,
     }
   };
   

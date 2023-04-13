@@ -5,6 +5,7 @@ import { oneDiseaseCaseMenu } from './caseTypeDefine.tsx';
 import Link from 'antd/es/typography/Link';
 import axios from 'axios';
 import { mytoken } from '../token.js';
+import { useSelector } from 'react-redux';
 
 export interface detailsProps {
     id: number;
@@ -16,12 +17,14 @@ export interface detailsProps {
 
 const CaseCards = ( props: detailsProps) => {
 
+  const userLogin = useSelector((state:any) => state.userLogin)
+  const { userInfo } = userLogin
   const initial_allCase : oneDiseaseCaseMenu[]=[]
   const [allCase, setAllCase] = useState<oneDiseaseCaseMenu[]>(initial_allCase)
 
   const config = {
     headers:{
-      "Authorization": "Bearer " + mytoken,
+      "Authorization": userInfo.data.result.token,
     }
   };
 

@@ -16,9 +16,9 @@ function Model() {
   const [drugs, Setdrugs] = useState([]);
   const userLogin = useSelector(state => state.userLogin)
   const token = userLogin.userInfo.headers.authorization;
-  var  headName = "张三"; 
+  var headName = "张三"; 
   axios({
-    url: `https://47.120.14.174:443/petHospital/guide/departments`,
+    url: `https://47.120.14.174:443/petHospital/departments`,
     method: "get",
     headers: {'Authorization':token},
   }).then(res => {
@@ -27,7 +27,7 @@ function Model() {
     console.log(err);
   })
   axios({
-    url: `https://47.120.14.174:443/petHospital/guide/drugs`,
+    url: `https://47.120.14.174:443/petHospital/drugs`,
     method: "get",
     headers: {'Authorization':token},
   }).then(res => {
@@ -133,21 +133,23 @@ function Model() {
     }
     Setitems(newItems);
   }
-  let prevCurr = -1, curr = 0;
-  const dots = document.querySelectorAll('.dot');
+  let prevCurr = - 1, curr = 0;
   const prev = () => {
+    const dots = document.querySelectorAll('.dot');
     prevCurr = curr;
-    curr = (curr > 0 ? --curr : (--curr + dots.length)) % (dots.length);
-    showSlide();
+    curr = curr - 1;
+    showSlide(dots);
   }
   const next = () =>{
+    const dots = document.querySelectorAll('.dot');
     prevCurr = curr;
-    curr = (curr < dots.length - 1 ? ++curr : (++curr - dots.length)) % (dots.length);
-    showSlide();
+    curr = curr + 1;
+    showSlide(dots);
   }
-  const showSlide =  () => {
+  const showSlide =  (dots) => {
+    console.log(dots[0].classList);
     if(prevCurr >= 0 && prevCurr < dots.length - 1) dots[prevCurr].classList.remove('selected');
-    dots[curr].classList.add('selected');
+    dots[(curr + dots.length) % dots.length].classList.add('selected');
   }
   
   return (
@@ -175,7 +177,9 @@ function Model() {
         </div>
         {showDrugs ? 
         <div className = "drugs">
-          <Drug name = {onDrug.name} type = {onDrug.type} intro = {onDrug.intro} price = {onDrug.price}/>
+          <div className='drug-content'>
+            <Drug name = {onDrug.name} type = {onDrug.type} intro = {onDrug.intro} price = {onDrug.price}/>
+          </div>
           <a className="prev" onClick={prev()}>&lt;</a>
           <a className="next" onClick={next()}>&gt;</a>
           <ul className='nav'>

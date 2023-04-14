@@ -139,8 +139,7 @@ const TestInsert: React.FC = () => {
                         <TextArea rows={3} />
                     </Form.Item>
 
-                    <Form.Item label="选择试卷" name="paperId" 
-                    >
+                    <Form.Item label="选择试卷" name="paperId" >
                         <PaperSelect getPaper = {getPaperId}/>
                     </Form.Item>
 

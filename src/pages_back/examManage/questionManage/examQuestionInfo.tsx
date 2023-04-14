@@ -437,9 +437,7 @@ const QuestionInfo: React.FC = () => {
                             <Radio value="1"> 错 </Radio>
                         </Radio.Group>
                     </Form.Item>
-
                 </Form>
-
             </Modal>
         );
     };
@@ -534,7 +532,7 @@ const QuestionInfo: React.FC = () => {
             dataIndex: 'description',
             key: 'description',
             align: 'center',    // 设置文本居中的属性
-            // width: '100px',
+            width: '50%',
             ...getColumnSearchProps('description'),
             // todo: 点击进入题目详情
             // 展开题目详情 createForm
@@ -652,11 +650,6 @@ const QuestionInfo: React.FC = () => {
             });
     }, []);
 
-
-    const path = {
-        pathname: '/systemManage/exercise/generate',
-        state: { "questionlist": questionList },
-    }
     const { state } = useLocation();
 
     return (

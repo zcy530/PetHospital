@@ -13,7 +13,7 @@ import {
 } from 'antd';
 import { Container } from 'react-bootstrap';
 import { diseaseType } from '../../diseaseManage/diseaseType.tsx'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import BackButton from '../../global/backButton.tsx';
 
 const { TextArea } = Input;
@@ -71,6 +71,8 @@ const QuestionInsert: React.FC = () => {
         }
 
     };
+
+    const {navigate} = useNavigate();
 
     const submitQuestion = () => {
         let questionType = type;
@@ -132,7 +134,10 @@ const QuestionInsert: React.FC = () => {
                 .then((data) => {
                     console.log(data);
                     let res = data.success;
-                    if (res === true) success();
+                    if (res === true) {
+                        success();
+                        //TODO： 跳转至 detail
+                    }
                     else fail();
                 })
                 .catch((err) => {

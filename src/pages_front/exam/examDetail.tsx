@@ -25,12 +25,19 @@ const ExamDetail = (props: examDetailsProps) => {
       score: '',
     } 
 
+    const initial_paper: examPaper = {
+      paperId: 1,
+      paperName: '',
+      score: 0,
+      questionList: [], 
+  }
+
     const initial_paperAnswer: oneQuestionAnswer[]= []
 
     const [allQuestionAnswer, setAllQuestionAnswer] = useState<oneQuestionAnswer[]>(initial_paperAnswer);
     const [thisQuestionAnswer, setThisQuestionAnswer] = useState<oneQuestionAnswer>(initial_answer);
     const [submitStatus, setSubmitStatus] = useState<boolean>(false);
-    const [examPaperData, setExampaperData] = useState<examPaper>(null);
+    const [examPaperData, setExampaperData] = useState<examPaper>(initial_paper);
 
     const config = {
         headers:{
@@ -39,7 +46,7 @@ const ExamDetail = (props: examDetailsProps) => {
       };
       
       const submitHandler = async() => {
-        const { data } = await axios.post(`/mytest/answer/1`,config);
+        const { data } = await axios.post(`https://47.120.14.174:443/petHospital/mytest/answer/1`,config);
         setSubmitStatus(data.success)
         props.setEndExam(true);
         console.log(data);
@@ -47,12 +54,12 @@ const ExamDetail = (props: examDetailsProps) => {
 
       useEffect(() => {
         const getExamPaper = async() => {
-            const { data } = await axios.get(`/mytest/1`,config);
+            const { data } = await axios.get(`https://47.120.14.174:443/petHospital/mytest/${props.id}`,config);
             setExampaperData(data.result);
-            console.log(data)
+            console.log(data.result)
         }
         getExamPaper();
-    },[])
+    },[props.id])
 
     return(
         // todo
@@ -61,12 +68,12 @@ const ExamDetail = (props: examDetailsProps) => {
         // 3. 倒计时做好
         <div className="exam-container">
         <Progress percent={60} status="active" strokeColor={{ from: '#108ee9', to: '#87d068' }} />
-        <h3>{oneExamQuestions.paperName}</h3>
+        <h3>{examPaperData.paperName}</h3>
         <Divider />
         <Form 
           style={{marginLeft:'100px',marginRight:'100px',fontSize:'17.5px',textAlign:'left'}}>
             
-            {oneExamQuestions.questionList.map((question,index)=>(
+            {examPaperData.questionList.map((question,index)=>(
                 <>
                 <Form.Group className="mb-3" controlId="question">
                     <Form.Label>

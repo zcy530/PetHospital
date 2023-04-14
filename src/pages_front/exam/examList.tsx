@@ -14,6 +14,7 @@ import { useSelector } from 'react-redux';
 export interface examListProps {
   chooseTab: number;
   setStartExam: (startExam: boolean) => void;
+  setExamDetailId : (id: number) => void;
 }  
 
 const ExamList = ( props: examListProps) => {
@@ -99,6 +100,7 @@ const ExamList = ( props: examListProps) => {
               <List.Item
                 key={item.testId}
                 onClick={() => {
+                  props.setExamDetailId(item.testId);
                   setModalOpen(true);
                 }}
                 actions={[

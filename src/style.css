@@ -275,12 +275,12 @@ html {
     background-color: #ffffff70;
   }
   .learn-rightarea-detail {
-    height: 1600px;
+    height: 2800px;
     margin-left: 40px;
     margin-right: 30px;
     padding: 0px;
     border-radius: 20px;
-    background-color: #ffffff70;
+    background-color: #ffffff;
   }
 
   .learn-breadcrumb {
@@ -372,6 +372,7 @@ html {
     margin-top: 10px;
     border-radius: 10px;
     background-color: #ffffff;
+    margin-bottom: 10px;
   }
 
   .ant-descriptions-item-label {

@@ -17,6 +17,7 @@ const Exam = () => {
   const [endExam, setEndExam] = useState<boolean>(false);
   const [checkExamAnswer, setCheckExamAnswer] = useState<boolean>(false);
   const [chooseTab, setChooseTab] = useState<number>(1);
+  const [examDetailId, setExamDetailId] = useState<number>(1);
 
   const tabItems: MenuProps['items'] = ['所有考试','我的考试'].map((info, index) => {
       return {
@@ -27,13 +28,13 @@ const Exam = () => {
 
   const renderRightComponent = () => {
     if(startExam) {
-      return <ExamDetail id={1} setStartExam={setStartExam} setEndExam={setEndExam}/>
+      return <ExamDetail id={examDetailId} setStartExam={setStartExam} setEndExam={setEndExam}/>
     } else if(endExam) {
       return <ExamEnd setEndExam={setEndExam} setExamAnswerCheck={setCheckExamAnswer} />
     } else if(checkExamAnswer) {
       return <ExamAnswerCheck />
     } else {
-      return <ExamList chooseTab={chooseTab} setStartExam={setStartExam}/>
+      return <ExamList chooseTab={chooseTab} setStartExam={setStartExam} setExamDetailId={setExamDetailId} />
     }
   }
 

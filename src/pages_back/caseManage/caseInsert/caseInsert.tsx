@@ -20,6 +20,8 @@ import VideoUpload from './videoUpload.tsx';
 import InspectionTable from './inspectionTable.tsx';
 import ImageUpload from './imageUpload.tsx';
 import axios from 'axios';
+import BackButton from "../../global/backButton.tsx";
+import { useNavigate } from 'react-router-dom';
 
 const { TextArea } = Input;
 
@@ -52,6 +54,7 @@ const CaseInsert: React.FC = () => {
 
   //处理表单，onFinish负责最后的提交
   const [form] = Form.useForm();
+  const navigate = useNavigate();
   const onFinish = (values) => {
     if (values.front_graph) {
       values.front_graph = values.front_graph[0]
@@ -71,7 +74,10 @@ const CaseInsert: React.FC = () => {
       .then((data) => {
         console.log(data);
         let res = data.success;
-        if (res === true) success();
+        if (res === true) {
+          message.success("添加成功！")
+          navigate(`/systemManage/case/detail/${data.result.caseId}`, { replace: true })
+        }
         else fail();
       })
       .catch((err) => {
@@ -89,6 +95,7 @@ const CaseInsert: React.FC = () => {
 
   return (
     <Layout className='system-manage-content'>
+      <div style={{ textAlign: 'left' }}><BackButton /></div>
       <div style={{ textAlign: 'left' }}>
         <Form
           labelCol={{ span: 4 }}

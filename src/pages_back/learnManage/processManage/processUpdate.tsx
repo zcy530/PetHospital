@@ -1,5 +1,4 @@
-import { Form, Input, Layout, Image, Button, List, Space, Modal, message } from "antd";
-
+import { Form, Input, Layout, Image, Button, Space, Modal, message } from "antd";
 import { MenuOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import type { DragEndEvent } from '@dnd-kit/core';
 import { DndContext } from '@dnd-kit/core';
@@ -14,13 +13,12 @@ import { Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 
 import { useForm } from 'antd/es/form/Form';
-import React, { useState } from "react";
-import { OperationType } from "./processType.tsx";
+import React, { useEffect, useState } from "react";
+import { OperationType, ProcessType } from "./processType.tsx";
 import { cloneDeep } from 'lodash';
 import ImageUpload from "../../caseManage/caseInsert/imageUpload.tsx";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import BackButton from "../../global/backButton.tsx";
-
 
 
 const { TextArea } = Input;
@@ -130,7 +128,10 @@ const CollectionCreateForm: React.FC<CollectionCreateFormProps> = ({
 };
 
 
-const ProcessInsert = () => {
+const ProcessUpdate = () => {
+
+    const params = useParams();
+    console.log(params)
 
     const [count, setCount] = useState(3);
     const [open, setOpen] = useState(false);
@@ -163,7 +164,9 @@ const ProcessInsert = () => {
         const addObj: OperationType = {
             key: count + 1,
             sortNum: -1,
-            ...obj
+            url: obj.url[0],
+            operationName: obj.operationName,
+            intro: obj.intro,
         }
         const data: OperationType[] = cloneDeep(dataSource);
         // console.log(addObj)
@@ -242,26 +245,59 @@ const ProcessInsert = () => {
 
     const [form] = useForm();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        //获取后台数据
+        fetch(`http://localhost:8080/petHospital/processes/${params.processId}`
+        )
+            .then(
+                (response) => response.json(),
+            )
+            .then((data) => {
+                // console.log(data.result);
+                const tempProcess: ProcessType = {
+                    processId: data.result.processId,
+                    processName: data.result.processName,
+                    intro: data.result.intro,
+                }
+                form.setFieldsValue(tempProcess);
+                var i = 0;
+                const tempOperationList: OperationType[] = (data.result.operationList.map((item) => {
+                    return ({
+                        key: ++i,
+                        sortNum: item.sortNum,
+                        operationName: item.operationName,
+                        intro: item.intro,
+                        url: item.url,
+                    }
+                    );
+                }));
+                setDataSource(tempOperationList);
+                setCount(tempOperationList.length + 1);
+            })
+            .catch((err) => {
+                console.log(err.message);
+            });
+    }, []);
+
+
     function onFinish(values: any): void {
         // console.log(values)
-        if (dataSource) {
-            values.operationList = (dataSource.map((item) => {
-                return ({
-                    sortNum: item.sortNum,
-                    operationName: item.operationName,
-                    intro: item.intro,
-                    url: item.url ? item.url[0] : "",
-                }
-                );
-            }));
-        } else {
-            values.operationList = [];
-        }
-
+        // console.log(dataSource)
+        // console.log(count)
+        values.operationList = (dataSource.map((item) => {
+            return ({
+                sortNum: item.sortNum,
+                operationName: item.operationName,
+                intro: item.intro,
+                url: item.url,
+            }
+            );
+        }));
         // console.log(values)
         // console.log(JSON.stringify(values))
-        fetch('http://localhost:8080/petHospital/processes', {
-            method: 'POST',
+        fetch(`http://localhost:8080/petHospital/processes/${params.processId}`, {
+            method: 'PUT',
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
             },
@@ -269,14 +305,14 @@ const ProcessInsert = () => {
         })
             .then((response) => response.json())
             .then((data) => {
-                // console.log(data);
+                console.log(data);
                 let res = data.success;
                 if (res === true) {
-                    message.success("添加成功！")
-                    navigate(`/systemManage/process/detail/${data.result.processId}`, { replace: true })
+                    message.success("修改成功！")
+                    navigate(`/systemManage/process/detail/${values.processId}`, { replace: true })
                 }
                 else {
-                    message.error("添加失败！")
+                    message.error("修改失败！")
                 }
             })
             .catch((err) => {
@@ -284,6 +320,7 @@ const ProcessInsert = () => {
             });
 
     }
+
     return (
         <Layout className='system-manage-content'>
             <div style={{ textAlign: 'left' }}><BackButton /></div>
@@ -296,6 +333,7 @@ const ProcessInsert = () => {
                     form={form} name="process_insert"
                     onFinish={onFinish}
                 >
+                    <Form.Item name="processId" hidden={true} />
                     <Form.Item name="processName" label="流程名称">
                         <Input />
                     </Form.Item>
@@ -348,8 +386,9 @@ const ProcessInsert = () => {
                     </div>
                 </Form>
             </div>
-        </Layout >
-    );
-};
+        </Layout>
 
-export default ProcessInsert;
+    );
+}
+
+export default ProcessUpdate;

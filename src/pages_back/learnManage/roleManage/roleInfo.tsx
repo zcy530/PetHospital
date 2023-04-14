@@ -1,74 +1,37 @@
 import { Button, Input, InputRef, Modal, Space, Table, message } from "antd";
-import { ColumnsType } from "antd/es/table";
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { RoleType } from "./roleType.tsx";
+import { ColumnsType } from "antd/es/table/InternalTable.js";
 import { DeleteTwoTone, SearchOutlined, EditTwoTone, ExclamationCircleFilled, EyeOutlined } from '@ant-design/icons';
-import { ColumnType, FilterConfirmProps } from "antd/es/table/interface";
-import { ProcessType } from "./processType.js";
+import { ColumnType, FilterConfirmProps } from "antd/es/table/interface.js";
 import Highlighter from 'react-highlight-words';
 
 
-const ProcessInfo: React.FC = () => {
+const RoleInfo = () => {
 
     /**
-     * 定义表格数据
-     */
+    * 定义表格数据
+    */
 
     //定义表格数据使用
-    const [processData, setProcessData] = useState<ProcessType[]>([]);
+    const [roleData, setRoleData] = useState<RoleType[]>([]);
     useEffect(() => {
         //获取后台数据
-        fetch('http://localhost:8080/petHospital/processes'
+        fetch('http://localhost:8080/petHospital/actors'
         )
             .then(
                 (response) => response.json(),
             )
             .then((data) => {
                 console.log(data.result);
-                setProcessData(data.result);
+                setRoleData(data.result);
                 //设置posts值为data
             })
             .catch((err) => {
                 console.log(err.message);
             });
     }, []);
-
-    /**
-     * 多选部分
-     */
-
-    //用于多选的变量和函数
-    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-    const [loading, setLoading] = useState(false);
-
-    //重置选择状态
-    const reload = () => {
-        setLoading(true);
-        // ajax request after empty completing
-        setTimeout(() => {
-            setSelectedRowKeys([]);
-            setLoading(false);
-        }, 1000);
-    };
-
-    //监听选择框编号
-    const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-        console.log('selectedRowKeys changed: ', newSelectedRowKeys);
-        setSelectedRowKeys(newSelectedRowKeys);
-    };
-
-    //定义每行前面的选择框
-    const rowSelection = {
-        selectedRowKeys,
-        onChange: onSelectChange,
-    };
-    //被选的行数
-    const hasSelected = selectedRowKeys.length > 0;
-
-    //批量删除
-    const batchDel = () => {
-
-    }
 
 
     /**
@@ -78,7 +41,7 @@ const ProcessInfo: React.FC = () => {
 
     //表格列搜索功能
     //列的下标
-    type DataIndex = keyof ProcessType;
+    type DataIndex = keyof RoleType;
 
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
@@ -103,7 +66,7 @@ const ProcessInfo: React.FC = () => {
     };
 
     //获取列
-    const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<ProcessType> => ({
+    const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<RoleType> => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
             <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
                 <Input
@@ -182,27 +145,28 @@ const ProcessInfo: React.FC = () => {
     });
 
 
+
     // 定义列
-    const columns: ColumnsType<ProcessType> = [
+    const columns: ColumnsType<RoleType> = [
         {
-            title: '流程id',
-            dataIndex: 'processId',
-            key: 'processId',
+            title: '角色id',
+            dataIndex: 'actorId',
+            key: 'actorId',
             align: 'center',
         },
         {
-            title: '流程名称',
-            dataIndex: 'processName',
-            key: 'processName',
+            title: '角色名称',
+            dataIndex: 'name',
+            key: 'name',
             align: 'center',
             // width: '50%',
             // 该列添加搜索功能
-            ...getColumnSearchProps('processName'),
+            ...getColumnSearchProps('name'),
         },
         {
-            title: '流程简介',
-            dataIndex: 'intro',
-            key: 'intro',
+            title: '工作内容',
+            dataIndex: 'content',
+            key: 'content',
             align: 'center',
             // width: '30%',
         },
@@ -212,14 +176,14 @@ const ProcessInfo: React.FC = () => {
             align: 'center',
             render: (_, record) => (
                 <Space size="middle">
-                    <Link to={`/systemManage/process/detail/${record.processId}`}>
+                    <Link to={`/systemManage/role/detail/${record.actorId}`}>
                         <EyeOutlined />
                     </Link>
-                    <Link to={`/systemManage/process/update/${record.processId}`}>
+                    <Link to={`/systemManage/role/update/${record.actorId}`}>
                         <EditTwoTone />
                     </Link>
                     <DeleteTwoTone onClick={() => {
-                        del(record.processId)
+                        del(record.actorId)
                     }} />
 
                 </Space>
@@ -227,21 +191,20 @@ const ProcessInfo: React.FC = () => {
         },
     ];
 
-
     /**
      * 删除操作
      */
 
-    //删除操作
+    // 删除操作
     const del = (id: number) => {
-        console.log("点击删除id为" + id + "的流程");
+        console.log("点击删除id为" + id + "的角色");
         //弹出对话框 是否删除？
         showDeleteConfirm(id);
     }
     const { confirm } = Modal;
     const showDeleteConfirm = (id: number) => {
         confirm({
-            title: '确认删除该流程吗？',
+            title: '确认删除该角色吗？',
             icon: <ExclamationCircleFilled />,
             // content: '用户id为:' + id,
             okText: '确定',
@@ -250,9 +213,9 @@ const ProcessInfo: React.FC = () => {
             async onOk() {
                 console.log('OK');
                 //删除的事件 DELETE
-                const data: ProcessType[] = processData.filter((item: ProcessType) => item.processId !== id);
-                setProcessData(data);
-                fetch(`http://localhost:8080/petHospital/processes/${id}`, {
+                const data: RoleType[] = roleData.filter((item: RoleType) => item.actorId !== id);
+                setRoleData(data);
+                fetch(`http://localhost:8080/petHospital/actors/${id}`, {
                     method: 'DELETE',
                 }).then((response) => {
                     if (response.status === 200) {
@@ -276,27 +239,25 @@ const ProcessInfo: React.FC = () => {
 
 
 
+
+
     return (
         <div>
             <Space size={500}>
-                <Space>
-                    <Button type="primary" onClick={reload} disabled={!hasSelected} loading={loading}>
-                        Reload
-                    </Button>
-                    <span style={{ marginLeft: 8 }}>
-                        {hasSelected ? `选择了 ${selectedRowKeys.length} 个流程` : ''}
-                    </span>
-                </Space>
                 <Space wrap>
-                    <Link to="/systemManage/process/insert">
-                        <Button type="primary" ghost>新增流程</Button>
+                    <Link to="/systemManage/role/insert">
+                        <Button type="primary" ghost>新增角色</Button>
                     </Link>
-                    <Button type="primary" danger ghost onClick={batchDel}>删除流程</Button>
                 </Space>
             </Space>
-            <Table rowSelection={rowSelection} columns={columns} dataSource={processData} style={{ margin: 16 }} rowKey="processId" />
+            <Table columns={columns} dataSource={roleData} style={{ margin: 16 }} rowKey="actorId"
+                expandable={{
+                    columnTitle: "角色职责",
+                    defaultExpandAllRows: false,
+                    expandedRowRender: (record) => <p style={{ margin: 0 }}>{record.responsibility}</p>,
+                    rowExpandable: (record) => record.responsibility !== null,
+                }} />
         </div >
     );
-};
-
-export default ProcessInfo;
+}
+export default RoleInfo;

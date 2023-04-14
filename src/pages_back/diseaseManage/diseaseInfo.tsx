@@ -90,7 +90,10 @@ const DiseaseManage: React.FC = () => {
                                     console.log(values)
                                     console.log(data);
                                     let res = data.success;
-                                    if (res === true) success();
+                                    if (res === true) { //成功新增
+                                        success();
+                                        setCount(count + 1);
+                                    }
                                     else fail();
                                 })
                                 .catch((err) => {
@@ -174,7 +177,10 @@ const DiseaseManage: React.FC = () => {
                                     console.log(data);
                                     let res = data.result.modifiedRecordCount;
                                     console.log(res);
-                                    if (res === 1) success();
+                                    if (res === 1) {
+                                        success();
+                                        setCount(count + 1); //数据页面更新
+                                    }
                                     else fail();
                                 })
                                 .catch((err) => {
@@ -321,7 +327,8 @@ const DiseaseManage: React.FC = () => {
     });
 
     //获取全部病种数据
-    const [diseaseData, setDiseaseData] = useState([]);
+    const [diseaseData, setDiseaseData] = useState<DiseaseInfo[]>([]);
+    const [count, setCount] = useState(0);
 
     useEffect(() => {
         //获取后台数据
@@ -338,7 +345,7 @@ const DiseaseManage: React.FC = () => {
             .catch((err) => {
                 console.log(err.message);
             });
-    }, []);
+    }, [count]);
 
     //增加
     const addDisease = () => {

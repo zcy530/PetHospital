@@ -29,7 +29,6 @@ interface PaperDetailType {
 
 const PaperDetail = () => {
     const params = useParams();
-    const [form] = useForm();
     const [paperDetail, setPaperDetail] = useState<PaperDetailType>({
         "paperId": 1,
         "paperName": "",

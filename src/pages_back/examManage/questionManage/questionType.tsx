@@ -23,3 +23,16 @@ export interface QuestionDetailType {
     diseaseName: string;
 }
 
+export interface QuestionDetail {
+    questionId: number,
+    questionType: string,
+    description: string,
+    choice: string[],
+    ans: string,
+    keyword: string,
+}
+
+export interface PostQuestion {
+    questionId: number,
+    score: number
+}

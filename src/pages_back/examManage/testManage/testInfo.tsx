@@ -256,6 +256,7 @@ const Test: React.FC = () => {
 
     //获取全部考题数据
     const [testData, setTestData] = useState<TestType[]>([]);
+    const [count, setCount] = useState(0);
 
     useEffect(() => {
         //获取后台数据
@@ -286,7 +287,7 @@ const Test: React.FC = () => {
             .catch((err) => {
                 console.log(err.message);
             });
-    }, []);
+    }, [count]);
 
     return (
         <div>

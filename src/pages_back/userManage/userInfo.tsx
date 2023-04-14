@@ -156,6 +156,8 @@ const UserInfo: React.FC = () => {
 
   // 记录用户数据
   const [userData, setUserData] = useState<UserType[]>([]);
+  const [count, setCount] = useState(0);
+
   useEffect(() => {
     //获取后台数据
     fetch('http://localhost:8080/petHospital/users'
@@ -182,7 +184,7 @@ const UserInfo: React.FC = () => {
       .catch((err) => {
         console.log(err.message);
       });
-  }, []);
+  }, [count]);
 
   //定义两个变量 一个对应创建的窗口 一个对应编辑的窗口
   const [createFormOpen, setCreateFormOpen] = useState(false);
@@ -239,7 +241,10 @@ const UserInfo: React.FC = () => {
                 .then((data) => {
                   console.log(data);
                   let res = data.success;
-                  if (res === true) success();
+                  if (res === true) {
+                    success();
+                    setCount(count + 1);
+                  }
                   else fail();
                   setUserData(userData.filter((data) => {
                     return data.userId !== 0
@@ -317,100 +322,101 @@ const UserInfo: React.FC = () => {
     record,
     onCreate,
     onCancel,
-}) => {
+  }) => {
     const [form] = Form.useForm();
 
     console.log('要修改：' + record.userId + ' ' + record.email + ' ' + record.role + ' ' + record.userClass);
 
     return (
-        //用Modal弹出表单
-        <Modal
-            open={open} //是
-            title="修改用户信息"
-            okText="确定"
-            cancelText="取消"
-            onCancel={onCancel}
-            onOk={() => {
-                form
-                    .validateFields()
-                    .then((values) => {
-                        form.resetFields();
-                        onCreate(values);
-                        //TODO: fetch update 
-                        fetch(`http://localhost:8080/petHospital/users/` + record.userId, {
-                            method: 'PATCH',
-                            body: JSON.stringify({
-                                "userId": record.userId,
-                                "email": values.email,
-                                "role": values.role,
-                                "userClass": values.userClass
-                            }),
-                            headers: {
-                                'Content-type': 'application/json; charset=UTF-8',
-                            }
-                        })
-                            .then((response) => response.json())
-                            .then((data) => {
-                                console.log(data)
-                                // 获取实际修改的数目
-                                let res = data.result.modifiedRecordCount;
-                                console.log(res)
-                                if (res === 1) {
-                                    success();
-                                }
-                                else fail();
-                            })
-                            .catch((err) => {
-                                console.log(err.message);
-                            });
-                        console.log('修改后：' + values.email + ' ' + values.role + ' ' + values.userClass)
-                        
-                    })
-                    .catch((info) => {
-                        console.log('Validate Failed:', info);
-                    });
-            }}
+      //用Modal弹出表单
+      <Modal
+        open={open} //是
+        title="修改用户信息"
+        okText="确定"
+        cancelText="取消"
+        onCancel={onCancel}
+        onOk={() => {
+          form
+            .validateFields()
+            .then((values) => {
+              form.resetFields();
+              onCreate(values);
+              //TODO: fetch update 
+              fetch(`http://localhost:8080/petHospital/users/` + record.userId, {
+                method: 'PATCH',
+                body: JSON.stringify({
+                  "userId": record.userId,
+                  "email": values.email,
+                  "role": values.role,
+                  "userClass": values.userClass
+                }),
+                headers: {
+                  'Content-type': 'application/json; charset=UTF-8',
+                }
+              })
+                .then((response) => response.json())
+                .then((data) => {
+                  console.log(data)
+                  // 获取实际修改的数目
+                  let res = data.result.modifiedRecordCount;
+                  console.log(res)
+                  if (res === 1) {
+                    success();
+                    setCount(count + 1); //数据页面更新
+                  }
+                  else fail();
+                })
+                .catch((err) => {
+                  console.log(err.message);
+                });
+              console.log('修改后：' + values.email + ' ' + values.role + ' ' + values.userClass)
+
+            })
+            .catch((info) => {
+              console.log('Validate Failed:', info);
+            });
+        }}
+      >
+        {contextHolder}
+        <Form
+          form={form}
+          layout="vertical"
+          name="form_in_modal"
+          initialValues={{ modifier: 'public' }}
         >
-            {contextHolder}
-            <Form
-                form={form}
-                layout="vertical"
-                name="form_in_modal"
-                initialValues={{ modifier: 'public' }}
-            >
-                {/* 填写邮箱 */}
-                <Form.Item
-                    name="email"
-                    label="邮箱"
-                    rules={[{ required: true, message: 'Please input email!' }]}
-                >
-                    <Input prefix={<MailOutlined className="site-form-item-icon" />} placeholder={record.email} />
-                </Form.Item>
+          {/* 填写邮箱 */}
+          <Form.Item
+            name="email"
+            label="邮箱"
+            rules={[{ required: true, message: 'Please input email!' }]}
+          >
+            <Input prefix={<MailOutlined className="site-form-item-icon" />} placeholder={record.email} />
+          </Form.Item>
 
-                {/* 选择角色 */}
-                <Form.Item
-                    name="role"
-                    label="角色"
-                    rules={[{ required: true, message: 'Please select role!' }]}
-                >
-                    <Select placeholder={record.role}>
-                        <Option value="student">student</Option>
-                        <Option value="manager">manager</Option>
-                    </Select>
-                </Form.Item>
+          {/* 选择角色 */}
+          <Form.Item
+            name="role"
+            label="角色"
+            rules={[{ required: true, message: 'Please select role!' }]}
+          >
+            <Select placeholder={record.role}>
+              <Option value="student">student</Option>
+              <Option value="manager">manager</Option>
+            </Select>
+          </Form.Item>
 
-                {/* 选择班级 */}
-                <Form.Item
-                    name="userClass"
-                    label="班级"
-                    rules={[{ required: true, message: 'Please input class!' }]}
-                >
-                    <Input placeholder={record.userClass} />
-                </Form.Item>
-            </Form>
-        </Modal>
+          {/* 选择班级 */}
+          <Form.Item
+            name="userClass"
+            label="班级"
+            rules={[{ required: true, message: 'Please input class!' }]}
+          >
+            <Input placeholder={record.userClass} />
+          </Form.Item>
+        </Form>
+      </Modal>
     )
-};
+  };
 
   //删除操作
   const del = (id: number) => {
@@ -421,7 +427,39 @@ const UserInfo: React.FC = () => {
 
   // TODO: 批量删除
   const batchDel = () => {
-
+    confirm({
+      title: '确认批量删除这些用户吗？',
+      icon: <ExclamationCircleFilled />,
+      // content: '用户id为:' + id,
+      okText: '确定',
+      okType: 'danger',
+      cancelText: '取消',
+      async onOk() {
+        console.log('OK');
+        //删除的事件 DELETE
+        await fetch(`http://localhost:8080/petHospital/users/batch`, {
+          method: 'POST',
+          body: JSON.stringify({
+// ?
+          })
+        }).then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+            let res = data.success;
+            if (res === true) success();
+            else fail();
+            setUserData(userData.filter((data) => {
+              return data.userId !== 0
+            }));
+          })
+          .catch((err) => {
+            console.log(err.message);
+          });
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
   }
 
   const { confirm } = Modal;
@@ -525,6 +563,9 @@ const UserInfo: React.FC = () => {
 
   //用于多选的变量和函数
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  //选择的用户 的 id
+  const [userList, setUserList] = useState<number[]>([]);
+
   const [loading, setLoading] = useState(false);
 
   //重置选择状态
@@ -541,6 +582,14 @@ const UserInfo: React.FC = () => {
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     console.log('selectedRowKeys changed: ', newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
+    let users: number[] = [];
+    newSelectedRowKeys.map((key) => {
+      console.log("对应的问题的id：" + userData[key].userId)
+      let id = userData[key].userId;
+      users.push(id); //加入问题id的列表
+    })
+    console.log('selectedQuestion changed: ', users);
+    setUserList(users)
   };
 
   //定义每行前面的选择框

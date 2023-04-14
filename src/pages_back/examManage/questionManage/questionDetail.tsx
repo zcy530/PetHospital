@@ -1,0 +1,1 @@
+import {QuestionDetailType} from './questionType.tsx'

@@ -26,6 +26,9 @@ import RoleInfo from './learnManage/roleManage/roleInfo.tsx';
 import RoleDetail from './learnManage/roleManage/roleDetail.tsx';
 import RoleUpdate from './learnManage/roleManage/roleUpdate.tsx';
 import RoleInsert from './learnManage/roleManage/roleInsert.tsx';
+import MedicineInfo from './hospitalManage/medicineManage/medicineManage.tsx';
+import DepartmentInfo from './hospitalManage/departmentManage/departmentManage.tsx';
+import VaccineInfo from './hospitalManage/vaccineManage/vaccineManage.tsx';
 
 import {
   ContainerOutlined,
@@ -126,13 +129,13 @@ function SystemManage() {
             <Route path="paper/detail/:paper_id" element={<PaperDetail />} />
             <Route path="test" element={<TestInfo />} />
             <Route path="test/insert" element={<TestInsert />} />
-            <Route path="department" element={<Page2 />} />
-            <Route path="medicine" element={<Page1 />} />
-            <Route path="vaccine" element={<Page2 />} />
             <Route path="role" element={<RoleInfo />} />
             <Route path="role/insert" element={<RoleInsert />} />
             <Route path="role/detail/:actorId" element={<RoleDetail />} />
             <Route path="role/update/:actorId" element={<RoleUpdate />} />
+            <Route path="department" element={<DepartmentInfo />} />
+            <Route path="medicine" element={<MedicineInfo />} />
+            <Route path="vaccine" element={<VaccineInfo />} />
             <Route path="process" element={<ProcessInfo />} />
             <Route path="process/insert" element={<ProcessInsert />} />
             <Route path="process/detail/:processId" element={<ProcessDetail />} />

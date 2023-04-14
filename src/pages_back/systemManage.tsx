@@ -13,7 +13,7 @@ import QuestionInsert from './examManage/questionManage/questionInsert.tsx';
 import TestInfo from './examManage/testManage/testInfo.tsx';
 import TestInsert from './examManage/testManage/testInsert.tsx';
 import CaseInsert from './caseManage/caseInsert/caseInsert.tsx';
-import CaseTest from './caseManage/caseInsert/casetest.tsx';
+import CaseUpdate from './caseManage/caseUpdate.tsx';
 import CaseDetail from './caseManage/caseDetail.tsx';
 import PaperInfo from './examManage/paperManage/paperInfo.tsx';
 import PaperDetail from './examManage/paperManage/paperDetail.tsx';
@@ -21,6 +21,11 @@ import PaperGenerate from './examManage/questionManage/generatePaper.tsx';
 import ProcessInfo from './learnManage/processManage/processInfo.tsx';
 import ProcessDetail from './learnManage/processManage/processDetail.tsx';
 import ProcessInsert from './learnManage/processManage/processInsert.tsx';
+import ProcessUpdate from './learnManage/processManage/processUpdate.tsx';
+import RoleInfo from './learnManage/roleManage/roleInfo.tsx';
+import RoleDetail from './learnManage/roleManage/roleDetail.tsx';
+import RoleUpdate from './learnManage/roleManage/roleUpdate.tsx';
+import RoleInsert from './learnManage/roleManage/roleInsert.tsx';
 
 import {
   ContainerOutlined,
@@ -124,13 +129,18 @@ function SystemManage() {
             <Route path="department" element={<Page2 />} />
             <Route path="medicine" element={<Page1 />} />
             <Route path="vaccine" element={<Page2 />} />
-            <Route path="role" element={<Page1 />} />
+            <Route path="role" element={<RoleInfo />} />
+            <Route path="role/insert" element={<RoleInsert />} />
+            <Route path="role/detail/:actorId" element={<RoleDetail />} />
+            <Route path="role/update/:actorId" element={<RoleUpdate />} />
             <Route path="process" element={<ProcessInfo />} />
             <Route path="process/insert" element={<ProcessInsert />} />
             <Route path="process/detail/:processId" element={<ProcessDetail />} />
+            <Route path="process/update/:processId" element={<ProcessUpdate />} />
             <Route path="" element={<Navigate to="/systemManage/case" />} />
             <Route path="case/insert" element={<CaseInsert />} />
             <Route path="case/detail/:case_id" element={<CaseDetail />} />
+            <Route path="case/update/:case_id" element={<CaseUpdate />} />
             <Route path="exercise/insert" element={<QuestionInsert />} />
             <Route path="paper/insert" element={<TestInsert />} />
 

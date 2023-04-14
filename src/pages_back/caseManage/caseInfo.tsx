@@ -255,7 +255,9 @@ const CaseInfo: React.FC = () => {
                     <Link to={`/systemManage/case/detail/${record.case_id}`}>
                         <EyeOutlined />
                     </Link>
-                    <EditTwoTone />
+                    <Link to={`/systemManage/case/update/${record.case_id}`}>
+                        <EditTwoTone />
+                    </Link>
                     <DeleteTwoTone onClick={() => {
                         del(record.case_id)
                     }} />
@@ -314,7 +316,7 @@ const CaseInfo: React.FC = () => {
                     <Link to="/systemManage/case/insert">
                         <Button type="primary" ghost>新增病例</Button>
                     </Link>
-                    <Button type="primary" danger ghost onClick={batchDel}>删除用户</Button>
+                    <Button type="primary" danger ghost onClick={batchDel}>删除病例</Button>
                 </Space>
             </Space>
             <Table rowSelection={rowSelection} columns={columns} dataSource={caseData} style={{ margin: 16 }} rowKey="case_id" />

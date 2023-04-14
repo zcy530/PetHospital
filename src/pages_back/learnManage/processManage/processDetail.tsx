@@ -3,6 +3,7 @@ import { ColumnsType } from "antd/es/table";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ProcessType, OperationType } from "./processType.tsx";
+import BackButton from "../../global/backButton.tsx";
 
 
 const ProcessDetail = () => {
@@ -75,6 +76,7 @@ const ProcessDetail = () => {
 
     return (
         <Layout className='system-manage-content'>
+            <div style={{ textAlign: 'left' }}><BackButton /></div>
             <Descriptions title="流程信息" column={3}
                 bordered size='middle'
                 labelStyle={{ justifyContent: 'flex-end' }}

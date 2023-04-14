@@ -6,11 +6,12 @@ import { Button } from '@mui/material';
 import FlowContent from './flowContent.js'
 
 function SingleFlow({flowName, flowsArr, content}) {
-    var items = [], arrLength = flowsArr.length, imgUrl = "./04364f825091a4776732db4f7230c428.jpg";
+    var items = [], arrLength = flowsArr.length;
     const [count, setCount] = useState(1);
     const [opeState, setOpeState] = useState([]);
     useEffect(() => {
-        console.log(count);
+        console.log(flowsArr);
+        console.log((count - 2 + arrLength) % arrLength);
     }, count);
     for(var i = 0; i < flowsArr.length; i++) opeState.push(false);
     for(let i = 0; i < flowsArr.length - 1; i++){
@@ -37,7 +38,6 @@ function SingleFlow({flowName, flowsArr, content}) {
         </span>
     );
     function changeState() {
-        console.log(count)
         setCount((count + 1) % (arrLength + 1));
         console.log(count)
         var newOpeState = [];
@@ -55,8 +55,9 @@ function SingleFlow({flowName, flowsArr, content}) {
             <div className='flow-button'>
                 <Button variant="outlined" onClick={() => changeState()}>Next Step</Button>
             </div>
-            {count !== 1 ? <FlowContent name = {flowName} imgUrl = {flowsArr[(count + 3) % arrLength].url} content = {content}/> : null}
+            {(count - 1 + arrLength) %(arrLength + 1) < arrLength ? <FlowContent name = {flowName} imgUrl = {flowsArr[(count - 1 + arrLength) %(arrLength + 1)].url} content = {flowsArr[(count - 1 + arrLength) % (arrLength + 1)].intro}/> : null}
         </div>
+        //
     )
 }
 

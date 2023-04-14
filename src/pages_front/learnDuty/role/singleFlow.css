@@ -1,7 +1,8 @@
 .singleFlow{
     margin-bottom: 5%;
-    width: auto;
+    width: 120%;
     height: auto;
+    overflow: scroll;
 }
 
 .singleFlow h3{

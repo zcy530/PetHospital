@@ -12,6 +12,8 @@ import Page2 from "./systemMenu/Page2.tsx";
 import QuestionInsert from './examManage/questionManage/questionInsert.tsx';
 import TestInfo from './examManage/testManage/testInfo.tsx';
 import TestInsert from './examManage/testManage/testInsert.tsx';
+import TestDetail from './examManage/testManage/testDetail.tsx';
+import TestUpdate from './examManage/testManage/testUpdate.tsx';
 import CaseInsert from './caseManage/caseInsert/caseInsert.tsx';
 import CaseUpdate from './caseManage/caseUpdate.tsx';
 import CaseDetail from './caseManage/caseDetail.tsx';
@@ -29,6 +31,8 @@ import RoleInsert from './learnManage/roleManage/roleInsert.tsx';
 import MedicineInfo from './hospitalManage/medicineManage/medicineManage.tsx';
 import DepartmentInfo from './hospitalManage/departmentManage/departmentManage.tsx';
 import VaccineInfo from './hospitalManage/vaccineManage/vaccineManage.tsx';
+import QuestionDetail from './examManage/questionManage/questionDetail.tsx';
+import QuestionUpdate from './examManage/questionManage/questionUpdate.tsx';
 
 import {
   ContainerOutlined,
@@ -124,10 +128,14 @@ function SystemManage() {
             <Route path="disease" element={<DiseaseInfo />} />
             <Route path="user" element={<UserInfo />} />
             <Route path="exercise" element={<ExamQuestion />} />
+            <Route path="exercise/detail/:questionId" element={<QuestionDetail />} />
+            <Route path="exercise/update/:questionId" element={<QuestionUpdate />} />
             <Route path="exercise/generate" element={<PaperGenerate />} />
             <Route path="paper" element={<PaperInfo />} />
             <Route path="paper/detail/:paper_id" element={<PaperDetail />} />
             <Route path="test" element={<TestInfo />} />
+            <Route path="test/detail/:testId" element={<TestDetail />} />
+            <Route path="test/update/:testId" element={<TestUpdate />} />
             <Route path="test/insert" element={<TestInsert />} />
             <Route path="role" element={<RoleInfo />} />
             <Route path="role/insert" element={<RoleInsert />} />

@@ -34,25 +34,6 @@ interface CollectionEditFormProps {
 //----------------------------------------------
 
 const UserInfo: React.FC = () => {
-  //全局消息提示
-  const [messageApi, contextHolder] = message.useMessage();
-
-  const success = () => {
-    messageApi.open({
-      type: 'success',
-      content: '操作成功',
-      duration: 1,
-    });
-  };
-
-  const fail = () => {
-    messageApi.open({
-      type: 'error',
-      content: '操作失败，请重试！',
-      duration: 1
-    });
-  }
-
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   // 搜索输入框
@@ -324,9 +305,10 @@ const UserInfo: React.FC = () => {
     onCancel,
   }) => {
     const [form] = Form.useForm();
-
     console.log('要修改：' + record.userId + ' ' + record.email + ' ' + record.role + ' ' + record.userClass);
-
+    form.setFieldValue("email", record.email);
+    form.setFieldValue("role", record.role);
+    form.setFieldValue("userClass", record.userClass);
     return (
       //用Modal弹出表单
       <Modal
@@ -346,6 +328,7 @@ const UserInfo: React.FC = () => {
                 method: 'PATCH',
                 body: JSON.stringify({
                   "userId": record.userId,
+                  "password": '',
                   "email": values.email,
                   "role": values.role,
                   "userClass": values.userClass
@@ -358,15 +341,23 @@ const UserInfo: React.FC = () => {
                 .then((data) => {
                   console.log(data)
                   // 获取实际修改的数目
-                  let res = data.result.modifiedRecordCount;
-                  console.log(res)
-                  if (res === 1) {
-                    success();
-                    setCount(count + 1); //数据页面更新
+                  if (data.success === true) {
+                    let res = data.result.modifiedRecordCount;
+                    console.log(res)
+                    if (res === 1) {
+                      message.success("修改成功！");
+                      setCount(count + 1); //数据页面更新
+                    }
+                    else {
+                      message.error("修改失败，请稍后再试！")
+                    }
+                  } else {
+                    message.error("修改失败，请稍后再试！")
                   }
-                  else fail();
+
                 })
                 .catch((err) => {
+                  message.error("修改失败，请稍后再试！")
                   console.log(err.message);
                 });
               console.log('修改后：' + values.email + ' ' + values.role + ' ' + values.userClass)
@@ -377,7 +368,6 @@ const UserInfo: React.FC = () => {
             });
         }}
       >
-        {contextHolder}
         <Form
           form={form}
           layout="vertical"
@@ -390,7 +380,7 @@ const UserInfo: React.FC = () => {
             label="邮箱"
             rules={[{ required: true, message: 'Please input email!' }]}
           >
-            <Input prefix={<MailOutlined className="site-form-item-icon" />} placeholder={record.email} />
+            <Input prefix={<MailOutlined className="site-form-item-icon" />} />
           </Form.Item>
 
           {/* 选择角色 */}
@@ -399,7 +389,7 @@ const UserInfo: React.FC = () => {
             label="角色"
             rules={[{ required: true, message: 'Please select role!' }]}
           >
-            <Select placeholder={record.role}>
+            <Select >
               <Option value="student">student</Option>
               <Option value="manager">manager</Option>
             </Select>
@@ -411,7 +401,7 @@ const UserInfo: React.FC = () => {
             label="班级"
             rules={[{ required: true, message: 'Please input class!' }]}
           >
-            <Input placeholder={record.userClass} />
+            <Input />
           </Form.Item>
         </Form>
       </Modal>
@@ -440,14 +430,18 @@ const UserInfo: React.FC = () => {
         await fetch(`http://localhost:8080/petHospital/users/batch`, {
           method: 'POST',
           body: JSON.stringify({
-// ?
+            // ?
           })
         }).then((response) => response.json())
           .then((data) => {
             console.log(data);
             let res = data.success;
-            if (res === true) success();
-            else fail();
+            if (res === true) {
+              message.success("删除成功！");
+            }
+            else {
+              message.error("删除失败，请稍后再试！");
+            }
             setUserData(userData.filter((data) => {
               return data.userId !== 0
             }));
@@ -487,10 +481,10 @@ const UserInfo: React.FC = () => {
             )
             console.log('删除成功！')
             //返回删除成功的提示
-            success()
+            message.success("删除成功！")
           } else {
             console.log('删除失败！')
-            fail()
+            message.error("删除失败，请重试！")
           }
         }).catch(e => {
           console.log('错误:', e)
@@ -613,7 +607,6 @@ const UserInfo: React.FC = () => {
           </span>
         </Space>
         <Space wrap>
-          {contextHolder}
           <Button type="primary" ghost onClick={addUsers}>新增用户</Button>
           {/* TODO:批量删除用户  */}
           <Button type="primary" danger ghost onClick={batchDel}>删除用户</Button>

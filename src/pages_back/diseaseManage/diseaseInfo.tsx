@@ -24,25 +24,6 @@ interface CollectionEditFormProps {
 }
 
 const DiseaseManage: React.FC = () => {
-    //全局消息提示
-    const [messageApi, contextHolder] = message.useMessage();
-
-    const success = () => {
-        messageApi.open({
-            type: 'success',
-            content: '操作成功',
-            duration: 1,
-        });
-    };
-
-    const fail = () => {
-        messageApi.open({
-            type: 'error',
-            content: '操作失败，请重试！',
-            duration: 1
-        });
-    }
-
     const [createOpenForm, setCreateFormOpen] = useState(false);
     const [editFormOpen, setEditFormOpen] = useState(false);
     const [editRecord, setEditRecord] = useState<DiseaseInfo>([]);
@@ -91,10 +72,10 @@ const DiseaseManage: React.FC = () => {
                                     console.log(data);
                                     let res = data.success;
                                     if (res === true) { //成功新增
-                                        success();
+                                        message.success("添加成功！")
                                         setCount(count + 1);
                                     }
-                                    else fail();
+                                    else message.error("添加失败，请稍后再试！")
                                 })
                                 .catch((err) => {
                                     console.log(err.message);

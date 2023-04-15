@@ -1,15 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom';
 import { MinusCircleOutlined, PlusOutlined, TagTwoTone, LeftCircleTwoTone, LeftOutlined, FileTextTwoTone } from '@ant-design/icons';
-import { Form,  Space, List, Divider, Input } from 'antd';
-import { useForm } from 'antd/es/form/Form.js';
+import { Form, Space, List, Divider, Input } from 'antd';
 import BackButton from '../../global/backButton.tsx';
 
-export interface detailsProps {
-    id: number;
-    showDetail: boolean;
-    setShowDetail: (showDetail: boolean) => void;
-}
 
 interface Question {
     questionId: number,
@@ -82,9 +76,8 @@ const PaperDetail = () => {
             // style={{ maxWidth: 600 }}
             >
                 <Form.Item label="试卷名称" >
-                     {/* <FileTextTwoTone style={{ width: '30px' }}/> */}
-                    <span style = {{fontSize: '16px', border: '2px solid #ddd', padding: '10px' , borderRadius: '15px'}}>{paperDetail.paperName}</span> 
-                    {/* <Input prefix={<FileTextTwoTone />} size='large' readOnly={true} defaultValue={paperDetail.paperName} /> */}
+                    {/* <FileTextTwoTone style={{ width: '30px' }}/> */}
+                    <span style={{ fontSize: '16px', border: '2px solid #ddd', padding: '8px', borderRadius: '15px' }}>{<FileTextTwoTone />} {paperDetail.paperName}</span>
                 </Form.Item>
 
                 <Form.Item label="题目列表">
@@ -101,19 +94,20 @@ const PaperDetail = () => {
 
                             {/* 四个答案竖着排列 */}
                             <List
-                                style={{ margin: '16px'}}
+                                size='small'
+                                style={{ margin: '16px' }}
                                 bordered
                                 dataSource={question.choice.split(";")}
                                 renderItem={(item) => <List.Item style={{ color: 'steelblue' }}>{item}</List.Item>}
                             />
-                            {/* <Divider></Divider> */}
+                            <Divider></Divider>
                         </Form.Item>
                     ))}
                 </Form.Item>
 
                 <Form.Item label="总分" >
                     <span style={{ fontSize: '20px', color: 'firebrick' }}>
-                         {paperDetail.score} 分
+                        {paperDetail.score} 分
                     </span>
                 </Form.Item>
 

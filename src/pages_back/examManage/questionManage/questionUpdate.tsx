@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import {
     Form,
@@ -13,16 +13,64 @@ import {
 } from 'antd';
 import { Container } from 'react-bootstrap';
 import { diseaseType } from '../../diseaseManage/diseaseType.tsx'
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { QuestionDetailType } from './questionType.tsx'
 import BackButton from '../../global/backButton.tsx';
 
 const { TextArea } = Input;
 const { Option } = Select;
 
-const QuestionInsert: React.FC = () => {
+//编辑问题
+const QuestionUpdate = () => {
+    const param = useParams();
 
     const [form] = Form.useForm();
+    const [detail, setDetail] = useState<QuestionDetailType>({});
     const navigate = useNavigate(); //跳转路由
+
+    useEffect(() => {
+        fetch("http://localhost:8080/petHospital/questions/" + param.questionId, { method: 'GET' })
+            .then(
+                (response) => response.json(),
+            )
+            .then((data) => {
+                console.log(data.result);
+                const res = data.result;
+                const type = res.questionType;
+                //设置detail值为data
+                setDetail(data.result);
+                //form setValue 
+                if (type === '单选') {
+                    setType('单选')
+                    setSingle(false);
+                    setMultiple(true);
+                    setJudge(true);
+                    form.setFieldValue("choices", res.choices);
+                    form.setFieldValue("single_ans", res.ans);
+                } else if (type === '多选') {
+                    setType('多选')
+                    setSingle(true);
+                    setMultiple(false);
+                    setJudge(true)
+                    form.setFieldValue("choices", res.choices)
+                    form.setFieldValue("multi_ans", res.ans)
+                } else {
+                    setType('判断')
+                    setSingle(true);
+                    setMultiple(true);
+                    setJudge(false)
+                    form.setFieldValue("judge_ans", res.ans)
+                }
+                form.setFieldValue("questionType", type)
+                form.setFieldValue("description", res.description)
+                form.setFieldValue("keyword", res.keyword)
+                //TODO: 选项如何渲染？？
+
+            })
+            .catch((err) => {
+                console.log(err.message);
+            });
+    }, []);
 
     const onFinish = (values: any) => {
         console.log('Received values of form:', values);
@@ -67,7 +115,6 @@ const QuestionInsert: React.FC = () => {
             description = values.description;
             keyword = values.keyword;
             diseaseId = values.diseaseId;
-
             if (type === "单选") {
                 console.log(values.choices)
                 let array = new Array(4);
@@ -96,8 +143,8 @@ const QuestionInsert: React.FC = () => {
             console.log(choice)
             console.log(ans)
 
-            fetch('http://localhost:8080/petHospital/questions', {
-                method: 'POST',
+            fetch('http://localhost:8080/petHospital/questions/' + param.questionId, {
+                method: 'PUT',
                 headers: {
                     'Content-type': 'application/json; charset=UTF-8',
                 },
@@ -107,18 +154,17 @@ const QuestionInsert: React.FC = () => {
                     "description": description,
                     "diseaseId": diseaseId,
                     "keyword": keyword,
-                    "questionId": 0,
+                    "questionId": param.questionId,
                     "questionType": questionType
                 })
             }).then((response) => response.json())
                 .then((data) => {
                     console.log(data);
-                    let res = data.success;
-                    if (res === true) {
-                        message.success("添加成功！")
-                        //TODO： 跳转至 detail
+                    let res = data.result.modifiedRecordCount;
+                    if (res === 1) {
+                        message.success("修改成功！")
                         // 跳转至 paper-detail
-                        navigate(`/systemManage/exercise/detail/${data.result.questionId}`, { replace: true })
+                        navigate(`/systemManage/exercise/detail/${param.questionId}`, { replace: true })
                     }
                     else message.error("添加失败，请稍后再试！");
                 })
@@ -131,7 +177,6 @@ const QuestionInsert: React.FC = () => {
 
     return (
         <Container style={{ width: '100%', height: '100%' }}>
-
             <div style={{ textAlign: 'left', backgroundColor: 'white', padding: 50, borderRadius: 10 }}>
                 <BackButton />
                 <Form
@@ -142,7 +187,6 @@ const QuestionInsert: React.FC = () => {
                     layout="horizontal"
                     style={{ maxWidth: '100%', marginLeft: 100 }}
                 >
-
                     <Form.Item label="选择题型" name="questionType"
                         rules={[{ required: true, message: 'Question type is required' }]}>
                         <Radio.Group name="questionType" value={type} buttonStyle="solid" onChange={typeChange}>
@@ -154,7 +198,7 @@ const QuestionInsert: React.FC = () => {
 
                     <Form.Item label="选择疾病类别" name="diseaseId"
                         rules={[{ required: true, message: 'Disease  type is required' }]}>
-                        <Select placeholder="Select a disease type">
+                        <Select placeholder="Select a disease type" >
                             {
                                 diseaseType.map(disease => (
                                     <Option value={disease.id}>{disease.text}</Option>
@@ -165,7 +209,7 @@ const QuestionInsert: React.FC = () => {
 
                     <Form.Item label="题目描述" name="description"
                         rules={[{ required: true, message: 'Required' }]}>
-                        <TextArea rows={3} />
+                        <TextArea rows={3} placeholder={detail.description} />
                     </Form.Item>
 
                     <Form.Item label="关键词" name="keyword"
@@ -238,6 +282,4 @@ const QuestionInsert: React.FC = () => {
 
 }
 
-
-export default QuestionInsert;
-
+export default QuestionUpdate;

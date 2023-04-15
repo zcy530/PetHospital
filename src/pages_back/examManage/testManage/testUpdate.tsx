@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TagTwoTone, FileTextTwoTone } from '@ant-design/icons';
 import {
     Form,
@@ -14,7 +14,8 @@ import PaperSelect from '../paperSelect.tsx';
 import StudentSelect from '../studentSelect.tsx';
 import TextArea from 'antd/es/input/TextArea';
 import BackButton from '../../global/backButton.tsx';
-import { useNavigate } from 'react-router-dom';
+import { TestDetailType } from './testType.tsx';
+import { useNavigate, useParams } from 'react-router-dom';
 
 // TODO: 新增每场考试，可以选择相应的考试试卷(select?)，开始时间(DatePicker)和结束时间，以及哪些学生(multi-select)可以参加考试。
 
@@ -22,9 +23,20 @@ dayjs.extend(customParseFormat);
 //时间范围选择器
 const { RangePicker } = DatePicker;
 
-const TestInsert: React.FC = () => {
-    const [form] = Form.useForm();
+interface UpdateFormType {
+    testName: string,
+    intro: string,
+    paperId: number,
+    tag: string,
+    testDate: dayjs[],
+    userList: number[]
+}
+
+const TestUpdate: React.FC = () => {
+    const param = useParams();
     const navigate = useNavigate(); //跳转路由
+
+    const [form] = Form.useForm();
 
     const onFinish = (values: any) => {
         console.log('Received values of form:', values);
@@ -41,7 +53,40 @@ const TestInsert: React.FC = () => {
         form.setFieldValue('userList', idList);
     }
 
-    //时间格式的转换
+    //获取原场次信息
+    const [detail, setDetail] = useState<TestDetailType>({});
+
+    useEffect(() => {
+        fetch("http://localhost:8080/petHospital/tests/" + param.testId, { method: 'GET' })
+            .then(
+                (response) => response.json(),
+            )
+            .then((data) => {
+                console.log(data.result);
+                let res = data.result;
+                //设置detail值为data
+                setDetail(res);
+                // form setFieldValue
+                // 时间转换为dayjs
+                const begin = dayjs(res.beginDate);
+                const end = dayjs(res.endDate);
+                const formData: UpdateFormType = {
+                    testName: res.testName,
+                    paperId: res.paperId,
+                    intro: res.intro,
+                    tag: res.tag,
+                    testDate: [begin, end],
+                    userList: res.userList
+                };
+                form.setFieldsValue(formData); //设置表单的值
+
+            })
+            .catch((err) => {
+                console.log(err.message);
+            });
+    }, [])
+
+    //时间格式的转换 GMT转string
     const GMTToStr = (time: string) => {
         let date = new Date(time)
         let Str = date.getFullYear() + '-' +
@@ -71,8 +116,8 @@ const TestInsert: React.FC = () => {
             intro = values.intro;
             tag = values.tag;
             userList = values.userList;
-            fetch('http://localhost:8080/petHospital/tests', {
-                method: 'POST',
+            fetch('http://localhost:8080/petHospital/tests/' + param.testId, {
+                method: 'PUT',
                 headers: {
                     'Content-type': 'application/json; charset=UTF-8',
                 },
@@ -80,24 +125,30 @@ const TestInsert: React.FC = () => {
                     "beginDate": beginDate,
                     "endDate": endDate,
                     "intro": intro,
-                    "paperID": paperId,
+                    "paperId": paperId,
                     "tag": tag,
-                    "testId": 0,
+                    "testId": param.testId,
                     "testName": testName,
                     "userList": userList
                 })
             }).then((response) => response.json())
                 .then((data) => {
                     console.log(data);
-                    let res = data.success;
-                    if (res === true) {
-                        message.success("添加成功！")
-                         // 跳转至 test-detail
-                         navigate(`/systemManage/test/detail/${data.result.testId}`, { replace: true })
+                    if (data.success === true) {
+                        let res = data.result.modifiedRecordCount; //修改的个数
+                        if (res === 1) {
+                            message.success("修改成功！")
+                            // 跳转至 test-detail
+                            navigate(`/systemManage/test/detail/${param.testId}`, { replace: true })
+                        }
+                        else {
+                            message.error("修改失败，请稍后再试！");
+                        }
                     }
-                    else message.error("添加失败，请稍后再试！");
+                    else message.error("修改失败，请稍后再试！");
                 })
                 .catch((err) => {
+                    message.error("修改失败，请稍后再试！");
                     console.log(err.message);
                 });
         })
@@ -162,5 +213,5 @@ const TestInsert: React.FC = () => {
 
 }
 
-export default TestInsert;
+export default TestUpdate;
 

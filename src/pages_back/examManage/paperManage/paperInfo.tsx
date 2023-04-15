@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { SearchOutlined, DeleteTwoTone, EditTwoTone, ExclamationCircleFilled } from '@ant-design/icons';
+import { SearchOutlined, DeleteTwoTone, EditTwoTone, ExclamationCircleFilled, EyeOutlined } from '@ant-design/icons';
 import { InputRef, Modal } from 'antd';
 import { Button, Input, Space, Table, message } from 'antd';
 import Highlighter from 'react-highlight-words';
@@ -17,25 +17,6 @@ interface PaperType {
 type DataIndex = keyof PaperType;
 
 const Paper: React.FC = () => {
-    //全局消息提示
-    const [messageApi, contextHolder] = message.useMessage();
-
-    const success = () => {
-        messageApi.open({
-            type: 'success',
-            content: '操作成功',
-            duration: 1,
-        });
-    };
-
-    const fail = () => {
-        messageApi.open({
-            type: 'error',
-            content: '操作失败，请重试！',
-            duration: 1
-        });
-    }
-
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef<InputRef>(null);
@@ -162,10 +143,10 @@ const Paper: React.FC = () => {
                         )
                         console.log('删除成功！')
                         //返回删除成功的提示
-                        success()
+                        message.success("删除成功！")
                     } else {
                         console.log('删除失败！')
-                        fail()
+                        message.error("删除失败，请稍后再试！")
                     }
                 }).catch(e => {
                     console.log('错误:', e)
@@ -190,17 +171,7 @@ const Paper: React.FC = () => {
             )
             .then((data) => {
                 console.log(data.result);
-                let records = data.result;
-                let paperDataTmp: PaperType[] = [];
-                //设置posts值为data
-                records.map((record, index) => (
-                    paperDataTmp.push({
-                        paperId: record.paperId,
-                        paperName: record.paperName,
-                        score: record.score
-                    })
-                ));
-                setPaperData(paperDataTmp);
+                setPaperData(data.result);
             })
             .catch((err) => {
                 console.log(err.message);
@@ -215,12 +186,6 @@ const Paper: React.FC = () => {
             key: 'paperName',
             align: 'center',    // 设置文本居中的属性
             ...getColumnSearchProps('paperName'),
-            // TODO 点击查看试卷详情
-            render: (text, record) => (
-                <Link to={`/systemManage/paper/detail/${record.paperId}`}>
-                    {text}
-                </Link>
-            ),
         },
         {
             title: '试卷总分',
@@ -236,12 +201,11 @@ const Paper: React.FC = () => {
             // key: 'action',
             render: (_, record) => (
                 <Space size="middle">
+                    <Link to={`/systemManage/paper/detail/${record.paperId}`}>
+                    <EyeOutlined />
+                </Link>
                     <EditTwoTone onClick={() => {
                         console.log(record)
-                        //这一行的数据赋值给editRecord
-                        // setEditRecord(record)
-                        // console.log(editRecord.email)
-                        // edit(record)
                     }
                     } />
                     <DeleteTwoTone onClick={() => {
@@ -257,7 +221,6 @@ const Paper: React.FC = () => {
 
     return (
         <div>
-            {contextHolder}
             <Table style={{ margin: 16 }} columns={columns} dataSource={paperData} pagination={{ position: ['bottomCenter'] }} />;
         </div>
     )

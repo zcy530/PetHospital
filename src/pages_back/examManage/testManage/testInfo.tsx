@@ -1,6 +1,6 @@
 //测试管理的页面
 import React, { useEffect, useRef, useState } from 'react';
-import { SearchOutlined, DeleteTwoTone, EditTwoTone, ExclamationCircleFilled } from '@ant-design/icons';
+import { SearchOutlined, DeleteTwoTone, EyeOutlined, EditTwoTone, ExclamationCircleFilled } from '@ant-design/icons';
 import { InputRef, Modal } from 'antd';
 import { Button, Input, Space, Table, Tag, message } from 'antd';
 import type { ColumnsType, ColumnType, TableProps } from 'antd/es/table';
@@ -236,17 +236,14 @@ const Test: React.FC = () => {
             // key: 'action',
             render: (_, record) => (
                 <Space size="middle">
-                    <EditTwoTone onClick={() => {
-                        console.log(record)
-                        //这一行的数据赋值给editRecord
-                        // setEditRecord(record)
-                        // console.log(editRecord.email)
-                        // edit(record)
-                    }
-                    } />
+                    <Link to={`/systemManage/test/detail/${record.testId}`}>
+                        <EyeOutlined />
+                    </Link>
+                    <Link to={`/systemManage/test/update/${record.testId}`}>
+                        <EditTwoTone />
+                    </Link>
                     <DeleteTwoTone onClick={() => {
                         del(record.testId)
-                        //添加filter方法
                     }
                     } />
                 </Space>

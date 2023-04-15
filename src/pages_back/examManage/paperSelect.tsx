@@ -70,7 +70,6 @@ const PaperSelect: React.FC = (props) => {
                     </>
                 )
             }
-
         </Select>
     )
 

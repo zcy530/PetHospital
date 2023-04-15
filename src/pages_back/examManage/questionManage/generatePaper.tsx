@@ -186,7 +186,6 @@ const GeneratePaper = () => {
                                 </Form.Item>
 
                             ))}
-                            {/* <QuestionList questions={questions} /> */}
                         </>
                     </Form.Item>
 
@@ -196,18 +195,13 @@ const GeneratePaper = () => {
 
                     <Form.Item style={{ textAlign: 'center' }}>
                         <Button type="primary" htmlType="submit">
-                            生成
+                            确认生成
                         </Button>
                     </Form.Item>
                 </Form >
 
             </>) : (<>正在加载中，请稍等！</>)}
-
         </div>
-
-
-
-
     )
 }
 

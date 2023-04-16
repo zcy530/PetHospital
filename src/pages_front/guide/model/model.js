@@ -21,164 +21,163 @@ function Model() {
   const [vaccines, Setvaccines] = useState([]);
   const userLogin = useSelector(state => state.userLogin)
   const token = userLogin.userInfo.headers.authorization;
-  axios({
-    url: `https://47.120.14.174:443/petHospital/departments`,
-    method: "get",
-    headers: {'Authorization':token},
-  }).then(res => {
-    Setresult(res.data.result);
-  }).catch(err => {
-    console.log(err);
-  })
-  axios({
-    url: `https://47.120.14.174:443/petHospital/drugs`,
-    method: "get",
-    headers: {'Authorization':token},
-  }).then(res => {
-    Setdrugs(res.data.result);
-  }).catch(err => {
-    console.log(err);
-  })
-  axios({
-    url: `https://47.120.14.174:443/petHospital/vaccines`,
-    method: "get",
-    headers: {'Authorization':token},
-  }).then(res => {
-    Setvaccines(res.data.result);
-  }).catch(err => {
-    console.log(err);
-  })
   useEffect(() => {
-    window.addEventListener('message', (e) => {
-      if(e.data === "zhenshi") {
-        Setdepartment("诊室");
-        Setdescription(result[2].intro);
-        SetheadDescription(result[2].peopleList);
-        SetshowDrugs(false);
-        SetshowVac(false);
-        Setondrug(drugs[0]);
-        SetonVac(vaccines[0]);
-      }
-      if(e.data === "qiantai") {
-        Setdepartment("前台");
-        Setdescription(result[3].intro);
-        SetheadDescription(result[3].peopleList);
-        SetshowDrugs(false);
-        SetshowVac(false);
-        Setondrug(drugs[0]);
-        SetonVac(vaccines[0]);
-      }
-      if(e.data === "danganshi") {
-        Setdepartment("档案室");
-        Setdescription(result[1].intro);
-        SetheadDescription(result[1].peopleList);
-        SetshowDrugs(false);
-        SetshowVac(false);
-        Setondrug(drugs[0]);
-        SetonVac(vaccines[0]);
-      }
-      if(e.data === "mianyishi") {
-        Setdepartment("免疫室");
-        Setdescription(result[4].intro);
-        SetheadDescription(result[4].peopleList);
-        SetshowDrugs(false);
-        SetshowVac(true);
-        Setondrug(drugs[0]);
-        SetonVac(vaccines[0]);
-      }
-      if(e.data === "huayanshi") {
-        Setdepartment("化验室");
-        Setdescription(result[0].intro);
-        SetheadDescription(result[0].peopleList);
-        SetshowDrugs(false);
-        SetshowVac(false);
-        Setondrug(drugs[0]);
-        SetonVac(vaccines[0]);
-      }
-      if(e.data === "yingxiangshi") {
-        Setdepartment("影像室");
-        Setdescription(result[5].intro);
-        SetheadDescription(result[5].peopleList);
-        SetshowDrugs(false);
-        SetshowVac(false);
-        Setondrug(drugs[0]);
-        SetonVac(vaccines[0]);
-      }
-      if(e.data === "jianchashi") {
-        Setdepartment("专科检查室");
-        Setdescription(result[6].intro);
-        SetheadDescription(result[6].peopleList);
-        SetshowDrugs(false);
-        SetshowVac(false);
-        Setondrug(drugs[0]);
-        SetonVac(vaccines[0]);
-      }
-      if(e.data === "chuzhishi") {
-        Setdepartment("处置室");
-        Setdescription(result[7].intro);
-        SetheadDescription(result[7].peopleList);
-        SetshowDrugs(false);
-        SetshowVac(false);
-        Setondrug(drugs[0]);
-        SetonVac(vaccines[0]);
-      }
-      if(e.data === "yaofang") {
-        Setdepartment("药房");
-        Setdescription(result[8].intro);
-        SetheadDescription(result[8].peopleList);
-        SetshowVac(false);
-        SetshowDrugs(true);
-        Setondrug(drugs[0]);
-        SetonVac(vaccines[0]);
-      }
-      if(e.data === "zhusheshi") {
-        Setdepartment("注射室");
-        Setdescription(result[9].intro);
-        SetheadDescription(result[9].peopleList);
-        SetshowDrugs(false);
-        SetshowVac(false);
-        Setondrug(drugs[0]);
-        SetonVac(vaccines[0]);
-      }
-      if(e.data === "shoushuzhunbeishi") {
-        Setdepartment("手术准备室");
-        Setdescription(result[10].intro);
-        SetheadDescription(result[10].peopleList);
-        SetshowDrugs(false);
-        SetshowVac(false);
-        Setondrug(drugs[0]);
-        SetonVac(vaccines[0]);
-      }
-      if(e.data === "shoushushi") {
-        Setdepartment("手术室");
-        Setdescription(result[11].intro);
-        SetheadDescription(result[11].peopleList);
-        SetshowDrugs(false);
-        SetshowVac(false);
-        Setondrug(drugs[0]);
-        SetonVac(vaccines[0]);
-      }
-      if(e.data === "zhuyuanbu") {
-        Setdepartment("住院部");
-        Setdescription(result[12].intro);
-        SetheadDescription(result[12].peopleList);
-        SetshowDrugs(false);
-        SetshowVac(false);
-        Setondrug(drugs[0]);
-        SetonVac(vaccines[0]);
-      }
-      if(e.data === "jiepoushi") {
-        Setdepartment("病理解剖室");
-        Setdescription(result[13].intro);
-        SetheadDescription(result[13].peopleList);
-        SetshowDrugs(false);
-        SetshowVac(false);
-        Setondrug(drugs[0]);
-        SetonVac(vaccines[0]);
-      }
-    }, false);
-  })
-
+    axios({
+      url: `https://47.120.14.174:443/petHospital/departments`,
+      method: "get",
+      headers: {'Authorization':token},
+    }).then(res => {
+      Setresult(res.data.result);
+    }).catch(err => {
+      console.log(err);
+    })
+    axios({
+      url: `https://47.120.14.174:443/petHospital/drugs`,
+      method: "get",
+      headers: {'Authorization':token},
+    }).then(res => {
+      Setdrugs(res.data.result);
+    }).catch(err => {
+      console.log(err);
+    })
+    axios({
+      url: `https://47.120.14.174:443/petHospital/vaccines`,
+      method: "get",
+      headers: {'Authorization':token},
+    }).then(res => {
+      Setvaccines(res.data.result);
+    }).catch(err => {
+      console.log(err);
+    })
+  },[])
+  window.addEventListener('message', (e) => {
+    if(e.data === "zhenshi") {
+      Setdepartment("诊室");
+      Setdescription(result[2].intro);
+      SetheadDescription(result[2].peopleList);
+      SetshowDrugs(false);
+      SetshowVac(false);
+      Setondrug(drugs[0]);
+      SetonVac(vaccines[0]);
+    }
+    if(e.data === "qiantai") {
+      Setdepartment("前台");
+      Setdescription(result[3].intro);
+      SetheadDescription(result[3].peopleList);
+      SetshowDrugs(false);
+      SetshowVac(false);
+      Setondrug(drugs[0]);
+      SetonVac(vaccines[0]);
+    }
+    if(e.data === "danganshi") {
+      Setdepartment("档案室");
+      Setdescription(result[1].intro);
+      SetheadDescription(result[1].peopleList);
+      SetshowDrugs(false);
+      SetshowVac(false);
+      Setondrug(drugs[0]);
+      SetonVac(vaccines[0]);
+    }
+    if(e.data === "mianyishi") {
+      Setdepartment("免疫室");
+      Setdescription(result[4].intro);
+      SetheadDescription(result[4].peopleList);
+      SetshowDrugs(false);
+      SetshowVac(true);
+      Setondrug(drugs[0]);
+      SetonVac(vaccines[0]);
+    }
+    if(e.data === "huayanshi") {
+      Setdepartment("化验室");
+      Setdescription(result[0].intro);
+      SetheadDescription(result[0].peopleList);
+      SetshowDrugs(false);
+      SetshowVac(false);
+      Setondrug(drugs[0]);
+      SetonVac(vaccines[0]);
+    }
+    if(e.data === "yingxiangshi") {
+      Setdepartment("影像室");
+      Setdescription(result[5].intro);
+      SetheadDescription(result[5].peopleList);
+      SetshowDrugs(false);
+      SetshowVac(false);
+      Setondrug(drugs[0]);
+      SetonVac(vaccines[0]);
+    }
+    if(e.data === "jianchashi") {
+      Setdepartment("专科检查室");
+      Setdescription(result[6].intro);
+      SetheadDescription(result[6].peopleList);
+      SetshowDrugs(false);
+      SetshowVac(false);
+      Setondrug(drugs[0]);
+      SetonVac(vaccines[0]);
+    }
+    if(e.data === "chuzhishi") {
+      Setdepartment("处置室");
+      Setdescription(result[7].intro);
+      SetheadDescription(result[7].peopleList);
+      SetshowDrugs(false);
+      SetshowVac(false);
+      Setondrug(drugs[0]);
+      SetonVac(vaccines[0]);
+    }
+    if(e.data === "yaofang") {
+      Setdepartment("药房");
+      Setdescription(result[8].intro);
+      SetheadDescription(result[8].peopleList);
+      SetshowVac(false);
+      SetshowDrugs(true);
+      Setondrug(drugs[0]);
+      SetonVac(vaccines[0]);
+    }
+    if(e.data === "zhusheshi") {
+      Setdepartment("注射室");
+      Setdescription(result[9].intro);
+      SetheadDescription(result[9].peopleList);
+      SetshowDrugs(false);
+      SetshowVac(false);
+      Setondrug(drugs[0]);
+      SetonVac(vaccines[0]);
+    }
+    if(e.data === "shoushuzhunbeishi") {
+      Setdepartment("手术准备室");
+      Setdescription(result[10].intro);
+      SetheadDescription(result[10].peopleList);
+      SetshowDrugs(false);
+      SetshowVac(false);
+      Setondrug(drugs[0]);
+      SetonVac(vaccines[0]);
+    }
+    if(e.data === "shoushushi") {
+      Setdepartment("手术室");
+      Setdescription(result[11].intro);
+      SetheadDescription(result[11].peopleList);
+      SetshowDrugs(false);
+      SetshowVac(false);
+      Setondrug(drugs[0]);
+      SetonVac(vaccines[0]);
+    }
+    if(e.data === "zhuyuanbu") {
+      Setdepartment("住院部");
+      Setdescription(result[12].intro);
+      SetheadDescription(result[12].peopleList);
+      SetshowDrugs(false);
+      SetshowVac(false);
+      Setondrug(drugs[0]);
+      SetonVac(vaccines[0]);
+    }
+    if(e.data === "jiepoushi") {
+      Setdepartment("病理解剖室");
+      Setdescription(result[13].intro);
+      SetheadDescription(result[13].peopleList);
+      SetshowDrugs(false);
+      SetshowVac(false);
+      Setondrug(drugs[0]);
+      SetonVac(vaccines[0]);
+    }
+  }, false);
   function preClick(){
     Setcountdrug((countDrug - 1 + drugs.length) % drugs.length);
     SetcountVac((countVac - 1 + vaccines.length) % vaccines.length);

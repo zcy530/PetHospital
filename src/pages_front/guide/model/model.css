@@ -58,11 +58,19 @@
   border-bottom: 1px solid #e7e7e7;
 }
 
+.drug-content{
+  position: relative;
+  top: 0;
+  padding: 10%;
+}
+
 .prev, 
 .next{
-  position: relative;
+  position: absolute;
   top: 40%;
   cursor: pointer;
+  color: black;
+  user-select: none;
 }
 
 .prev{
@@ -71,14 +79,15 @@
 }
 
 .next{
-  left: 80%;
+  left: 90%;
   padding-right: 5%;
 }
 
 .nav{
   position: absolute;
-  top: 70%;
-  width: 90%;
+  top: 80%;
+  left: 25%;
+  width: 50%;
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
@@ -96,4 +105,8 @@
 .prev:hover,
 .next:hover {
   background-color: rgba(0, 0, 0, 0.8);
+}
+
+.selected {
+  background-color: #ff5000;
 }

@@ -60,53 +60,62 @@
 
 .drug-content{
   position: relative;
-  top: 0;
+  top: 10%;
+  left: 10%;
+  width: 80%;
+  height: 80%;
   padding: 10%;
+  word-break: break-all;
+  background-color: #e7e7e7;
+  opacity: 0.7;
 }
 
-.prev, 
+.vaccines{
+  position: relative;
+  margin: 20px;
+  padding: 3%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  height: calc(200px + 2vh);
+  border-radius: 3%;
+  background-color: #F0F8FF;
+  text-align: left;
+}
+
+.vaccines-content{
+  position: relative;
+  top: 10%;
+  left: 10%;
+  width: 80%;
+  height: 80%;
+  right: 10%;
+  padding: 10%;
+  word-break: break-all;
+  background-color: #e7e7e7;
+  opacity: 0.7;
+}
+
+.pre,
 .next{
   position: absolute;
   top: 40%;
+  width: 20px;
+  height: 30px;
+  padding: 5px;
   cursor: pointer;
-  color: black;
   user-select: none;
 }
 
-.prev{
-  left: 0;
-  padding-left: 5%;
+.pre{
+  left: 0; 
+  border-radius: 3px 0 0 3px;
 }
 
 .next{
-  left: 90%;
-  padding-right: 5%;
+  right: 0;
+  border-radius: 0 3px 3px 0;
 }
 
-.nav{
-  position: absolute;
-  top: 80%;
-  left: 25%;
-  width: 50%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-}
-
-.dot{
-  list-style-type: none;
-  cursor: pointer;
-  width: 1.5vmax;
-  height: 1.5vmax;
-  background-color:#e7e7e7; 
-  border-radius: 50%;
-}
-
-.prev:hover,
-.next:hover {
+.pre:hover,
+.next:hover{
   background-color: rgba(0, 0, 0, 0.8);
-}
-
-.selected {
-  background-color: #ff5000;
 }

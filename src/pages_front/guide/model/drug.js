@@ -2,9 +2,6 @@ import React, { useEffect, useState} from 'react'
 
 function Drug({name,type,intro,price}) {
   // const [Obj, setobj] = useState({});
-  useEffect(() => {
-    console.log(name)
-  },[])
   return (
     <div>
       <div className='drug'>

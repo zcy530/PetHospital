@@ -55,7 +55,7 @@ function SingleFlow({flowName, flowsArr, content}) {
             <div className='flow-button'>
                 <Button variant="outlined" onClick={() => changeState()}>Next Step</Button>
             </div>
-            {(count - 1 + arrLength) %(arrLength + 1) < arrLength ? <FlowContent name = {flowName} imgUrl = {flowsArr[(count - 1 + arrLength) %(arrLength + 1)].url} content = {flowsArr[(count - 1 + arrLength) % (arrLength + 1)].intro}/> : null}
+            {(count - 1 + arrLength) %(arrLength + 1) < arrLength ? <FlowContent name = {flowsArr[(count - 1 + arrLength) % (arrLength + 1)].operationName} imgUrl = {flowsArr[(count - 1 + arrLength) %(arrLength + 1)].url} content = {flowsArr[(count - 1 + arrLength) % (arrLength + 1)].intro}/> : null}
         </div>
         //
     )

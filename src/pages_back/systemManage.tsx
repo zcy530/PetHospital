@@ -7,8 +7,6 @@ import UserInfo from './userManage/userInfo.tsx';
 import CaseInfo from './caseManage/caseInfo.tsx';
 import DiseaseInfo from './diseaseManage/diseaseInfo.tsx';
 import ExamQuestion from './examManage/questionManage/examQuestionInfo.tsx';
-import Page1 from "./systemMenu/Page1.tsx";
-import Page2 from "./systemMenu/Page2.tsx";
 import QuestionInsert from './examManage/questionManage/questionInsert.tsx';
 import TestInfo from './examManage/testManage/testInfo.tsx';
 import TestInsert from './examManage/testManage/testInsert.tsx';
@@ -19,6 +17,7 @@ import CaseUpdate from './caseManage/caseUpdate.tsx';
 import CaseDetail from './caseManage/caseDetail.tsx';
 import PaperInfo from './examManage/paperManage/paperInfo.tsx';
 import PaperDetail from './examManage/paperManage/paperDetail.tsx';
+import PaperUpdate from './examManage/paperManage/paperUpdate.tsx';
 import PaperGenerate from './examManage/questionManage/generatePaper.tsx';
 import ProcessInfo from './learnManage/processManage/processInfo.tsx';
 import ProcessDetail from './learnManage/processManage/processDetail.tsx';
@@ -133,6 +132,7 @@ function SystemManage() {
             <Route path="exercise/generate" element={<PaperGenerate />} />
             <Route path="paper" element={<PaperInfo />} />
             <Route path="paper/detail/:paper_id" element={<PaperDetail />} />
+            <Route path="paper/update/:paper_id" element={<PaperUpdate />} />
             <Route path="test" element={<TestInfo />} />
             <Route path="test/detail/:testId" element={<TestDetail />} />
             <Route path="test/update/:testId" element={<TestUpdate />} />

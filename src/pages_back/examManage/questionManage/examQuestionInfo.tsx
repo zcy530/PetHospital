@@ -1,22 +1,16 @@
 //考题管理的页面
 import React, { useEffect, useRef, useState } from 'react';
 import { SearchOutlined, DeleteTwoTone, EditTwoTone, MinusCircleOutlined, EyeOutlined, PlusOutlined, ExclamationCircleFilled } from '@ant-design/icons';
-import { Form, InputRef, List, Modal, Select, Tag } from 'antd';
+import { InputRef, Modal, Tag } from 'antd';
 import { Button, Input, Space, Table, message, Checkbox, Radio, RadioChangeEvent, } from 'antd';
 import type { ColumnsType, ColumnType, TableProps } from 'antd/es/table';
 import type { FilterConfirmProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
 import { diseaseType } from '../../diseaseManage/diseaseType.tsx'
-import { Link, Navigate, useLocation, useNavigate, } from 'react-router-dom';
-import TextArea from 'antd/es/input/TextArea';
-import { QuestionType, QuestionDetailType } from '../../examManage/questionManage/questionType.tsx'
+import { Link, useLocation } from 'react-router-dom';
+import { QuestionType } from '../../examManage/questionManage/questionType.tsx'
+import Loading from '../../global/loading.tsx'
 
-interface CollectionShowFormProps {
-    open: boolean;
-    record: QuestionType;
-    onCreate: (values: QuestionDetailType) => void;
-    onCancel: () => void;
-}
 
 type DataIndex = keyof QuestionType;
 
@@ -206,7 +200,7 @@ const QuestionInfo: React.FC = () => {
             dataIndex: 'description',
             key: 'description',
             align: 'center',    // 设置文本居中的属性
-            width: '50%',
+            width: '40%',
             ...getColumnSearchProps('description'),
         },
 
@@ -313,48 +307,54 @@ const QuestionInfo: React.FC = () => {
     }, []);
 
     const hintError = () => {
-        message.error("请选择试题！")
+        message.warning("请选择试题！")
 
     }
 
     const { state } = useLocation();
 
     return (
-        <div>
-            <Space wrap size={800}>
-                <Space>
-                    <Button type="primary" onClick={reload} disabled={!hasSelected} loading={loading}>
-                        Reload
-                    </Button>
-                    <span style={{ marginLeft: 8 }}>
-                        {hasSelected ? `选择了 ${selectedRowKeys.length} 个考题` : ''}
-                    </span>
-                </Space>
+        questionData ? (
+            <div>
+                <Space wrap size={700}>
+                    <Space>
+                        <Button type="primary" onClick={reload} disabled={!hasSelected} loading={loading}>
+                            Reload
+                        </Button>
+                        <span style={{ marginLeft: 8 }}>
+                            {hasSelected ? `选择了 ${selectedRowKeys.length} 个考题` : ''}
+                        </span>
+                    </Space>
 
-                <Space>
-                    <Link to="/systemManage/exercise/insert">
-                        <Button type="primary" ghost>新增考题</Button>
-                    </Link>
+                    <Space>
+                        <Link to="/systemManage/exercise/insert">
+                            <Button type="primary" ghost>新增考题</Button>
+                        </Link>
 
-                    {/* 点击事件后的执行 */}
-                    {selectedRowKeys.length !== 0 ? (
-                        <Link to='/systemManage/exercise/generate'
-                            state={{ questionList: questionList }}
-                        >
-                            <Button type="primary">
+                        {/* 点击事件后的执行 */}
+                        {selectedRowKeys.length !== 0 ? (
+                            <Link to='/systemManage/exercise/generate'
+                                state={{ questionList: questionList }}
+                            >
+                                <Button type="primary">
+                                    生成试卷
+                                </Button>
+                            </Link>
+                        ) : (
+                            <Button type="primary" onClick={hintError}>
                                 生成试卷
                             </Button>
-                        </Link>
-                    ) : (
-                        <Button type="primary" onClick={hintError}>
-                            生成试卷
-                        </Button>
-                    )}
+                        )}
+                    </Space>
                 </Space>
-            </Space>
 
-            <Table style={{ margin: 16 }} rowSelection={rowSelection} columns={columns} dataSource={questionData} pagination={{ position: ['bottomCenter'] }} />;
-        </div >
+                <Table style={{ margin: 16 }} rowSelection={rowSelection} columns={columns} dataSource={questionData} pagination={{ position: ['bottomCenter'] }} />;
+            </div >
+        ) : (
+            <>
+                <Loading />
+            </>
+        )
     )
 };
 

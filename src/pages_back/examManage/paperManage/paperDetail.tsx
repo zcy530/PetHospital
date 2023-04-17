@@ -23,6 +23,7 @@ interface PaperDetailType {
 
 const PaperDetail = () => {
     const params = useParams();
+    const [form] = Form.useForm();
     const [paperDetail, setPaperDetail] = useState<PaperDetailType>({
         "paperId": 1,
         "paperName": "",
@@ -58,7 +59,7 @@ const PaperDetail = () => {
                     setPaperDetail(detail);
                     console.log(paperDetail);
                 }, 0);
-
+                form.setFieldValue("paperName", detail.paperName);
             })
             .catch((err) => {
                 console.log(err.message);
@@ -69,15 +70,15 @@ const PaperDetail = () => {
         <div style={{ textAlign: 'left', backgroundColor: 'white', padding: 50, borderRadius: 10 }}>
             <BackButton />
             <Form
+                form = {form}
                 labelCol={{ span: 4 }}
                 wrapperCol={{ span: 14 }}
                 layout="horizontal"
                 style={{ maxWidth: '100%', marginLeft: 100, fontSize: '16px' }}
             // style={{ maxWidth: 600 }}
             >
-                <Form.Item label="试卷名称" >
-                    {/* <FileTextTwoTone style={{ width: '30px' }}/> */}
-                    <span style={{ fontSize: '16px', border: '2px solid #ddd', padding: '8px', borderRadius: '15px' }}>{<FileTextTwoTone />} {paperDetail.paperName}</span>
+                <Form.Item label="试卷名称" name = "paperName">
+                    <Input size = 'large'  readOnly = {true} prefix ={<FileTextTwoTone />}></Input>
                 </Form.Item>
 
                 <Form.Item label="题目列表">

@@ -202,12 +202,11 @@ const Paper: React.FC = () => {
             render: (_, record) => (
                 <Space size="middle">
                     <Link to={`/systemManage/paper/detail/${record.paperId}`}>
-                    <EyeOutlined />
-                </Link>
-                    <EditTwoTone onClick={() => {
-                        console.log(record)
-                    }
-                    } />
+                        <EyeOutlined />
+                    </Link>
+                    <Link to={`/systemManage/paper/update/${record.paperId}`}>
+                        <EditTwoTone />
+                    </Link>
                     <DeleteTwoTone onClick={() => {
                         del(record.paperId)
                         //添加filter方法

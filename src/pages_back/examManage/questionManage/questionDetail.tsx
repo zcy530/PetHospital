@@ -26,7 +26,7 @@ const QuestionDetail = () => {
                 setDetail(data.result);
                 //form setValue
                 form.setFieldValue("description", res.description)
-                form.setFieldValue("diseaseName", res.deseaseName)
+                form.setFieldValue("diseaseName", res.disease.diseaseName)
 
             })
             .catch((err) => {
@@ -50,15 +50,12 @@ const QuestionDetail = () => {
                     name="description"
                     label="题目描述:"
                 >
-                    {/* <span style={{fontSize: '16px'}}>{detail.description}</span> */}
                     <TextArea style={{ color: 'dimgrey' }} readOnly={true} rows={3} />
                 </Form.Item>
                 <Form.Item
                     name="diseaseName"
                     label="疾病名:"
                 >
-                    {/* <span style={{fontSize: '16px', color: 'maroon'}}>{detail.diseaseName}</span> */}
-
                     <Input style={{ color: 'maroon' }} readOnly={true} />
                 </Form.Item>
                 <Form.Item

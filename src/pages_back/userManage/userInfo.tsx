@@ -13,6 +13,7 @@ import { Button, Input, Select, Form, InputRef, Space, Table, Tag, Modal, messag
 import type { FilterConfirmProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
 import { UserType } from './userType';
+import Loading from '../global/loading.tsx'
 
 
 type DataIndex = keyof UserType;
@@ -138,7 +139,45 @@ const UserInfo: React.FC = () => {
   // 记录用户数据
   const [userData, setUserData] = useState<UserType[]>([]);
   const [count, setCount] = useState(0);
+  //用于多选的变量和函数
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  //选择的用户 的 id
+  const [userList, setUserList] = useState<number[]>([]);
 
+  const [loading, setLoading] = useState(false);
+
+  //重置选择状态
+  const reload = () => {
+    setLoading(true);
+    // ajax request after empty completing
+    setTimeout(() => {
+      setSelectedRowKeys([]);
+      setLoading(false);
+    }, 1000);
+  };
+
+  //监听选择框编号
+  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+    console.log('selectedRowKeys changed: ', newSelectedRowKeys);
+    setSelectedRowKeys(newSelectedRowKeys);
+    let users: number[] = [];
+    newSelectedRowKeys.map((key) => {
+      console.log("对应的问题的id：" + userData[key].userId)
+      let id = userData[key].userId;
+      users.push(id); //加入问题id的列表
+    })
+    console.log('selectedQuestion changed: ', users);
+    setUserList(users)
+  };
+
+  //定义每行前面的选择框
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
+
+  //被选的行数
+  const hasSelected = selectedRowKeys.length > 0;
   useEffect(() => {
     //获取后台数据
     fetch('http://localhost:8080/petHospital/users'
@@ -149,9 +188,8 @@ const UserInfo: React.FC = () => {
       .then((data) => {
         console.log(data.result);
         let records = data.result;
-        let userDataTmp = [...userData]; //浅拷贝？
+        let userDataTmp: UserType[] = [];
         for (let i = 0; i < records.length; i++) {
-          console.log(records[i]);
           userDataTmp.push({
             key: i,
             userId: records[i].userId,
@@ -223,13 +261,12 @@ const UserInfo: React.FC = () => {
                   console.log(data);
                   let res = data.success;
                   if (res === true) {
-                    success();
+                    message.success("添加成功！");
                     setCount(count + 1);
                   }
-                  else fail();
-                  setUserData(userData.filter((data) => {
-                    return data.userId !== 0
-                  }));
+                  else {
+                    message.error("添加失败，请稍后再试！");
+                  }
                 })
                 .catch((err) => {
                   console.log(err.message);
@@ -289,14 +326,12 @@ const UserInfo: React.FC = () => {
     )
   };
 
-
   //编辑操作
   const edit = (record: UserType) => {
     console.log("点击编辑id为" + record.userId);
     //跳出编辑的对话框
     setEditFormOpen(true); //设置open为true，用于弹出弹出修改用户信息的表单
   };
-
 
   const UserEditForm: React.FC<CollectionEditFormProps> = ({
     open,
@@ -305,7 +340,7 @@ const UserInfo: React.FC = () => {
     onCancel,
   }) => {
     const [form] = Form.useForm();
-    console.log('要修改：' + record.userId + ' ' + record.email + ' ' + record.role + ' ' + record.userClass);
+    //set field value
     form.setFieldValue("email", record.email);
     form.setFieldValue("role", record.role);
     form.setFieldValue("userClass", record.userClass);
@@ -425,29 +460,34 @@ const UserInfo: React.FC = () => {
       okType: 'danger',
       cancelText: '取消',
       async onOk() {
-        console.log('OK');
+        console.log('要删除：' + userList)
         //删除的事件 DELETE
-        await fetch(`http://localhost:8080/petHospital/users/batch`, {
+        fetch(`http://localhost:8080/petHospital/users/batch`, {
           method: 'POST',
           body: JSON.stringify({
-            // ?
-          })
+            "ids": userList
+          }),
+          headers: {
+            'Content-type': 'application/json',
+          },
         }).then((response) => response.json())
           .then((data) => {
             console.log(data);
             let res = data.success;
             if (res === true) {
-              message.success("删除成功！");
+              if (data.result.modifiedRecordCount === 1) {
+                message.success("删除成功！");
+              }
+              message.error("删除失败，请稍后再试！");
             }
             else {
               message.error("删除失败，请稍后再试！");
             }
-            setUserData(userData.filter((data) => {
-              return data.userId !== 0
-            }));
+            setCount(count + 1); // 刷新界面
           })
           .catch((err) => {
             console.log(err.message);
+            message.error("删除失败，请稍后再试！");
           });
       },
       onCancel() {
@@ -555,49 +595,12 @@ const UserInfo: React.FC = () => {
   ];
 
 
-  //用于多选的变量和函数
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  //选择的用户 的 id
-  const [userList, setUserList] = useState<number[]>([]);
 
-  const [loading, setLoading] = useState(false);
-
-  //重置选择状态
-  const reload = () => {
-    setLoading(true);
-    // ajax request after empty completing
-    setTimeout(() => {
-      setSelectedRowKeys([]);
-      setLoading(false);
-    }, 1000);
-  };
-
-  //监听选择框编号
-  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log('selectedRowKeys changed: ', newSelectedRowKeys);
-    setSelectedRowKeys(newSelectedRowKeys);
-    let users: number[] = [];
-    newSelectedRowKeys.map((key) => {
-      console.log("对应的问题的id：" + userData[key].userId)
-      let id = userData[key].userId;
-      users.push(id); //加入问题id的列表
-    })
-    console.log('selectedQuestion changed: ', users);
-    setUserList(users)
-  };
-
-  //定义每行前面的选择框
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  };
-
-  //被选的行数
-  const hasSelected = selectedRowKeys.length > 0;
 
   return (
-    <div>
-      <Space size={800}>
+    userData ? (
+      <div>
+      <Space size={700}>
         <Space>
           <Button type="primary" onClick={reload} disabled={!hasSelected} loading={loading}>
             Reload
@@ -632,6 +635,11 @@ const UserInfo: React.FC = () => {
 
       <Table rowSelection={rowSelection} rowKey={record => record.key} columns={columns} dataSource={userData} style={{ margin: 16 }} pagination={{ position: ['bottomCenter'] }} />
     </div >
+    ) : (
+      <>
+        <Loading />
+      </>
+    )
   );
 };
 

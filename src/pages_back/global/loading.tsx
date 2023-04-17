@@ -2,7 +2,7 @@ import { Spin, Row, Col } from "antd";
 import React from "react";
 import Cat from "../../Assets/image/cat2.png";
 
-const View = () => {
+const Loading = () => {
     return (
 
         <section>
@@ -23,7 +23,7 @@ const View = () => {
                     </h1>
 
                 </Col>
-                <Col style={{ marginTop: 300, marginLeft: 50 }}>
+                <Col style={{ marginTop: 300 }}>
                     <Spin size="large" style={{ color: "black" }}>
                         <div className="content" />
                     </Spin>
@@ -40,4 +40,4 @@ const View = () => {
 
     );
 }
-export default View
+export default Loading;

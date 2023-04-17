@@ -111,7 +111,7 @@ const CaseInsert: React.FC = () => {
           <Form.Item name="front_graph" label="病例封面图">
             <ImageUpload num={1} mult={false} />
           </Form.Item>
-          <Form.Item name="diseaseId" label="疾病名称">
+          <Form.Item name="disease_id" label="疾病名称">
             <Select optionLabelProp="key">
               {options.map(item => (
                 <Option key={item.diseaseName} value={item.diseaseId}>{item.diseaseName}</Option>
@@ -146,9 +146,6 @@ const CaseInsert: React.FC = () => {
         </Form>
       </div>
     </Layout>
-    // <Container style={{ width: '100%', height: '100%' }}>
-
-    // </Container>
   );
 };
 

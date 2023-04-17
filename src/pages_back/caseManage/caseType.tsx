@@ -16,25 +16,47 @@ export type InspectionType = {
   inspection_graphs: [];
 }
 
+//检查项目结果图片
+export type InspectionGraphType = {
+  caseId: number,
+  fileId: number,
+  sortNum: number,
+  url: string
+}
+
+//疾病
+export type DiseaseType = {
+  diseaseId: number;
+  diseaseName: string;
+  typeName: string;
+}
+
+//检查项目基本信息
+export type InspectionItemType = {
+  itemId: number;
+  itemName: string
+}
+
+//检查项目与病例关联信息
+export type InspectionInfo = {
+  inspectionCaseId: number;
+  inspectionGraphs: InspectionGraphType[];
+  inspectionItem: InspectionItemType;
+  result: string;
+}
+
+
 //病例详细信息，form类型
 export type CaseFormType = {
-  admission_graphs: string[],
-  admission_text: string,
-  // case_id: number,
-  case_title: string,
-  diagnostic_result: string,
-  disease_id: number,
-  front_graph: string,
-  inspection_cases: InspectionType[],
-  //   {
-  //     "inspection_graphs": [
-  //       "string"
-  //     ],
-  //     "inspection_item_id": 0,
-  //     "inspection_result_text": "string"
-  //   }
-  // ],
-  therapy_graphs: string[],
-  therapy_videos: string[],
-  treatment_info: string
+  admissionGraphList: string[],
+  admissionText: string,
+  caseId: number,
+  caseName: string,
+  diagnosticInfo: string,
+  disease: DiseaseType,
+  frontGraph: string,
+  inspectionCaseList: InspectionInfo[],
+  treatmentGraphList: string[],
+  treatmentVideoList: string[],
+  treatmentInfo: string
 }

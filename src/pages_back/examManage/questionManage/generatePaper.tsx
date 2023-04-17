@@ -9,7 +9,7 @@ import {
 } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
 import BackButton from '../../global/backButton.tsx';
-import {QuestionDetail, PostQuestion} from './questionDetail.tsx';
+import { QuestionDetail, PostQuestion } from './questionDetail.tsx';
 
 
 //传入参数：questionIdList: number[]
@@ -48,57 +48,64 @@ const GeneratePaper = () => {
     }
 
     //试卷名字、试题列表、总分值（自动计算） Form
-    const [score, setScore] = useState(0);
+    //上传的数据
     const [post, setPost] = useState<PostQuestion[]>([]);
     const [count, setCount] = useState(0); //用于监听变化
 
+
     useEffect(() => {
-        //TODO: 串行执行
-        let questionList: QuestionDetail[] = [];
-        // list.map(async id => {
-        //     questionList.push(await getQuestion(id))
-        // })
-        list.forEach(async id => {
-            questionList.push(await getQuestion(id))
-        });
-        // for(let i = 0; i< list.length; i++) {
-        //     questionList.push(await getQuestion(list[i]))
-        // }
-        setTimeout(() => {
-            // 直接setData
-            setQuestions(questionList)
-        }, 500)
+        //如果questions未被set过 setValue 若有值 不重新渲染。
+        if (questions.length === 0) {
+            // TODO: 串行执行
+            let questionList: QuestionDetail[] = [];
+            list.forEach(async id => {
+                questionList.push(await getQuestion(id))
+            });
+            setTimeout(() => {
+                // 直接setData
+                setQuestions(questionList)
+            }, 500)
+        }
+        //监听总分的变化。
         let sum = 0;
         post.map(record => {
             console.log(record.score);
             sum += record.score;
         })
-        setScore(sum);
         form.setFieldValue("score", sum);
     }, [count]);
 
+    //更新post的某一格
+    const updatePost = (questionId: number, score: number) => {
+        let question: PostQuestion = { "questionId": questionId, "score": score };
+        let newPost: PostQuestion[] = [...post];
+        newPost = newPost.filter(p => {return p.questionId !== questionId})
+        // post.filter((p) => { return p.questionId !== questionId });
+        newPost.push(question);
+        setPost(newPost);
+        // setPost(post.filter((p) => p.questionId !== questionId))
+        // setPost(post.push(question))
+        console.log(newPost)
+    }
+
     //onChange函数 多传一个参数
     const countScore = (_score, question_Id: number,) => {
-        setCount(count + 1)
-        // let scorelist : number[] = [];
-        console.log(_score)
-        console.log('id:' + question_Id);
+        console.log("题目" + question_Id + "的分值为" + _score)
         //新建一个postQuestion的类型
         let question: PostQuestion = {
             questionId: 0,
             score: 0
         };
-        question = { "questionId": question_Id, "score": _score }; //赋值 
+        question = { "questionId": question_Id, "score": _score };
+        console.log("题目" + question.questionId + "分值" + question.score);
+        //更新questionList里面的数据
         let exist = false; //标记post里是否已经存在question
         //post不为空 -- 判断这个题目是否赋值
         if (post !== null) {
             post.map(record => {
                 if (record.questionId === question_Id) {
                     exist = true;
-                    //先过滤/删除原来的元素
-                    let newPost = post.filter((p) => p.questionId !== question_Id);
-                    newPost.push(question);
-                    setPost(newPost); //再重新set Post
+                    updatePost(question_Id, _score)
                 }
             })
             if (exist === false) {
@@ -111,14 +118,19 @@ const GeneratePaper = () => {
             //如果post为空 -- 直接setData
             setPost([question]);
         }
-        //给对应的表单设置值
-        form.setFieldValue("questionList", post);
+
+        console.log(post)
+        //给对应的表单questionList设置值
+        form.setFieldValue("questionList", post); //setField的时候post还没更新？？？
+        setTimeout(() => {
+            console.log(post)
+            setCount(count + 1) //用于刷新score数据
+        }, 1000)
     }
 
     const [form] = Form.useForm();
 
-    const onFinish = (values: any) => {
-        console.log('Received values of form:', values);
+    const postPaper = (values: any) => {
         //todo: 上传到post
         fetch('http://localhost:8080/petHospital/papers', {
             method: 'POST',
@@ -145,6 +157,13 @@ const GeneratePaper = () => {
             .catch((err) => {
                 console.log(err.message);
             });
+    }
+
+    const onFinish = (values: any) => {
+        console.log('Received values of form:', values);
+        setTimeout(() => {
+            postPaper(values)
+        }, 500)
     };
 
     return (
@@ -172,6 +191,7 @@ const GeneratePaper = () => {
                                         <span style={{ fontSize: '16px' }}>
                                             {index + 1}.{' '}<b>({question.questionType}){' '}</b>{question.description}
                                         </span>
+
                                         <InputNumber key={index} prefix="分值：" style={{ width: '50%' }} max='100' min='0' onChange={(value) => { countScore(value, question.questionId) }}></InputNumber>
                                     </Space>
                                     {/* 四个答案竖着排列 */}
@@ -190,7 +210,7 @@ const GeneratePaper = () => {
                     </Form.Item>
 
                     <Form.Item label="试卷总分" name="score" >
-                        <span style={{ fontSize: '16px' }}>{score} 分</span>
+                        <InputNumber min={0} max={100}></InputNumber>
                     </Form.Item>
 
                     <Form.Item style={{ textAlign: 'center' }}>

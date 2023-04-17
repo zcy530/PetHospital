@@ -5,6 +5,7 @@ import { DeleteTwoTone, EditTwoTone, SearchOutlined, ExclamationCircleFilled } f
 import type { FilterConfirmProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
 import { DiseaseInfo, diseaseCategory } from './diseaseType.tsx'
+import Loading from '../global/loading.tsx'
 
 type DataIndex = keyof DiseaseInfo;
 const { Option } = Select;
@@ -363,7 +364,7 @@ const DiseaseManage: React.FC = () => {
                     if (response.status === 200) {
                         console.log('删除成功！')
                         //返回删除成功的提示
-                        success()
+                        message.success("删除成功！")
                         setDiseaseData(
                             diseaseData.filter((data) => {
                                 return data.diseaseId !== id
@@ -371,11 +372,11 @@ const DiseaseManage: React.FC = () => {
                         )
                     } else {
                         console.log('删除失败！')
-                        fail()
+                        message.error("删除失败，请重试！")
                     }
                 }).catch(e => {
                     console.log('错误:', e)
-                    fail()
+                    message.error("删除失败，请重试！")
                 });
             },
             onCancel() {
@@ -435,28 +436,32 @@ const DiseaseManage: React.FC = () => {
 
 
     return (
-        <div>
-            {contextHolder}
-            <Button type="primary" ghost onClick={addDisease}>新增病种</Button>
-            <DiseaseCreateForm
-                open={createOpenForm}
-                onCreate={onCreate}
-                onCancel={() => {
-                    setCreateFormOpen(false);
-                }}
-            />
+        diseaseData ? (
+            <div>
+                <Button type="primary" ghost onClick={addDisease}>新增病种</Button>
+                <DiseaseCreateForm
+                    open={createOpenForm}
+                    onCreate={onCreate}
+                    onCancel={() => {
+                        setCreateFormOpen(false);
+                    }}
+                />
 
-            <DiseaseEditForm
-                open={editFormOpen}
-                record={editRecord}
-                onCreate={onCreate}
-                onCancel={() => {
-                    setEditFormOpen(false);
-                }} />
+                <DiseaseEditForm
+                    open={editFormOpen}
+                    record={editRecord}
+                    onCreate={onCreate}
+                    onCancel={() => {
+                        setEditFormOpen(false);
+                    }} />
 
-            {/* 表单 */}
-            <Table columns={columns} dataSource={diseaseData} style={{ margin: 16 }} pagination={{ position: ['bottomCenter'] }} />
-        </div>
+                {/* 表单 */}
+                <Table columns={columns} dataSource={diseaseData} style={{ margin: 16 }} pagination={{ position: ['bottomCenter'] }} />
+            </div>) : (
+            <>
+                <Loading />
+            </>)
+
 
     )
 }

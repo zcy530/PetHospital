@@ -1,6 +1,3 @@
-import { DiseaseInfo } from '../../diseaseManage/diseaseType.tsx'
-
-
 //考题的数据类型
 export interface QuestionType {
     key: React.Key;
@@ -20,7 +17,7 @@ export interface QuestionDetailType {
     choice: string[];
     ans: string[];
     keyword: string;
-    diseaseName: string;
+    diseaseName: {"diseaseId":0, "diseaseName": ''};
 }
 
 export interface QuestionDetail {

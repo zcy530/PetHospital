@@ -136,7 +136,7 @@ const RoleInsert = () => {
                     <Form.Item name="responsibility" label="职责">
                         <TextArea rows={4} />
                     </Form.Item>
-                    <Form.Item name="processList" label="操作列表" >
+                    <Form.Item name="processList" label="流程列表" >
                         <Table
                             rowSelection={rowSelection}
                             rowKey="processId"

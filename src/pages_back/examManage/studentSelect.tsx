@@ -17,19 +17,22 @@ interface studentOption {
 const StudentSelect: React.FC = (props) => {
 
     const [studentList, setStudent] = useState<studentOption[]>([]);
+    const [defaultUsers, setDefaultUsers] = useState<String[]>([]);
+    console.log(props.userList)
 
     useEffect(() => {
+
         fetch('http://localhost:8080/petHospital/users'
         )
             .then(
                 (response) => response.json(),
             )
             .then((data) => {
-                console.log(data.result);
+                // console.log(data.result);
                 const lists = data.result;
-                let student_List : studentOption[] = [];
+                let student_List: studentOption[] = [];
                 lists.map(list => {
-                    if(list.role === 'student')
+                    if (list.role === 'student')
                         student_List.push({ "id": list.userId, "email": list.email, "class": list.userClass })
                 })
                 //赋值给paper
@@ -38,10 +41,10 @@ const StudentSelect: React.FC = (props) => {
             .catch((err) => {
                 console.log(err.message);
             });
-    
+
     }, []);
 
-    
+
     const handleChange = (e) => {
         console.log(e);
         props.getStudent(e);
@@ -54,7 +57,8 @@ const StudentSelect: React.FC = (props) => {
             mode="multiple"
             allowClear
             style={{ width: '100%' }}
-            placeholder="选择参加考试的学生" 
+            placeholder="选择参加考试的学生"
+            defaultValue={props.userList}
             onChange={handleChange}
         >
             {

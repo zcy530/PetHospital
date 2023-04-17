@@ -23,14 +23,7 @@ dayjs.extend(customParseFormat);
 //时间范围选择器
 const { RangePicker } = DatePicker;
 
-interface UpdateFormType {
-    testName: string,
-    intro: string,
-    paperId: number,
-    tag: string,
-    testDate: dayjs[],
-    userList: number[]
-}
+
 
 const TestUpdate: React.FC = () => {
     const param = useParams();
@@ -55,6 +48,7 @@ const TestUpdate: React.FC = () => {
 
     //获取原场次信息
     const [detail, setDetail] = useState<TestDetailType>({});
+    const [userList, setUserList] = useState<string[]>([])
 
     useEffect(() => {
         fetch("http://localhost:8080/petHospital/tests/" + param.testId, { method: 'GET' })
@@ -70,16 +64,19 @@ const TestUpdate: React.FC = () => {
                 // 时间转换为dayjs
                 const begin = dayjs(res.beginDate);
                 const end = dayjs(res.endDate);
-                const formData: UpdateFormType = {
-                    testName: res.testName,
-                    paperId: res.paperId,
-                    intro: res.intro,
-                    tag: res.tag,
-                    testDate: [begin, end],
-                    userList: res.userList
-                };
-                form.setFieldsValue(formData); //设置表单的值
-
+                
+                form.setFieldValue("testName", res.testName)
+                form.setFieldValue("paperId", res.paperId)
+                form.setFieldValue("intro", res.intro)
+                form.setFieldValue("tag", res.tag)
+                form.setFieldValue("testDate", [begin, end])
+                
+                //设置默认的users
+                let userList : string[] = [];
+                res.userList.map(user => {
+                    userList.push(user.email)
+                })
+                setUserList(userList)
             })
             .catch((err) => {
                 console.log(err.message);
@@ -198,7 +195,7 @@ const TestUpdate: React.FC = () => {
                     </Form.Item>
 
                     <Form.Item label="参考学生" name="userList">
-                        <StudentSelect getStudent={getUserList} />
+                        <StudentSelect userList = {userList} getStudent={getUserList} />
                     </Form.Item>
 
                     <Form.Item style={{ textAlign: 'center' }}>

@@ -64,6 +64,7 @@ const QuestionUpdate = () => {
                 form.setFieldValue("questionType", type)
                 form.setFieldValue("description", res.description)
                 form.setFieldValue("keyword", res.keyword)
+                form.setFieldValue("diseaseId", res.disease.diseaseId)
                 //TODO: 选项如何渲染？？
 
             })

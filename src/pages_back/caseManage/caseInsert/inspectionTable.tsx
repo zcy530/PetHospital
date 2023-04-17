@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { MinusCircleOutlined } from '@ant-design/icons';
-import { Button, Form, Input, Modal, Select, Space, Table } from 'antd';
+import { Button, Form, Input, Modal, Select, Space, Table, Image } from 'antd';
 import { cloneDeep } from 'lodash';
 import { ColumnsType } from 'antd/es/table';
 import ImageUpload from './imageUpload.tsx';
+import { InspectionInfo } from '../caseType.tsx'
 
 //返回给上层表单的类型
 interface returnType {
@@ -113,10 +114,35 @@ const CollectionCreateForm: React.FC<CollectionCreateFormProps> = ({
     );
 };
 
-
 const InspectionTable = (props) => {
+    console.log(props.value)
     const [open, setOpen] = useState(false);
     const [tableData, setTableData] = useState<TableDataType[]>([]);
+
+    useEffect(() => {
+        if (props.value) {
+            const inspection_list: TableDataType[] = props.value.map((item, i) => {
+                return {
+                    id: i, //增加一个id用于锁定在表格当中的位置，防止同一个检查多个检查信息的情况
+                    inspection_item_id: item.inspectionItem?.itemId,
+                    inspection_name: item.inspectionItem?.itemName,
+                    inspection_result_text: item.result,
+                    inspection_graphs: item.inspectionGraphs?.map(item1 => { return item1.url })
+                }
+            })
+            setTableData(inspection_list);
+            const formData: returnType[] = (inspection_list.map((item) => {
+                return ({
+                    inspection_item_id: item.inspection_item_id,
+                    inspection_result_text: item.inspection_result_text,
+                    inspection_graphs: item.inspection_graphs
+                });
+            }));
+            props.getTable(formData);
+            console.log(tableData)
+        }
+    }, []);
+
     function deleteInspection(obj: TableDataType) {
         const data: TableDataType[] = tableData.filter((item: TableDataType) => item.id !== obj.id);
         setTableData(data);
@@ -169,8 +195,23 @@ const InspectionTable = (props) => {
 
         },
         {
+            title: '检查图片',
+            dataIndex: 'inspection_graphs',
+            render: (_, record) => (
+                <div>
+                    {record.inspection_graphs?.map((item, i) => (
+                        <Image
+                            width={100} height={100}
+                            src={item}
+                        />
+                    ))}
+                </div>
+            ),
+        },
+        {
             title: '操作',
             key: 'action',
+
             render: (_, record) => (
                 <Space size="middle">
                     <MinusCircleOutlined onClick={() => deleteInspection(record)} />

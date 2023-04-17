@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import { Modal, Upload } from 'antd';
 import type { RcFile, UploadProps } from 'antd/es/upload';
@@ -18,11 +18,26 @@ const getBase64 = (file: RcFile): Promise<string> =>
 
 
 const ImageUpload: React.FC = (props) => {
-  // console.log(props);
+  console.log(props);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   // const [previewTitle, setPreviewTitle] = useState('');
   const [fileList, setFileList] = useState<UploadFile[]>([]);
+
+  useEffect(() => {
+    if (props.defaultImages) {
+      const tempFiles: UploadFile[] = props.defaultImages.map((item, i) => {
+        return {
+          uid: -i,
+          name: item,
+          url: item
+        }
+      })
+      setFileList(tempFiles);
+      console.log(fileList)
+    }
+  }, []);
+
 
   const handleCancel = () => setPreviewOpen(false);
 
@@ -36,6 +51,10 @@ const ImageUpload: React.FC = (props) => {
     setPreviewOpen(true);
   };
 
+  const onRemove = (file: UploadFile) => {
+
+  };
+
   const triggerChange = (value) => {
     // console.log(value)
     // console.log(value.map(file => (file.url)))
@@ -44,7 +63,7 @@ const ImageUpload: React.FC = (props) => {
   };
 
   const handleChange: UploadProps['onChange'] = ({ file, fileList }) => {
-    // console.log(file); // file 是当前正在上传的 单个 img
+    console.log(file); // file 是当前正在上传的 单个 img
     console.log(fileList); // fileList 是已上传的全部 img 列表
     //把上传好收到success的文件的url更新
     fileList.forEach(imgItem => {
@@ -74,6 +93,7 @@ const ImageUpload: React.FC = (props) => {
         fileList={fileList}
         onPreview={handlePreview}
         onChange={handleChange}
+        onRemove={onRemove}
       >
         {fileList.length >= props.num ? null : uploadButton}
       </Upload>

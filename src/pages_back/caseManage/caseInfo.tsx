@@ -13,6 +13,7 @@ import { CaseType } from "./caseType";
 import { Link } from "react-router-dom";
 import { Container } from 'react-bootstrap';
 import { diseaseCategory } from '../diseaseManage/diseaseType.tsx';
+import Loading from '../global/loading.tsx';
 
 //列的下标
 type DataIndex = keyof CaseType;
@@ -33,22 +34,15 @@ const CaseInfo: React.FC = () => {
                 const posts = data.result;
                 const data1: CaseType[] = [];
                 for (let i = 0; i < posts.length; i++) {
-                    console.log(typeof (posts[i].disease))
                     data1.push({
                         key: i,
                         case_id: posts[i].illCaseId,
                         case_name: posts[i].illCaseName,
-                        disease_name: posts[i].disease ? posts[i].disease.diseaseName : 'null',
-                        disease_type: posts[i].disease ? posts[i].disease.typeName : 'null'
+                        disease_name: posts[i].disease ? posts[i].disease.diseaseName : '--',
+                        disease_type: posts[i].disease ? posts[i].disease.typeName : '--'
                     });
-                    // const admissionGraphList: UploadFile[] = [];
-                    // posts[i].admissionGraphList.forEach(element => {
-                    //     const tempfile:UploadFile = {};
-
-                    // });
                 }
                 setCaseData(data1);
-                //设置posts值为data
             })
             .catch((err) => {
                 console.log(err.message);
@@ -57,6 +51,7 @@ const CaseInfo: React.FC = () => {
 
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
+
     // 搜索输入框
     const searchInput = useRef<InputRef>(null);
 
@@ -204,9 +199,9 @@ const CaseInfo: React.FC = () => {
     // 定义列
     const columns: ColumnsType<CaseType> = [
         {
-            title: '序号',
-            dataIndex: 'key',
-            key: 'key',
+            title: '病例Id',
+            dataIndex: 'case_id',
+            key: 'case_id',
             align: 'center',
         },
         {
@@ -237,13 +232,6 @@ const CaseInfo: React.FC = () => {
             filterMode: 'tree',
             filterSearch: true,
             onFilter: (value: string, record) => record.disease_type.startsWith(value),
-        },
-        {
-            title: '疾病类型',
-            dataIndex: 'disease_type',
-            key: 'disease_type',
-            // width: '50%',
-            ...getColumnSearchProps('disease_type'),
         },
         {
             title: '操作',
@@ -302,6 +290,7 @@ const CaseInfo: React.FC = () => {
     }
 
     return (
+
         <div>
             <Space size={500}>
                 <Space>
@@ -319,8 +308,10 @@ const CaseInfo: React.FC = () => {
                     <Button type="primary" danger ghost onClick={batchDel}>删除病例</Button>
                 </Space>
             </Space>
-            <Table rowSelection={rowSelection} columns={columns} dataSource={caseData} style={{ margin: 16 }} rowKey="case_id" />
+            <Table rowSelection={rowSelection} columns={columns} dataSource={caseData}
+                style={{ margin: 16 }} rowKey="case_id" loading={caseData.length === 0} />
         </div >
+
     );
 };
 

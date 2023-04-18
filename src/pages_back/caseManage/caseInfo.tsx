@@ -23,7 +23,7 @@ const CaseInfo: React.FC = () => {
     const [caseData, setCaseData] = useState<CaseType[]>([]);
     useEffect(() => {
         //获取后台数据
-        fetch('http://localhost:8080/petHospital/cases'
+        fetch('https://47.120.14.174:443/petHospital/cases'
         )
             .then(
                 (response) => response.json(),
@@ -178,7 +178,7 @@ const CaseInfo: React.FC = () => {
                 //删除的事件 DELETE
                 const data: CaseType[] = caseData.filter((item: CaseType) => item.case_id !== id);
                 setCaseData(data);
-                fetch(`http://localhost:8080/petHospital/cases/${id}`, {
+                fetch(`https://47.120.14.174:443/petHospital/cases/${id}`, {
                     method: 'DELETE',
                 }).then((response) => {
                     if (response.status === 200) {

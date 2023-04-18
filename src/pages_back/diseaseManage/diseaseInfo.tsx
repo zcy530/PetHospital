@@ -388,8 +388,9 @@ const DiseaseManage: React.FC = () => {
     // 定义列
     const columns: ColumnsType<DiseaseInfo> = [
         {
-            title: '疾病id',
-            dataIndex: 'diseaseId',
+            title: '序号',
+            dataIndex: 'index',
+            render: (text, record, index) => `${index + 1}`,
             align: 'center',
             // key: 'userId',
         },

@@ -220,7 +220,7 @@ const Paper: React.FC = () => {
 
     return (
         <div>
-            <Table style={{ margin: 16 }} columns={columns} dataSource={paperData} pagination={{ position: ['bottomCenter'] }} />;
+            <Table style={{ margin: 16 }} columns={columns} dataSource={paperData} pagination={{ position: ['bottomCenter'] }} />
         </div>
     )
 }

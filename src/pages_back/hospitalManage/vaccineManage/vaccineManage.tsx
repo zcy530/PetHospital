@@ -1,16 +1,35 @@
 // 疫苗管理的界面
 import React, { useEffect, useRef, useState } from "react";
-import { Button, Input, InputRef, Modal, Space, Table, Tag, message } from "antd";
+import { Button, Input, Form, InputRef, Space, Table, Modal, message } from 'antd';
 import { ColumnsType } from "antd/es/table";
-import { Link } from "react-router-dom";
-import { DeleteTwoTone, SearchOutlined, EditTwoTone, ExclamationCircleFilled, EyeOutlined } from '@ant-design/icons';
+import { DeleteTwoTone, SearchOutlined, EditTwoTone, ExclamationCircleFilled, MedicineBoxTwoTone, BookTwoTone } from '@ant-design/icons';
 import { ColumnType, FilterConfirmProps } from "antd/es/table/interface";
 import Highlighter from 'react-highlight-words';
 import { VaccineType } from "./vaccineType.tsx";
+import TextArea from "antd/es/input/TextArea";
+
+
+//------------------------------------------
+interface CollectionCreateFormProps {
+    open: boolean;
+    onCreate: (values: VaccineType) => void;
+    onCancel: () => void;
+}
+
+interface CollectionEditFormProps {
+    open: boolean;
+    record: VaccineType;
+    onCreate: (values: VaccineType) => void;
+    onCancel: () => void;
+}
+//----------------------------------------------
 
 const VaccineInfo: React.FC = () => {
     //定义表格数据使用
     const [vaccineData, setVaccineData] = useState<VaccineType[]>([]);
+    //count监听变化
+    const [count, setCount] = useState(0);
+
     useEffect(() => {
         //获取后台数据
         fetch('http://localhost:8080/petHospital/vaccines'
@@ -26,8 +45,201 @@ const VaccineInfo: React.FC = () => {
             .catch((err) => {
                 console.log(err.message);
             });
-    }, []);
+    }, [count]);
 
+    //定义两个变量 一个对应创建的窗口 一个对应编辑的窗口
+    const [createFormOpen, setCreateFormOpen] = useState(false);
+    const [editFormOpen, setEditFormOpen] = useState(false);
+    //editRecord用于记录点击的record的信息，传给编辑窗口
+    const [editRecord, setEditRecord] = useState<VaccineType>({});
+
+    const onCreate = (values: any) => {
+        console.log('Received values of form: ', values);
+        setCreateFormOpen(false);
+        setEditFormOpen(false);
+    };
+
+    //新增操作
+    const addVaccine = () => {
+        setCreateFormOpen(true);
+    }
+
+    //新建疫苗的表单
+    const VaccineCreateForm: React.FC<CollectionCreateFormProps> = ({
+        open,
+        onCreate,
+        onCancel,
+    }) => {
+        const [form] = Form.useForm();
+        return (
+            //用Modal弹出表单
+            <Modal
+                open={open} //是
+                title="添加疫苗信息"
+                okText="确定"
+                cancelText="取消"
+                onCancel={onCancel}
+                onOk={() => {
+                    form
+                        .validateFields()
+                        .then((values) => {
+                            form.resetFields();
+                            onCreate(values);
+                            fetch('http://localhost:8080/petHospital/vaccines', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-type': 'application/json; charset=UTF-8',
+                                },
+                                body: JSON.stringify({
+                                    "id": 0,
+                                    "intro": values.intro,
+                                    "name": values.name
+                                })
+                            })
+                                .then((response) => response.json())
+                                .then((data) => {
+                                    console.log(data);
+                                    let res = data.success;
+                                    if (res === true) {
+                                        message.success("添加成功！");
+                                        setCount(count + 1);
+                                    }
+                                    else {
+                                        message.error("添加失败，请稍后再试！");
+                                    }
+                                })
+                                .catch((err) => {
+                                    console.log(err.message);
+                                });
+                        })
+                        .catch((info) => {
+                            console.log('Validate Failed:', info);
+                        });
+                }}
+            >
+                <Form
+                    form={form}
+                    layout="vertical"
+                    name="form_in_modal"
+                    initialValues={{ modifier: 'public' }}
+                >
+                    {/* 填写邮箱 */}
+                    <Form.Item
+                        name="name"
+                        label="疫苗名称"
+                        rules={[{ required: true, message: 'Please input vaccine name!' }]}
+                    >
+                        <Input prefix={<MedicineBoxTwoTone />} placeholder="Vaccine name" />
+                    </Form.Item>
+                    {/* 填写密码 */}
+                    <Form.Item name="intro" label="疫苗简介"
+                        rules={[{ required: true, message: 'Please input introduction!' }]}
+                    >
+                        <TextArea placeholder="Introduction" rows={3} />
+                    </Form.Item>
+
+                </Form>
+            </Modal>
+        )
+    };
+
+    //编辑操作
+    const editVaccine = () => {
+        //跳出编辑的对话框
+        setEditFormOpen(true);
+    };
+
+    const VaccineEditForm: React.FC<CollectionEditFormProps> = ({
+        open,
+        record,
+        onCreate,
+        onCancel,
+    }) => {
+        const [form] = Form.useForm();
+        //set field value
+        form.setFieldValue("name", record.name);
+        form.setFieldValue("intro", record.intro);
+        return (
+            //用Modal弹出表单
+            <Modal
+                open={open} //是
+                title="修改疫苗信息"
+                okText="确定"
+                cancelText="取消"
+                onCancel={onCancel}
+                onOk={() => {
+                    form
+                        .validateFields()
+                        .then((values) => {
+                            form.resetFields();
+                            onCreate(values);
+                            //TODO: fetch update 
+                            fetch(`http://localhost:8080/petHospital/vaccines/` + record.id, {
+                                method: 'PUT',
+                                body: JSON.stringify({
+                                    "id": record.id,
+                                    "intro": values.intro,
+                                    "name": values.name
+                                }),
+                                headers: {
+                                    'Content-type': 'application/json; charset=UTF-8',
+                                }
+                            })
+                                .then((response) => response.json())
+                                .then((data) => {
+                                    console.log(data)
+                                    // 获取实际修改的数目
+                                    if (data.success === true) {
+                                        let res = data.result.modifiedRecordCount;
+                                        console.log(res)
+                                        if (res === 1) {
+                                            message.success("修改成功！");
+                                            setCount(count + 1); //数据页面更新
+                                        }
+                                        else {
+                                            message.error("修改失败，请稍后再试！")
+                                        }
+                                    } else {
+                                        message.error("修改失败，请稍后再试！")
+                                    }
+
+                                })
+                                .catch((err) => {
+                                    message.error("修改失败，请稍后再试！")
+                                    console.log(err.message);
+                                });
+                        })
+                        .catch((info) => {
+                            console.log('Validate Failed:', info);
+                        });
+                }}
+            >
+                <Form
+                    form={form}
+                    layout="vertical"
+                    name="form_in_modal"
+                    initialValues={{ modifier: 'public' }}
+                >
+                    <Form.Item
+                        name="name"
+                        label="疫苗名称"
+                        rules={[{ required: true, message: 'Please input vaccine name!' }]}
+                    >
+                        <Input prefix={<MedicineBoxTwoTone />} placeholder="Vaccine name" />
+                    </Form.Item>
+
+                    <Form.Item
+                        name="intro"
+                        label="疫苗简介"
+                        rules={[{ required: true, message: 'Please input introduction!' }]}
+                    >
+                        <TextArea placeholder="Introduction" rows={3} />
+                    </Form.Item>
+
+                </Form>
+            </Modal>
+        )
+    };
 
     //表格列搜索功能
     //列的下标
@@ -158,7 +370,7 @@ const VaccineInfo: React.FC = () => {
                         console.log('删除成功！')
                         message.success("操作成功！");
                         //删除的事件 DELETE
-                        setVaccineData( vaccineData.filter((item) => {return item.id !== id}));
+                        setVaccineData(vaccineData.filter((item) => { return item.id !== id }));
                         //返回删除成功的提示
                     } else {
                         console.log('删除失败！')
@@ -180,7 +392,8 @@ const VaccineInfo: React.FC = () => {
     const columns: ColumnsType<VaccineType> = [
         {
             title: '序号',
-            dataIndex: 'id',
+            dataIndex: 'index',
+            render: (text, record, index) => `${index + 1}`,
             align: 'center',
         },
         {
@@ -203,7 +416,13 @@ const VaccineInfo: React.FC = () => {
             align: 'center',
             render: (_, record) => (
                 <Space size="middle">
-                    <EditTwoTone />
+                    <EditTwoTone onClick={() => {
+                        console.log(record)
+                        //这一行的数据赋值给editRecord
+                        setEditRecord(record)
+                        editVaccine()
+                    }
+                    } />
                     <DeleteTwoTone onClick={() => {
                         del(record.id)
                     }} />
@@ -213,16 +432,27 @@ const VaccineInfo: React.FC = () => {
         },
     ];
 
-
-
-
     return (
         <div>
             <Space wrap>
-                <Link to="/systemManage/process/insert">
-                    <Button type="primary" ghost>新增药品</Button>
-                </Link>
+                <Button type="primary" ghost onClick={addVaccine}>新增疫苗</Button>
             </Space>
+            {/* 新建疫苗的表单 open为true时弹出 */}
+            <VaccineCreateForm
+                open={createFormOpen}
+                onCreate={onCreate}
+                onCancel={() => {
+                    setCreateFormOpen(false);
+                }} />
+
+            {/* 编辑疫苗的表单 open为true时弹出 */}
+            <VaccineEditForm
+                open={editFormOpen}
+                record={editRecord}
+                onCreate={onCreate}
+                onCancel={() => {
+                    setEditFormOpen(false);
+                }} />
             <Table columns={columns} dataSource={vaccineData} style={{ margin: 16 }} />
         </div >
     );

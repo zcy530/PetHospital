@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
-import { MinusCircleOutlined, PlusOutlined, TagTwoTone, LeftCircleTwoTone, LeftOutlined, FileTextTwoTone } from '@ant-design/icons';
+import { FileTextTwoTone } from '@ant-design/icons';
 import { Form, Space, List, Divider, Input, InputNumber, Button, message } from 'antd';
 import BackButton from '../../global/backButton.tsx';
 import { PostQuestion } from '../questionManage/questionType.tsx';
@@ -44,7 +44,6 @@ const PaperUpdate = () => {
         ]
     });
 
-    const [scoreList, setScoreList] = useState<number[]>([]);
     const [post, setPost] = useState<PostQuestion[]>([]);
     const [count, setCount] = useState(0); //用于监听变化
 
@@ -64,12 +63,10 @@ const PaperUpdate = () => {
                 .then((data) => {
                     console.log(data.result);
                     detail = data.result;
-                    setTimeout(() => {
-                        setPaperDetail(detail);
-                        console.log(paperDetail);
-                    }, 0);
-                    form.setFieldValue("paperName", detail.paperName);
-                    form.setFieldValue("score", detail.score);
+                    setPaperDetail(detail);
+                    //获取到试卷的detail。给form的各项赋值
+                    form.setFieldValue("paperName", detail.paperName); //试卷名
+                    form.setFieldValue("score", detail.score); //总分
                     const questionList = detail.questionList;
                     // TODO: 
                     let list: PostQuestion[] = [];
@@ -78,64 +75,51 @@ const PaperUpdate = () => {
                         list.push({ "questionId": questionList[i].questionId, "score": questionList[i].score });
                     }
                     console.log(list)
+                    //questionlist赋值
                     form.setFieldValue("questionList", list)
                 })
                 .catch((err) => {
                     console.log(err.message);
                 });
         }
-        //监听总分的变化。
-        let sum = 0;
-        post.map(record => {
-            console.log(record.score);
-            sum += record.score;
-        })
-        console.log('总分为：' + sum)
-        form.setFieldValue("score", sum);
+        else {
+            //监听总分的变化。
+            let sum = 0;
+            //获取表单中题目列表
+            const list = form.getFieldValue("questionList");
+            console.log(list)
+            list.map(q => {
+                console.log('题目'+ q.questionId + '的分数为：' + q.score)
+                sum += q.score
+            })
+            // post.map(record => {
+            //     console.log(record.score);
+            //     sum += record.score;
+            // })
+            console.log('总分为：' + sum)
+            form.setFieldValue("score", sum);
+        }
+
+        console.log(form.getFieldsValue()); //打印表单的值
     }, [count]);
 
+    //更新post的某一格
+    const updatePost = (questionId: number, score: number) => {
+        let question: PostQuestion = { "questionId": questionId, "score": score };
+        let newPost: PostQuestion[] = [...post];
+        newPost = newPost.filter(p => { return p.questionId !== questionId })
+        newPost.push(question);
+        setPost(newPost);
+        console.log(newPost)
+    }
 
     //onChange函数 多传一个参数
     const countScore = (_score, question_Id: number,) => {
-        // let scorelist : number[] = [];
-        console.log(_score)
-        console.log('id:' + question_Id);
-        //新建一个postQuestion的类型
-        let question: PostQuestion = {
-            questionId: 0,
-            score: 0
-        };
-        question = { "questionId": question_Id, "score": _score }; //赋值 
-        let exist = false; //标记post里是否已经存在question
-        //post不为空 -- 判断这个题目是否赋值
-        if (post !== null) {
-            post.map(record => {
-                if (record.questionId === question_Id) {
-                    exist = true;
-                    //先过滤/删除原来的元素
-                    let newPost = post.filter((p) => p.questionId !== question_Id);
-                    newPost.push(question);
-                    setPost(newPost); //再重新set Post
-                }
-            })
-            if (exist === false) {
-                //如果不存在对应的题目
-                let newPost = post;
-                newPost.push(question);
-                setPost(newPost);
-            }
-        } else {
-            //如果post为空 -- 直接setData
-            setPost([question]);
-        }
-        //给对应的表单questionList设置值
-        form.setFieldValue("questionList", post);
+        console.log(question_Id + "的分数变为：" + _score)
         setCount(count + 1) //用于刷新score数据
     }
 
-    const onFinish = (values: any) => {
-        //提交修改
-        console.log('Received values of form:', values);
+    const updatePaper = (values: any) => {
         //todo: 上传到post
         fetch('http://localhost:8080/petHospital/papers/' + params.paper_id, {
             method: 'PUT',
@@ -143,10 +127,10 @@ const PaperUpdate = () => {
                 'Content-type': 'application/json; charset=UTF-8',
             },
             body: JSON.stringify({
-                "paperId": 0,
+                "paperId": params.paper_id,
                 "paperName": values.paperName,
-                "questionList": values.questionList,
-                "score": values.score,
+                "questionList": values.questionList, 
+                "score": values.score, //总分
             })
         }).then((response) => response.json())
             .then((data) => {
@@ -167,7 +151,12 @@ const PaperUpdate = () => {
             .catch((err) => {
                 console.log(err.message);
             });
-        //跳转至详情页面
+    }
+
+    const onFinish = (values: any) => {
+        //提交修改
+        console.log('Received values of form:', values);
+        updatePaper(values)
     }
 
     return (
@@ -186,27 +175,38 @@ const PaperUpdate = () => {
                     <Input size='large' prefix={<FileTextTwoTone />}></Input>
                 </Form.Item>
 
-                <Form.Item label="题目列表" name="questionList">
-                    {paperDetail.questionList.map((question, index) => (
-                        <Form.Item name="score">
-                            <Space >
-                                <span style={{ fontSize: '16px' }}>
-                                    {index + 1}.{' '}<b>({question.questionType}){' '}</b>{question.description}
-                                </span>
-                                <InputNumber key={index} prefix="分值：" style={{ width: '50%' }} max='100' min='0' onChange={(value) => { countScore(value, question.questionId) }}></InputNumber>
-                            </Space>
+                <Form.Item label="问题列表" >
+                    {/* 通过Form.List渲染数组字段 */}
+                    <Form.List name="questionList">
+                        {fields =>
+                            paperDetail.questionList.map((question, index) => (
+                                <>
+                                    <Form.Item name={[index, 'questionId']}>
+                                        <span style={{ fontSize: '16px' }}>
+                                            {index + 1}.{' '}<b>({question.questionType}){' '}</b>{question.description}
+                                        </span>
 
-                            {/* 四个答案竖着排列 */}
-                            <List
-                                size='small'
-                                style={{ margin: '16px' }}
-                                bordered
-                                dataSource={question.choice.split(";")}
-                                renderItem={(item) => <List.Item style={{ color: 'steelblue' }}>{item}</List.Item>}
-                            />
-                            <Divider></Divider>
-                        </Form.Item>
-                    ))}
+                                        {/* 四个答案竖着排列 */}
+                                        <List
+                                            size='small'
+                                            style={{ margin: '16px' }}
+                                            bordered
+                                            dataSource={question.choice.split(';')}
+                                            renderItem={(item) => <List.Item style={{ color: 'steelblue' }}>{item}</List.Item>}
+                                        />
+                                    </Form.Item>
+                                    <Form.Item {...question} key={question.questionId}
+                                        name={[index, 'score']}>
+                                        <InputNumber key={index} prefix="分值：" style={{ width: '30%', marginLeft: '16px' }} max='100' min='0'
+                                            onChange={(value) => { countScore(value, question.questionId) }}
+                                            rules={[{ required: true, message: 'Question score is required' }]}
+                                        ></InputNumber>
+                                    </Form.Item>
+                                    <Divider></Divider>
+                                </>
+                            ))
+                        }
+                    </Form.List>
                 </Form.Item>
 
                 <Form.Item label="试卷总分" name="score" >

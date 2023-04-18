@@ -464,21 +464,19 @@ const UserInfo: React.FC = () => {
         //删除的事件 DELETE
         fetch(`http://localhost:8080/petHospital/users/batch`, {
           method: 'POST',
-          body: JSON.stringify({
-            "ids": userList
-          }),
+          body: JSON.stringify(userList),
           headers: {
-            'Content-type': 'application/json',
+            'Content-type': 'application/json; charset=UTF-8',
           },
         }).then((response) => response.json())
           .then((data) => {
             console.log(data);
             let res = data.success;
             if (res === true) {
-              if (data.result.modifiedRecordCount === 1) {
+              if (data.result.modifiedRecordCount !== 0) {
                 message.success("删除成功！");
               }
-              message.error("删除失败，请稍后再试！");
+              else message.error("删除失败，请稍后再试！");
             }
             else {
               message.error("删除失败，请稍后再试！");

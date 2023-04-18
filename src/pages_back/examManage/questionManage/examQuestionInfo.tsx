@@ -1,9 +1,9 @@
 //考题管理的页面
 import React, { useEffect, useRef, useState } from 'react';
-import { SearchOutlined, DeleteTwoTone, EditTwoTone, MinusCircleOutlined, EyeOutlined, PlusOutlined, ExclamationCircleFilled } from '@ant-design/icons';
+import { SearchOutlined, DeleteTwoTone, EditTwoTone, EyeOutlined, ExclamationCircleFilled } from '@ant-design/icons';
 import { InputRef, Modal, Tag } from 'antd';
-import { Button, Input, Space, Table, message, Checkbox, Radio, RadioChangeEvent, } from 'antd';
-import type { ColumnsType, ColumnType, TableProps } from 'antd/es/table';
+import { Button, Input, Space, Table, message } from 'antd';
+import type { ColumnsType, ColumnType} from 'antd/es/table';
 import type { FilterConfirmProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
 import { diseaseType } from '../../diseaseManage/diseaseType.tsx'

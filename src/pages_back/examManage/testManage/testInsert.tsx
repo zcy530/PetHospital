@@ -122,7 +122,7 @@ const TestInsert: React.FC = () => {
                     </Form.Item>
 
                     <Form.Item label="考试简介" name="intro" >
-                        <TextArea rows={3} />
+                        <TextArea rows={5} />
                     </Form.Item>
 
                     <Form.Item label="选择试卷" name="paperId"

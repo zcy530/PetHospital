@@ -1,29 +1,35 @@
 import React, { useEffect, useState } from 'react';
-import {
-    Alert,
-    Select,
-    Spin
-} from 'antd';
+import { Select, } from 'antd';
+import Loading from '../global/loading.tsx'
 
 const { Option } = Select;
 
 interface studentOption {
-    id: number,
+    userId: number,
     email: string,
-    class: string
+}
+
+interface option {
+    value: number,
+    label: string
 }
 
 
 const StudentSelect: React.FC = (props) => {
+    // console.log("student props:");
+    console.log(props);
 
     const [studentList, setStudent] = useState<studentOption[]>([]);
-    const [defaultUsers, setDefaultUsers] = useState<String[]>([]);
-    console.log(props.userList)
+    const [defaultUsers, setDefaultUsers] = useState<option[]>([]);
 
     useEffect(() => {
-
-        fetch('http://localhost:8080/petHospital/users'
-        )
+        //如果有传进来userList 就setDefaultValue
+        if (props.userList) {
+            const userList = props.userList;
+            console.log(userList)
+            setDefaultUsers(userList)
+        }
+        fetch('http://localhost:8080/petHospital/users')
             .then(
                 (response) => response.json(),
             )
@@ -33,7 +39,7 @@ const StudentSelect: React.FC = (props) => {
                 let student_List: studentOption[] = [];
                 lists.map(list => {
                     if (list.role === 'student')
-                        student_List.push({ "id": list.userId, "email": list.email, "class": list.userClass })
+                        student_List.push({ "userId": list.userId, "email": list.email })
                 })
                 //赋值给paper
                 setStudent(student_List);
@@ -58,23 +64,16 @@ const StudentSelect: React.FC = (props) => {
             allowClear
             style={{ width: '100%' }}
             placeholder="选择参加考试的学生"
-            defaultValue={props.userList}
-            onChange={handleChange}
-        >
+            defaultValue={props.userList ? props.userList : null}
+            onChange={handleChange}>
             {
                 studentList ? (
                     studentList.map(student =>
-                        <Option key={student.id}> {student.email} </Option>
+                        <Option key={student.userId}> {student.email} </Option>
                     )
                 ) : (
                     <>
-                        <Spin tip="加载中...">
-                            <Alert
-                                message="疯狂加载中"
-                                description="不要走开喵"
-                                type="info"
-                            />
-                        </Spin>
+                        <Loading />
                     </>
                 )
             }

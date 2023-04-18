@@ -23,7 +23,15 @@ dayjs.extend(customParseFormat);
 //时间范围选择器
 const { RangePicker } = DatePicker;
 
+interface studentOption {
+    userId: number,
+    email: string
+}
 
+interface defaultOption {
+    value: number,
+    label: string
+}
 
 const TestUpdate: React.FC = () => {
     const param = useParams();
@@ -48,7 +56,8 @@ const TestUpdate: React.FC = () => {
 
     //获取原场次信息
     const [detail, setDetail] = useState<TestDetailType>({});
-    const [userList, setUserList] = useState<string[]>([])
+    const [defaultPaper, setDefaultPaper] = useState<defaultOption>({});
+    const [userList, setUserList] = useState<defaultOption[]>([]);
 
     useEffect(() => {
         fetch("http://localhost:8080/petHospital/tests/" + param.testId, { method: 'GET' })
@@ -64,19 +73,22 @@ const TestUpdate: React.FC = () => {
                 // 时间转换为dayjs
                 const begin = dayjs(res.beginDate);
                 const end = dayjs(res.endDate);
-                
+
                 form.setFieldValue("testName", res.testName)
                 form.setFieldValue("paperId", res.paperId)
                 form.setFieldValue("intro", res.intro)
                 form.setFieldValue("tag", res.tag)
                 form.setFieldValue("testDate", [begin, end])
-                
-                //设置默认的users
-                let userList : string[] = [];
+
+                //设置默认的users和paper
+                // setUserList(res.userList)
+                let list: defaultOption[] = []
                 res.userList.map(user => {
-                    userList.push(user.email)
-                })
-                setUserList(userList)
+                    list.push({ "value": user.userId, "label": user.email });
+                }
+                )
+                setUserList(list);
+                setDefaultPaper({ "value": res.paperId, "label": res.paperName });
             })
             .catch((err) => {
                 console.log(err.message);
@@ -170,12 +182,12 @@ const TestUpdate: React.FC = () => {
                     </Form.Item>
 
                     <Form.Item label="考试简介" name="intro" >
-                        <TextArea rows={3} />
+                        <TextArea rows={5} />
                     </Form.Item>
 
                     <Form.Item label="选择试卷" name="paperId"
                         rules={[{ required: true, message: 'Paper is required!' }]}>
-                        <PaperSelect getPaper={getPaperId} />
+                        <PaperSelect defaultPaper={defaultPaper} getPaper={getPaperId} />
                     </Form.Item>
 
                     <Form.Item label="标签" name="tag">
@@ -195,7 +207,7 @@ const TestUpdate: React.FC = () => {
                     </Form.Item>
 
                     <Form.Item label="参考学生" name="userList">
-                        <StudentSelect userList = {userList} getStudent={getUserList} />
+                        <StudentSelect userList={userList} getStudent={getUserList} />
                     </Form.Item>
 
                     <Form.Item style={{ textAlign: 'center' }}>

@@ -7,9 +7,13 @@ import SingleFlow from './singleFlow.js'
 
 
 function Flow({roleId}) {
-  // var flowName = "消毒流程", flowsArr = ["剃毛","洗净","二次法","覆盖"],  content = "如何穿戴手术设备？";
   const [resLen, setresLen] = useState(0);
   const [items, setItems] = useState([]);
+  const [onItemName, setonItemName] = useState("");
+  const [onItemOpe, setonItemOpe] = useState([]);
+  const [onItemLen, setonItemLen] = useState(0);
+  const [onItemIntro, setonItemIntro] = useState("");
+  const [cntItem, setcntItems] = useState(0);
   const userLogin = useSelector(state => state.userLogin)
   const token = userLogin.userInfo.headers.authorization;
   useEffect(() => {
@@ -19,18 +23,31 @@ function Flow({roleId}) {
       headers: {'Authorization':token},
     }).then(res => {
       setresLen(res.data.result.length);
-      let newItems = [];
-      for(let i = 0; i < resLen; i++){
-        newItems.push( <SingleFlow flowName={res.data.result[i].name} flowsArr={res.data.result[i].operationDTOList} content={res.data.result[i].intro}/> );
-      }
-      setItems(newItems);
+      setItems(res.data.result);
+      initItem();
     }).catch(err => {
       console.log(err);
     })
   })
+  const preClick = () => {
+    setcntItems((cntItem - 1 + resLen) % resLen);
+    initItem();
+  }
+  const nextClick = () => {
+    setcntItems((cntItem + 1) % resLen);
+    initItem();
+  }
+  const initItem = () => {
+    setonItemName(items[cntItem].name);
+    setonItemOpe(items[cntItem].operationDTOList);
+    setonItemLen(items[cntItem].operationDTOList.length);
+    setonItemIntro(items[cntItem].intro);
+  }
   return (
     <div className='flow'>
-      {items}
+      <div className = "pre" onClick = {preClick}>&lt;</div>
+      <div className = "next" onClick = {nextClick}>&gt;</div>
+      {onItemLen > 0 ? <SingleFlow flowName={onItemName} flowsArr={onItemOpe} flowsLen = {onItemLen} content={onItemIntro} /> : null}
     </div>
   )
 }

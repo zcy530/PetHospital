@@ -4,8 +4,8 @@ import { useSelector } from "react-redux";
 import './work.css'
 
 function Work({roleName, getChildData}) {
-  const [respon, setRespon] = useState(null);
-  const [content, setContent] = useState(null);
+  const [respon, setRespon] = useState("");
+  const [content, setContent] = useState("");
   const [roleId, setroleID] = useState(0);
   const userLogin = useSelector(state => state.userLogin)
   const token = userLogin.userInfo.headers.authorization;

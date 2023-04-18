@@ -1,8 +1,0 @@
-.steps{
-    position: relative;
-    height: calc(2vh + 500px);
-    right: -20px;
-    overflow-y: scroll;
-    margin: 0;
-    padding: 0;
-}

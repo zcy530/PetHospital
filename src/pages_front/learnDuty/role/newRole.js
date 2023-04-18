@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import Work from './work.js';
+import Flow from './flow.js';
 import './newRole.css';
 import {useParams, Link} from "react-router-dom";
-import MyStep from "./myStep";
-import {Col, Layout, Row} from "antd";
 
 
 function NewRole() {
@@ -24,19 +23,8 @@ function NewRole() {
           <Link className='text_a' to = "/dutyLearn">角色扮演/</Link>
           <Link className='text_b' to = {`/dutyLearn/role/${params.roleName}`}>{params.roleName}</Link>
         </div>
-        <Row gutter={ {xs: 8, sm: 16, md: 24}}>
-            <Col span={8}>
-                <Work roleName={params.roleName} getChildData={setId} />
-            </Col>
-            <Col span={15}>
-                <MyStep roleId = {roleId}></MyStep>
-            </Col>
-            <Col span={1}>
-            </Col>
-        </Row>
-
-        {/*<Flow roleId = {roleId}/>  */}
-
+        <Work roleName={params.roleName} getChildData={setId} />
+        <Flow roleId = {roleId}/>  
     </div>
   )
 }

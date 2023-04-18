@@ -1,19 +1,36 @@
 .flowContent{
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    background-color: #F0F8FF;
+    position: relative;
+    top: 2%;
+    left: 0;
+    height: 230px;
 }
 .flowPic{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 200px; 
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 40%;
+    height: 100%;
+    padding-left: 3%;
 }
 .flowPic img{
-    width: 400px;
-    height: 200px; 
-    object-fit: fill;
-    padding-bottom: 20px;
-    padding-left: 10px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.flowOpe{
+    position: absolute;
+    top: 0;
+    left: 48%;
+    width: 40%;
+    height: 100%;
+    padding: 2%;
+    background-color: #F0F8FF;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.flowName{
+    border-bottom: 1px solid #F0F0F0;
+}
+.opeContent{
+    padding-top: 2%;
+    text-align: left;
 }

@@ -1,27 +1,33 @@
 .singleFlow{
+    margin-left: 10%;
     margin-bottom: 5%;
-    width: 120%;
-    height: auto;
-    overflow: scroll;
 }
 
 .singleFlow h3{
     /* padding-left: 20%; */
     text-align: left;
 }
+.flow-content{
+    width: 50%;
+    text-align: left;
+}
 .flow-icon{
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    flex-direction: row;
     align-items: center;
+    justify-content: flex-start;
+    word-break: keep-all;
 }
 .flow-items{
     display: flex;
     flex-direction: row;
     align-items: flex-start;
-    justify-content: center;
-    margin: 2%;
+    justify-content: flex-start;
+    padding-top: 5%;
+    padding-bottom: 5%;
+    overflow: scroll;
 }
 .flow-button{
-    margin: 2%;
+    position: absolute;
+    left: 60%;
 }

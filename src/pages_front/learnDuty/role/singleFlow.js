@@ -5,16 +5,16 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import { Button } from '@mui/material';
 import FlowContent from './flowContent.js'
 
-function SingleFlow({flowName, flowsArr, content}) {
-    var items = [], arrLength = flowsArr.length;
+function SingleFlow({flowName, flowsArr, flowsLen, content}) {
+    var items = [], arrLength = flowsLen;
     const [count, setCount] = useState(1);
     const [opeState, setOpeState] = useState([]);
     useEffect(() => {
-        console.log(flowsArr);
-        console.log((count - 2 + arrLength) % arrLength);
-    }, count);
-    for(var i = 0; i < flowsArr.length; i++) opeState.push(false);
-    for(let i = 0; i < flowsArr.length - 1; i++){
+        setCount(1);
+        setOpeState([]);
+    },[flowName]);
+    for(var i = 0; i < arrLength; i++) opeState.push(false);
+    for(let i = 0; i < arrLength - 1; i++){
         let name = flowsArr[i].operationName;
         items.push(
         <span className='flow-icon'>
@@ -33,8 +33,8 @@ function SingleFlow({flowName, flowsArr, content}) {
     }
     items.push(
         <span className='flow-icon'>
-            {opeState[flowsArr.length - 1] ? (<CheckCircleIcon color='success'/>) : (<CheckCircleIcon />)}
-        <div>{flowsArr[flowsArr.length - 1].operationName}</div>
+            {opeState[arrLength - 1] ? (<CheckCircleIcon color='success'/>) : (<CheckCircleIcon />)}
+        <div>{flowsArr[arrLength - 1].operationName}</div>
         </span>
     );
     function changeState() {
@@ -45,19 +45,22 @@ function SingleFlow({flowName, flowsArr, content}) {
             if(i < count) newOpeState.push(true);
             else newOpeState.push(false);
         setOpeState(newOpeState);
-        console.log(opeState);
     }
     
     return (
         <div className='singleFlow'>
-            <h3>{flowName}</h3>
+            <h3>
+                {flowName}
+                <span className='flow-button'>
+                    {(count - 1 + arrLength) %(arrLength + 1) !== arrLength - 1 ?
+                        <Button variant="outlined" onClick={() => changeState()}> {(count - 1 + arrLength) %(arrLength + 1) < arrLength ? "Next Step" : "Start learn"} </Button>
+                    :   <Button variant="outlined" color = "success" onClick={() => changeState()}> Finished </Button>}
+                </span>
+            </h3>
+            <div className='flow-content'>{content}</div>
             <div className='flow-items'>{items}</div>
-            <div className='flow-button'>
-                <Button variant="outlined" onClick={() => changeState()}>Next Step</Button>
-            </div>
             {(count - 1 + arrLength) %(arrLength + 1) < arrLength ? <FlowContent name = {flowsArr[(count - 1 + arrLength) % (arrLength + 1)].operationName} imgUrl = {flowsArr[(count - 1 + arrLength) %(arrLength + 1)].url} content = {flowsArr[(count - 1 + arrLength) % (arrLength + 1)].intro}/> : null}
         </div>
-        //
     )
 }
 

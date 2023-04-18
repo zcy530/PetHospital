@@ -11,7 +11,9 @@
     height: 200px; 
 }
 .flowPic img{
-    width: 200px;
+    width: 400px;
     height: 200px; 
     object-fit: fill;
+    padding-bottom: 20px;
+    padding-left: 10px;
 }

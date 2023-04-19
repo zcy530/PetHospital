@@ -20,7 +20,7 @@ function Register() {
     const [myuUserRegisterInfo, setMyUserRegisterInfo] = useState<registerInfo>(initailRegisterInfo);
     const [email,setEmail] = useState<string>('');
     const [password,setPassword] = useState<string>('');
-    const [role, setRole] = useState<string>('');
+    const [role, setRole] = useState<string>('user');
     const [userClass, setUserClass] = useState<string>('');
     const [show, setShow] = useState<boolean>(true);
 
@@ -87,8 +87,8 @@ function Register() {
                     onChange={(e)=>setRole(e.target.value)}
                     aria-label="Default select example"
                     value={role}>
-                    <option value="1">User</option>
-                    <option value="2">Administer</option>
+                    <option value="user">User</option>
+                    <option value="manager">Administer</option>
                 </Form.Select>
                 <Button type="submit" variant="primary">REGISTER</Button>
                 </Form>

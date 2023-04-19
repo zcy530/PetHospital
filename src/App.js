@@ -36,7 +36,7 @@ function App() {
 				<Route path='/examdetail' element={<ExamDetail />} />
 				<Route path='/dutyLearn' element={userInfo ? <DutyLearn /> : <Login />}/>
 				<Route path="/dutyLearn/role/:roleName" element={userInfo ? <Role /> : <Login />} /> 
-				<Route path="/userinfo" element={<UserInfo />}/>
+				<Route path="/userinfo" element={userInfo ? <UserInfo /> : <Login />}/>
 				<Route path='/systemManage/*' element={<SystemManage />} />
 			</Routes>
 			</div>

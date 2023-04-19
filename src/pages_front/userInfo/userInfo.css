@@ -1,0 +1,39 @@
+.userInfo{
+    position: relative;
+    height: calc(2vh + 500px);
+    width: 100%;
+}
+.userImage{
+    position: absolute;
+    left: 10%;
+    top: 10%;
+    width: 15%;
+}
+
+.userCard{
+    position: absolute;
+    left: 30%;
+    top: 15%;
+    width: 20%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    background-color: #B9D3EE;
+}
+.infoCard{
+    margin-left: 2%;
+    margin-right: 2%;
+    border-bottom: 0.5px solid black;
+}
+.passChangeCard{
+    padding-bottom: 3%;
+    
+}
+.textF{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content:space-evenly;
+}

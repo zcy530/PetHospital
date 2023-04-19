@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { SearchOutlined, DeleteTwoTone, EditTwoTone, EyeOutlined, ExclamationCircleFilled } from '@ant-design/icons';
 import { InputRef, Modal, Tag } from 'antd';
 import { Button, Input, Space, Table, message } from 'antd';
-import type { ColumnsType, ColumnType} from 'antd/es/table';
+import type { ColumnsType, ColumnType } from 'antd/es/table';
 import type { FilterConfirmProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
 import { diseaseType } from '../../diseaseManage/diseaseType.tsx'
@@ -129,25 +129,29 @@ const QuestionInfo: React.FC = () => {
             async onOk() {
                 console.log('OK');
                 //删除的事件 DELETE
-                await fetch(`http://localhost:8080/petHospital/questions/${id}`, {
+                await fetch(`https://47.120.14.174:443/petHospital/questions/${id}`, {
                     method: 'DELETE',
-                }).then((response) => {
-                    if (response.status === 200) {
+                }).then(
+                    (response) => response.json()
+                ).then((data) => {
+                    console.log(data)
+                    if (data.status === 200) {
+                        console.log('删除成功！')
+                        //返回删除成功的提示
+                        message.success("删除成功！")
                         setQuestionData(
                             questionData.filter((data) => {
                                 return data.questionId !== id
                             })
                         )
-                        console.log('删除成功！')
-                        //返回删除成功的提示
-                        message.success("删除成功！")
                     } else {
                         console.log('删除失败！')
-                        message.success("删除失败，请稍后再试！")
+                        message.error(data.message)
                     }
-                }).catch(e => {
+                }
+                ).catch(e => {
                     console.log('错误:', e)
-                    message.success("删除失败，请稍后再试！")
+                    message.error("删除失败，请稍后再试！")
                 });
             },
             onCancel() {
@@ -278,7 +282,7 @@ const QuestionInfo: React.FC = () => {
 
     useEffect(() => {
         //获取后台数据
-        fetch('http://localhost:8080/petHospital/questions'
+        fetch('https://47.120.14.174:443/petHospital/questions'
         )
             .then(
                 (response) => response.json(),
@@ -315,7 +319,7 @@ const QuestionInfo: React.FC = () => {
 
     return (
         questionData ? (
-            <div>
+            <div style={{ margin: 16 }}>
                 <Space wrap size={700}>
                     <Space>
                         <Button type="primary" onClick={reload} disabled={!hasSelected} loading={loading}>

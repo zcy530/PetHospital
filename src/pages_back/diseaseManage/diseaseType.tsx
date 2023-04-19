@@ -15,7 +15,7 @@ interface diseaseOption {
 const getCategoryList = () => {
   let diseaseList: diseaseOption[] =[];
   //获取后台数据
-  fetch("http://localhost:8080/petHospital/categories"
+  fetch("https://47.120.14.174:443/petHospital/categories"
   )
     .then(
       (response) => response.json(),
@@ -41,7 +41,7 @@ const getCategoryList = () => {
 const getDiseaseList = () => {
   let diseaseList: diseaseOption[] =[];
   //获取后台数据
-  fetch("http://localhost:8080/petHospital/diseases"
+  fetch("https://47.120.14.174:443/petHospital/diseases"
   )
     .then(
       (response) => response.json(),

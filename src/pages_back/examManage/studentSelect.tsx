@@ -9,27 +9,15 @@ interface studentOption {
     email: string,
 }
 
-interface option {
-    value: number,
-    label: string
-}
 
-
-const StudentSelect: React.FC = (props) => {
+const StudentSelect = (props) => {
     // console.log("student props:");
     console.log(props);
 
     const [studentList, setStudent] = useState<studentOption[]>([]);
-    const [defaultUsers, setDefaultUsers] = useState<option[]>([]);
 
     useEffect(() => {
-        //如果有传进来userList 就setDefaultValue
-        if (props.userList) {
-            const userList = props.userList;
-            console.log(userList)
-            setDefaultUsers(userList)
-        }
-        fetch('http://localhost:8080/petHospital/users')
+        fetch('https://47.120.14.174:443/petHospital/users')
             .then(
                 (response) => response.json(),
             )
@@ -47,7 +35,6 @@ const StudentSelect: React.FC = (props) => {
             .catch((err) => {
                 console.log(err.message);
             });
-
     }, []);
 
 
@@ -64,7 +51,6 @@ const StudentSelect: React.FC = (props) => {
             allowClear
             style={{ width: '100%' }}
             placeholder="选择参加考试的学生"
-            defaultValue={props.userList ? props.userList : null}
             onChange={handleChange}>
             {
                 studentList ? (
@@ -80,8 +66,6 @@ const StudentSelect: React.FC = (props) => {
 
         </Select>
     )
-
-
 }
 
 export default StudentSelect;

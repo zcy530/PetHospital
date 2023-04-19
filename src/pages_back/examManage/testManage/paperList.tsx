@@ -6,7 +6,7 @@ interface paperOption {
 
 const getPaper = () => {
     let paperList: paperOption[] = [];
-    fetch("http://localhost:8080/petHospital/papers")
+    fetch("https://47.120.14.174:443/petHospital/papers")
         .then(
             (response) => response.json(),
         )

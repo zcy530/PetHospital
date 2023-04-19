@@ -105,7 +105,7 @@ const DiseaseManage: React.FC = () => {
                         label="疾病类别"
                         rules={[{ required: true, message: 'Please select the type of disease!' }]}
                     >
-                        <Select placeholder="Select type">
+                        <Select placeholder="选择疾病类别">
                             {/* 循环遍历渲染数组对象 */}
                             {
                                 diseaseCategory.map(disease => (
@@ -358,21 +358,19 @@ const DiseaseManage: React.FC = () => {
             async onOk() {
                 console.log('OK');
                 //删除的事件 DELETE
-                await fetch(`http://localhost:8080/petHospital/diseases/${id}`, {
+                await fetch(`https://47.120.14.174:443/petHospital/diseases/${id}`, {
                     method: 'DELETE',
-                }).then((response) => {
-                    if (response.status === 200) {
+                }).then(
+                    (response) => response.json()
+                ).then((data) => {
+                    if (data.status === 200) {
                         console.log('删除成功！')
                         //返回删除成功的提示
                         message.success("删除成功！")
-                        setDiseaseData(
-                            diseaseData.filter((data) => {
-                                return data.diseaseId !== id
-                            })
-                        )
-                    } else {
+                        setCount(count + 1)
+                    } else { //status===409 有关关联的病例
                         console.log('删除失败！')
-                        message.error("删除失败，请重试！")
+                        message.error(data.message)
                     }
                 }).catch(e => {
                     console.log('错误:', e)
@@ -439,7 +437,9 @@ const DiseaseManage: React.FC = () => {
     return (
         diseaseData ? (
             <div>
-                <Button type="primary" ghost onClick={addDisease}>新增病种</Button>
+                <div style={{ textAlign: 'right', margin: 16 }}>
+                    <Button type="primary" ghost onClick={addDisease}>新增病种</Button>
+                </div>
                 <DiseaseCreateForm
                     open={createOpenForm}
                     onCreate={onCreate}

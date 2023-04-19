@@ -3,25 +3,10 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { FileTextTwoTone } from '@ant-design/icons';
-import { Form, Space, List, Divider, Input, InputNumber, Button, message } from 'antd';
+import { Form,  List, Divider, Input, InputNumber, Button, message } from 'antd';
 import BackButton from '../../global/backButton.tsx';
 import { PostQuestion } from '../questionManage/questionType.tsx';
-
-interface Question {
-    questionId: number,
-    choice: string,
-    // choiceList: string[],
-    score: number,
-    description: string,
-    questionType: string
-}
-
-interface PaperDetailType {
-    paperId: number,
-    paperName: string,
-    score: number,
-    questionList: Question[]
-}
+import { PaperDetailType} from './paperType.tsx';
 
 
 const PaperUpdate = () => {
@@ -56,7 +41,7 @@ const PaperUpdate = () => {
                 questionList: []
             };
             //获取后台数据
-            fetch(`http://localhost:8080/petHospital/papers/${params.paper_id}?front=false`)
+            fetch(`https://47.120.14.174:443/petHospital/papers/${params.paper_id}?front=false`)
                 .then(
                     (response) => response.json(),
                 )
@@ -120,8 +105,7 @@ const PaperUpdate = () => {
     }
 
     const updatePaper = (values: any) => {
-        //todo: 上传到post
-        fetch('http://localhost:8080/petHospital/papers/' + params.paper_id, {
+        fetch('https://47.120.14.174:443/petHospital/papers/' + params.paper_id, {
             method: 'PUT',
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',

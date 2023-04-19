@@ -1,41 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import {
-    Alert,
-    Select,
-    Spin
-} from 'antd';
+import { Select } from 'antd';
 import Loading from '../global/loading.tsx'
 
 
 const { Option } = Select;
-
-
-interface defaultOption {
-    value: number,
-    label: string
-}
 
 interface paperOption {
     id: number,
     name: string
 }
 
-export interface paperProps {
-    defaultPaper: defaultOption;
-    getPaper: (getPaperId: number) => void;
-}
 
-
-const PaperSelect = (props: paperProps) => {
+const PaperSelect = (props) => {
     // console.log("paper props:")
-    // console.log(props);
+    console.log(props);
 
-    const [defaultPaper, setDefaultPaper] = useState<defaultOption>({ "value": 0, "label": "" });
     const [paperList, setPaper] = useState<paperOption[]>([]);
 
     useEffect(() => {
 
-        fetch('http://localhost:8080/petHospital/papers'
+        fetch('https://47.120.14.174:443/petHospital/papers'
         )
             .then(
                 (response) => response.json(),
@@ -53,14 +37,6 @@ const PaperSelect = (props: paperProps) => {
             .catch((err) => {
                 console.log(err.message);
             });
-
-        if (props.defaultPaper) {
-            console.log(props.defaultPaper);
-            setDefaultPaper(props.defaultPaper);
-            console.log("props默认为" + props.defaultPaper.value);
-            console.log("默认为" + defaultPaper.value);
-        }
-
     }, []);
 
 
@@ -69,8 +45,6 @@ const PaperSelect = (props: paperProps) => {
         props.getPaper(e);
     }
 
-    const paper = { "label": "肠胃病考试试卷", "value": 1 }
-
     return (
         <Select
             size="large"
@@ -78,7 +52,6 @@ const PaperSelect = (props: paperProps) => {
             style={{ width: 160 }}
             placeholder="Select a paper"
             onChange={handleChange}
-            defaultValue={props.defaultPaper ? defaultPaper : null}
         >
             {
                 paperList ? (
@@ -93,8 +66,6 @@ const PaperSelect = (props: paperProps) => {
             }
         </Select>
     )
-
-
 }
 
 export default PaperSelect;

@@ -32,7 +32,7 @@ const VaccineInfo: React.FC = () => {
 
     useEffect(() => {
         //获取后台数据
-        fetch('http://localhost:8080/petHospital/vaccines'
+        fetch('https://47.120.14.174:443/petHospital/vaccines'
         )
             .then(
                 (response) => response.json(),
@@ -85,7 +85,7 @@ const VaccineInfo: React.FC = () => {
                         .then((values) => {
                             form.resetFields();
                             onCreate(values);
-                            fetch('http://localhost:8080/petHospital/vaccines', {
+                            fetch('https://47.120.14.174:443/petHospital/vaccines', {
                                 method: 'POST',
                                 headers: {
                                     'Content-type': 'application/json; charset=UTF-8',
@@ -173,8 +173,7 @@ const VaccineInfo: React.FC = () => {
                         .then((values) => {
                             form.resetFields();
                             onCreate(values);
-                            //TODO: fetch update 
-                            fetch(`http://localhost:8080/petHospital/vaccines/` + record.id, {
+                            fetch(`https://47.120.14.174:443/petHospital/vaccines/` + record.id, {
                                 method: 'PUT',
                                 body: JSON.stringify({
                                     "id": record.id,
@@ -363,7 +362,7 @@ const VaccineInfo: React.FC = () => {
             cancelText: '取消',
             async onOk() {
                 console.log('OK');
-                fetch(`http://localhost:8080/petHospital/vaccines/${id}`, {
+                fetch(`https://47.120.14.174:443/petHospital/vaccines/${id}`, {
                     method: 'DELETE',
                 }).then((response) => {
                     if (response.status === 200) {
@@ -434,9 +433,9 @@ const VaccineInfo: React.FC = () => {
 
     return (
         <div>
-            <Space wrap>
+            <div style={{ textAlign: 'right', margin: 16 }}>
                 <Button type="primary" ghost onClick={addVaccine}>新增疫苗</Button>
-            </Space>
+            </div>
             {/* 新建疫苗的表单 open为true时弹出 */}
             <VaccineCreateForm
                 open={createFormOpen}

@@ -94,8 +94,8 @@
   opacity: 0.7;
 }
 
-.pre,
-.next{
+.drugs .pre,
+.drugs .next{
   position: absolute;
   top: 40%;
   width: 20px;
@@ -105,17 +105,43 @@
   user-select: none;
 }
 
-.pre{
+.drugs .pre{
   left: 0; 
   border-radius: 3px 0 0 3px;
 }
 
-.next{
+.drugs .next{
   right: 0;
   border-radius: 0 3px 3px 0;
 }
 
-.pre:hover,
-.next:hover{
+.drugs .pre:hover,
+.drugs .next:hover{
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.vaccines .pre,
+.vaccines .next{
+  position: absolute;
+  top: 40%;
+  width: 20px;
+  height: 30px;
+  padding: 5px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.vaccines .pre{
+  left: 0; 
+  border-radius: 3px 0 0 3px;
+}
+
+.vaccines .next{
+  right: 0;
+  border-radius: 0 3px 3px 0;
+}
+
+.vaccines .pre:hover,
+.vaccines .next:hover{
   background-color: rgba(0, 0, 0, 0.8);
 }

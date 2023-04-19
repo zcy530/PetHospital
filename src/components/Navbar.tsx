@@ -78,7 +78,7 @@ const NavBar = () => {
             <NavDropdown title="User">
               {userInfo ? (
                 <NavDropdown.Item onClick={logoutHandler} >
-                  <Nav.Link >Log out</Nav.Link>
+                  <Nav.Link as={Link} to="/login">Log out</Nav.Link>
                 </NavDropdown.Item>
               ) : (
                 <NavDropdown.Item>

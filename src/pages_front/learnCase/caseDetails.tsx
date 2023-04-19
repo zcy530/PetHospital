@@ -119,7 +119,7 @@ const CaseDetail = (props : detailsProps) => {
           </Descriptions>
         </Layout>
 
-        <h3>就诊记录</h3>
+        <h3>治疗方案</h3>
         <Layout className='detail-table-2'>
           <Descriptions  
             column={3}

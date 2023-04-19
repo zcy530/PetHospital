@@ -92,6 +92,7 @@ const CaseLearnVer2 = () => {
             items={tabItems}
             onSelect={(item)=> {
               setChooseNow(parseInt(item.key));
+              setShowDetail(false);
               console.log(item.key);
             }}
             onOpenChange={onOpenChange}

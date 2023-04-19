@@ -28,6 +28,7 @@ import RoleDetail from './learnManage/roleManage/roleDetail.tsx';
 import RoleUpdate from './learnManage/roleManage/roleUpdate.tsx';
 import RoleInsert from './learnManage/roleManage/roleInsert.tsx';
 import MedicineInfo from './hospitalManage/medicineManage/medicineManage.tsx';
+import MedicineDetail from './hospitalManage/medicineManage/medicineDetail.tsx';
 import DepartmentInfo from './hospitalManage/departmentManage/departmentManage.tsx';
 import VaccineInfo from './hospitalManage/vaccineManage/vaccineManage.tsx';
 import QuestionDetail from './examManage/questionManage/questionDetail.tsx';
@@ -143,6 +144,7 @@ function SystemManage() {
             <Route path="role/update/:actorId" element={<RoleUpdate />} />
             <Route path="department" element={<DepartmentInfo />} />
             <Route path="medicine" element={<MedicineInfo />} />
+            <Route path="medicine/detail/:id" element={<MedicineDetail />} />
             <Route path="vaccine" element={<VaccineInfo />} />
             <Route path="process" element={<ProcessInfo />} />
             <Route path="process/insert" element={<ProcessInsert />} />

@@ -52,7 +52,7 @@ const VideoUpload = (props) => {
     const props1 = {
         name: 'videos',
         multiple: true,
-        action: 'http://localhost:8080/petHospital/videos',
+        action: 'https://47.120.14.174:443/petHospital/videos',
         onChange: handleChange,
         onDrop(e) {
             // console.log('Dropped files', e.dataTransfer.files);

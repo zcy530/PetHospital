@@ -8,7 +8,6 @@ import { Button, Input, InputRef, Modal, Space, Table, UploadFile, message } fro
 import type { FilterConfirmProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
 //导入CaseData & CaseType
-import { CaseData } from './caseData.tsx';
 import { CaseType } from "./caseType";
 import { Link } from "react-router-dom";
 import { Container } from 'react-bootstrap';
@@ -20,6 +19,30 @@ type DataIndex = keyof CaseType;
 
 const CaseInfo: React.FC = () => {
 
+
+    //分页默认值，记得import useState
+    const [pageOption, setPageOption] = useState({
+        pageNo: 1,  //当前页为1
+        pageSize: 10, //一页10行
+    })
+
+    //分页配置
+    const paginationProps = {
+        current: pageOption.pageNo,
+        pageSize: pageOption.pageSize,
+        onChange: (current, size) => paginationChange(current, size)
+    }
+
+    //当翻页时，改变当前为第current页，current和size这两参数是onChange API自带的，会帮你算出来你现在在第几页，这一页有多少行数据。
+    const paginationChange = async (current, size) => {
+        //前面用到useState
+        setPageOption({
+            pageNo: current, //当前所在页面
+            pageSize: size,  //一页有几行
+        })
+    }
+
+
     //定义表格数据使用
     const [caseData, setCaseData] = useState<CaseType[]>([]);
     useEffect(() => {
@@ -30,7 +53,7 @@ const CaseInfo: React.FC = () => {
                 (response) => response.json(),
             )
             .then((data) => {
-                console.log(data.result);
+                //console.log(data.result);
                 const posts = data.result;
                 const data1: CaseType[] = [];
                 for (let i = 0; i < posts.length; i++) {
@@ -45,7 +68,7 @@ const CaseInfo: React.FC = () => {
                 setCaseData(data1);
             })
             .catch((err) => {
-                console.log(err.message);
+                //console.log(err.message);
             });
     }, []);
 
@@ -155,7 +178,7 @@ const CaseInfo: React.FC = () => {
 
     //删除操作
     const del = (id: number) => {
-        console.log("点击删除id为" + id + "的病例");
+        //console.log("点击删除id为" + id + "的病例");
         //弹出对话框 是否删除？
         showDeleteConfirm(id);
     }
@@ -169,7 +192,7 @@ const CaseInfo: React.FC = () => {
             okType: 'danger',
             cancelText: '取消',
             async onOk() {
-                console.log('OK');
+                //console.log('OK');
                 //删除的事件 DELETE
                 const data: CaseType[] = caseData.filter((item: CaseType) => item.case_id !== id);
                 setCaseData(data);
@@ -178,20 +201,20 @@ const CaseInfo: React.FC = () => {
                 }).then((response) => {
                     if (response.status === 200) {
                         //TODO：重新加载页面（好像并不合适）
-                        console.log('删除成功！')
+                        //console.log('删除成功！')
                         message.success("操作成功！");
                         //返回删除成功的提示
                     } else {
-                        console.log('删除失败！')
-                        fail()
+                        //console.log('删除失败！')
+                        message.error("操作失败！");
                     }
                 }).catch(e => {
-                    console.log('错误:', e)
+                    //console.log('错误:', e)
                     fail()
                 });
             },
             onCancel() {
-                console.log('Cancel');
+                //console.log('Cancel');
             },
         });
     };
@@ -199,9 +222,9 @@ const CaseInfo: React.FC = () => {
     // 定义列
     const columns: ColumnsType<CaseType> = [
         {
-            title: '病例Id',
-            dataIndex: 'case_id',
-            key: 'case_id',
+            title: '序号',
+            width: '10%',
+            render: (text, record, index) => `${(pageOption.pageNo - 1) * pageOption.pageSize + (index + 1)}`,
             align: 'center',
         },
         {
@@ -255,60 +278,17 @@ const CaseInfo: React.FC = () => {
         },
     ];
 
-    //用于多选的变量和函数
-    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-    const [loading, setLoading] = useState(false);
-
-    //重置选择状态
-    const reload = () => {
-        setLoading(true);
-        // ajax request after empty completing
-        setTimeout(() => {
-            setSelectedRowKeys([]);
-            setLoading(false);
-        }, 1000);
-    };
-
-    //监听选择框编号
-    const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-        console.log('selectedRowKeys changed: ', newSelectedRowKeys);
-        setSelectedRowKeys(newSelectedRowKeys);
-    };
-
-
-    //定义每行前面的选择框
-    const rowSelection = {
-        selectedRowKeys,
-        onChange: onSelectChange,
-    };
-    //被选的行数
-    const hasSelected = selectedRowKeys.length > 0;
-
-    //批量删除
-    const batchDel = () => {
-
-    }
-
     return (
 
         <div>
-            <Space size={500}>
-                <Space>
-                    <Button type="primary" onClick={reload} disabled={!hasSelected} loading={loading}>
-                        Reload
-                    </Button>
-                    <span style={{ marginLeft: 8 }}>
-                        {hasSelected ? `选择了 ${selectedRowKeys.length} 个病例` : ''}
-                    </span>
-                </Space>
+            <div style={{ textAlign: 'right', margin: 16 }}>
                 <Space wrap>
                     <Link to="/systemManage/case/insert">
                         <Button type="primary" ghost>新增病例</Button>
                     </Link>
-                    <Button type="primary" danger ghost onClick={batchDel}>删除病例</Button>
                 </Space>
-            </Space>
-            <Table rowSelection={rowSelection} columns={columns} dataSource={caseData}
+            </div>
+            <Table columns={columns} dataSource={caseData} pagination={paginationProps}
                 style={{ margin: 16 }} rowKey="case_id" loading={caseData.length === 0} />
         </div >
 

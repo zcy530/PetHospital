@@ -54,7 +54,7 @@ const CollectionCreateForm: React.FC<CollectionCreateFormProps> = ({
     //处理多选框
     const [options, setOptions] = useState([]);
     useEffect(() => {
-        fetch('http://localhost:8080/petHospital/inspections/items' //获取所有检查项
+        fetch('https://47.120.14.174:443/petHospital/inspections/items' //获取所有检查项
         )
             .then(
                 (response) => response.json(),
@@ -94,7 +94,7 @@ const CollectionCreateForm: React.FC<CollectionCreateFormProps> = ({
                 name="form_in_modal"
                 initialValues={{ modifier: 'public' }}
             >
-                <Form.Item name="inspection_item_id" label="检查名称">
+                <Form.Item name="inspection_item_id" label="检查名称" rules={[{ required: true, message: '请选择检查名称！' }]}>
                     <Select onChange={handleChange} optionLabelProp="key">
                         {options.map(item => (
                             <Option key={item.itemName} value={item.itemId}>{item.itemName}</Option>
@@ -103,7 +103,7 @@ const CollectionCreateForm: React.FC<CollectionCreateFormProps> = ({
                 </Form.Item>
                 <Form.Item name="inspection_name" hidden={true}>
                 </Form.Item>
-                <Form.Item name="inspection_result_text" label="检查情况描述">
+                <Form.Item name="inspection_result_text" label="检查情况描述" rules={[{ required: true, message: '请输入检查情况！' }]}>
                     <Input type="textarea" />
                 </Form.Item>
                 <Form.Item name="inspection_graphs" label="检查情况图片" valuePropName="fileList">
@@ -115,7 +115,7 @@ const CollectionCreateForm: React.FC<CollectionCreateFormProps> = ({
 };
 
 const InspectionTable = (props) => {
-    console.log(props.value)
+    // console.log(props.value)
     const [open, setOpen] = useState(false);
     const [tableData, setTableData] = useState<TableDataType[]>([]);
 
@@ -139,7 +139,7 @@ const InspectionTable = (props) => {
                 });
             }));
             props.getTable(formData);
-            console.log(tableData)
+            // console.log(tableData)
         }
     }, []);
 

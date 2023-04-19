@@ -20,7 +20,7 @@ function Model() {
   const [drugs, Setdrugs] = useState([]);
   const [vaccines, Setvaccines] = useState([]);
   const userLogin = useSelector(state => state.userLogin)
-  const token = userLogin.userInfo.headers.authorization;
+  const token = userLogin.userInfo.data.result.token;
   useEffect(() => {
     axios({
       url: `https://47.120.14.174:443/petHospital/departments`,

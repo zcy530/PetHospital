@@ -27,9 +27,6 @@ function SingleFlow({flowName, flowsArr, flowsLen, content}) {
         items.push(<span className='flow-icon'>
             <RemoveIcon />
         </span>)
-        items.push(<span className='flow-icon'>
-            <RemoveIcon />
-        </span>)
     }
     items.push(
         <span className='flow-icon'>

@@ -15,7 +15,7 @@ function Flow({roleId}) {
   const [onItemIntro, setonItemIntro] = useState("");
   const [cntItem, setcntItems] = useState(0);
   const userLogin = useSelector(state => state.userLogin)
-  const token = userLogin.userInfo.headers.authorization;
+  const token = userLogin.userInfo.data.result.token;
   useEffect(() => {
     axios({
       url: `https://47.120.14.174:443/petHospital/roles/${roleId}/processes`,

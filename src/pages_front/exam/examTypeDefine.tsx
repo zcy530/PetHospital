@@ -27,3 +27,16 @@ export type oneQuestionAnswer = {
     ans: string;
     score: string;
 }
+
+export type oneQuestionStandardAnswer = {
+
+    questionId: number;
+    choice:string;
+    choiceList: string[];
+    score: number;
+    description: string;
+    questionType: string;
+    userAns: string;
+    ans: string;
+    getScore: number;
+}

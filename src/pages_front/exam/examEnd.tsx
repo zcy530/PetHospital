@@ -11,7 +11,7 @@ const ExamEnd = ( props:examEndProps ) => {
     return(
         <Result
         status="success"
-        title="恭喜你答题结束!你的分数为：100分"
+        title="恭喜你答题结束！你可以去“我的考试”里查看得分！"
         subTitle="现在你可以点击下方按钮查看正确答案。"
         extra={[
           <Button  key="console">

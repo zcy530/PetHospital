@@ -4,7 +4,7 @@ import Cat from "../../Assets/image/cat.svg";
 import { Form, Button } from 'react-bootstrap';
 import { loginInfo } from "./loginType";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../../actions/userActions";
+import { login, registerout } from "../../actions/userActions";
 import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -42,6 +42,7 @@ const Login = () => {
         e.preventDefault()
         // 执行登录动作
         dispatch(login(email, password))
+        dispatch(registerout())
     };
 
     return (

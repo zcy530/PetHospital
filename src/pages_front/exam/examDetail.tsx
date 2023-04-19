@@ -71,13 +71,13 @@ const ExamDetail = (props: examDetailsProps) => {
         <h3>{examPaperData.paperName}</h3>
         <Divider />
         <Form 
-          style={{marginLeft:'100px',marginRight:'100px',fontSize:'17.5px',textAlign:'left'}}>
+          style={{marginLeft:'100px',marginRight:'100px',fontSize:'18px',textAlign:'left'}}>
             
             {examPaperData.questionList.map((question,index)=>(
                 <>
                 <Form.Group className="mb-3" controlId="question">
                     <Form.Label>
-                        {index+1}. {' '}<b>({question.questionType}){' '}</b>{question.description}
+                      <b> {index+1}. {' '}({question.questionType}){' '}{question.description}</b>
                     </Form.Label>
 
                     {/* 四个答案竖着排列 */}

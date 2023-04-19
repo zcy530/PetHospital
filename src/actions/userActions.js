@@ -76,3 +76,8 @@ export const register = (email, password, role, user_class) => async (dispatch) 
         })
     }
 }
+
+export const registerout = () => (dispatch) => {
+    localStorage.removeItem('userRegisterInfo')
+    dispatch({ type: 'USER_REGISTER_OUT' })
+}

@@ -5,10 +5,10 @@ html {
   /* Navbar */
 
   .navbar {
-    margin-top: 20px;
-    margin-bottom: 20px;
-    padding: 0.3rem 2rem !important;
+    margin-top: 10px;
+    margin-bottom: 10px;
     font-size: 40px !important;
+    margin-left: 20px;
   }
 
   .navbar-nav .nav-link {
@@ -16,12 +16,10 @@ html {
     color: rgb(0, 0, 0) !important;
     font-size: 25px;
     font-weight: bold;
-    padding-right: 1rem !important;
-    padding-left: 1rem !important;
   }
 
   .form .form-control .button{
-    padding-right: 6rem;
+    margin-left: 20px;
   }
 
   .navbar-content {
@@ -29,7 +27,7 @@ html {
   }
 
   .mynavbar form input{
-    width: 160px;
+    width: 180px;
     height: 40px;
     background: rgba(255, 255, 255, 0.435);
     border: 0px solid rgba(255, 255, 255, 0.5);
@@ -56,7 +54,7 @@ html {
     font-size: 17px;
     border-radius: 15px;
     z-index: 1;
-    margin-right:60px;
+    margin-right:0px;
     position: relative;
     transition: 0.3s ease-in-out;
   }

@@ -18,6 +18,7 @@ const Exam = () => {
   const [checkExamAnswer, setCheckExamAnswer] = useState<boolean>(false);
   const [chooseTab, setChooseTab] = useState<number>(1);
   const [examDetailId, setExamDetailId] = useState<number>(1);
+  const [exitReminder, setExitReminder] = useState<boolean>(false);
 
   const tabItems: MenuProps['items'] = ['所有考试','我的考试'].map((info, index) => {
       return {
@@ -32,7 +33,7 @@ const Exam = () => {
     } else if(endExam) {
       return <ExamEnd setEndExam={setEndExam} setExamAnswerCheck={setCheckExamAnswer} />
     } else if(checkExamAnswer) {
-      return <ExamAnswerCheck />
+      return <ExamAnswerCheck id={examDetailId} setCheckExamAnswer={setCheckExamAnswer}/>
     } else {
       return <ExamList chooseTab={chooseTab} setStartExam={setStartExam} setExamDetailId={setExamDetailId} />
     }
@@ -48,10 +49,33 @@ const Exam = () => {
             mode="inline"
             onSelect={(item)=> {
               setChooseTab(parseInt(item.key));
+              if(startExam){
+                setExitReminder(true);
+              } else {
+                setEndExam(false);
+                setCheckExamAnswer(false);
+              }
             }}
             defaultSelectedKeys={['1']}
             items={tabItems}
           />
+
+          <Modal
+            title="考试须知"
+            centered
+            open={exitReminder}
+            okText="确认退出"
+            cancelText="取消"
+            onOk={() => {
+                setStartExam(false);
+                setExitReminder(false);
+            }}
+            onCancel={() => setExitReminder(false) }
+            width={600}
+          >
+            <b>考试正在进行中，离开将自动交卷请确认是否要退出考试？</b>
+          </Modal>
+
           <div className='exam-tag-choose'>
             <b>选择tag筛选题目</b>
             <div className='exam-tag-choose-item'>

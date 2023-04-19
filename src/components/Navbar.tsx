@@ -20,10 +20,10 @@ const NavBar = () => {
   return (
     <>
     <Navbar variant="light" bg="transparent">
-      <Container className="mynavbar">
+      <Container className="mynavbar" style={{backgroundColor:'', marginLeft:'90px', marginRight:'0px'}}>
         
         <Navbar.Brand>
-          <img src={CatAndDog} style={{height:'60px'}}>
+          <img src={CatAndDog} style={{height:'60px',marginLeft:'0px'}}>
           </img>
         </Navbar.Brand>
 

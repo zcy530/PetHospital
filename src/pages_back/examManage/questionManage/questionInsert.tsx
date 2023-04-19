@@ -13,7 +13,7 @@ import {
 } from 'antd';
 import { Container } from 'react-bootstrap';
 import { diseaseType } from '../../diseaseManage/diseaseType.tsx'
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import BackButton from '../../global/backButton.tsx';
 
 const { TextArea } = Input;
@@ -96,7 +96,7 @@ const QuestionInsert: React.FC = () => {
             console.log(choice)
             console.log(ans)
 
-            fetch('http://localhost:8080/petHospital/questions', {
+            fetch('https://47.120.14.174:443/petHospital/questions', {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json; charset=UTF-8',

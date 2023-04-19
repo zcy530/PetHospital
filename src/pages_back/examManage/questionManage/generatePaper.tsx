@@ -31,7 +31,7 @@ const GeneratePaper = () => {
             ans: '',
             keyword: ''
         };
-        await fetch(`http://localhost:8080/petHospital/questions/${id}?front=false`)
+        await fetch(`https://47.120.14.174:443/petHospital/questions/${id}?front=false`)
             .then(
                 (response) => response.json(),
             )
@@ -125,7 +125,7 @@ const GeneratePaper = () => {
 
     const postPaper = (values: any) => {
         //todo: 上传到post
-        fetch('http://localhost:8080/petHospital/papers', {
+        fetch('https://47.120.14.174:443/petHospital/papers', {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',

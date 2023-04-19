@@ -15,7 +15,7 @@ const QuestionDetail = () => {
     const [detail, setDetail] = useState<QuestionDetailType>({});
 
     useEffect(() => {
-        fetch("http://localhost:8080/petHospital/questions/" + param.questionId, { method: 'GET' })
+        fetch("https://47.120.14.174:443/petHospital/questions/" + param.questionId, { method: 'GET' })
             .then(
                 (response) => response.json(),
             )

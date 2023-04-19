@@ -13,7 +13,7 @@ const TestDetail = () => {
     const [form] = Form.useForm();
 
     useEffect(() => {
-        fetch("http://localhost:8080/petHospital/tests/" + param.testId, { method: 'GET' })
+        fetch("https://47.120.14.174:443/petHospital/tests/" + param.testId, { method: 'GET' })
             .then(
                 (response) => response.json(),
             )

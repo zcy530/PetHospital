@@ -8,7 +8,7 @@ interface studentOption {
 const getStudentList = () => {
     let studentList: studentOption[] =[];
     //获取后台数据
-    fetch("http://localhost:8080/petHospital/users"
+    fetch("https://47.120.14.174:443/petHospital/users"
     )
       .then(
         (response) => response.json(),

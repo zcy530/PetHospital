@@ -6,13 +6,8 @@ import Highlighter from 'react-highlight-words';
 import { ColumnsType } from 'antd/es/table';
 import { FilterConfirmProps } from 'antd/es/table/interface';
 import { Link } from 'react-router-dom';
+import { PaperType } from './paperType.tsxy'
 
-
-interface PaperType {
-    paperId: number,
-    paperName: string,
-    score: number
-}
 
 type DataIndex = keyof PaperType;
 
@@ -131,26 +126,28 @@ const Paper: React.FC = () => {
             async onOk() {
                 console.log('OK');
                 //删除的事件 DELETE
-                await fetch(`http://localhost:8080/petHospital/papers/${id}`, {
+                await fetch(`https://47.120.14.174:443/petHospital/papers/${id}`, {
                     method: 'DELETE',
-                }).then((response) => {
-                    if (response.status === 200) {
-                        //DONE：重新加载数据 filter一下
+                }).then(
+                    (response) => response.json()
+                ).then((data) => {
+                    if (data.status === 200) {
+                        console.log('删除成功！')
+                        //返回删除成功的提示
+                        message.success("删除成功！")
+                        //filter一下
                         setPaperData(
                             paperData.filter((data) => {
                                 return data.paperId !== id
                             })
                         )
-                        console.log('删除成功！')
-                        //返回删除成功的提示
-                        message.success("删除成功！")
-                    } else {
+                    } else { //status===409 有关联场次 无法删除
                         console.log('删除失败！')
-                        message.error("删除失败，请稍后再试！")
+                        message.error(data.message)
                     }
                 }).catch(e => {
                     console.log('错误:', e)
-                    fail()
+                    message.error("删除失败！")
                 });
             },
             onCancel() {
@@ -164,7 +161,7 @@ const Paper: React.FC = () => {
 
     useEffect(() => {
         //获取后台数据
-        fetch('http://localhost:8080/petHospital/papers'
+        fetch('https://47.120.14.174:443/petHospital/papers'
         )
             .then(
                 (response) => response.json(),

@@ -21,24 +21,6 @@ interface TestType {
 type DataIndex = keyof TestType;
 
 const Test: React.FC = () => {
-    //全局消息提示
-    const [messageApi, contextHolder] = message.useMessage();
-
-    const success = () => {
-        messageApi.open({
-            type: 'success',
-            content: '操作成功',
-            duration: 1,
-        });
-    };
-
-    const fail = () => {
-        messageApi.open({
-            type: 'error',
-            content: '操作失败，请重试！',
-            duration: 1
-        });
-    }
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef<InputRef>(null);
@@ -154,26 +136,21 @@ const Test: React.FC = () => {
             async onOk() {
                 console.log('OK');
                 //删除的事件 DELETE
-                await fetch(`http://localhost:8080/petHospital/tests/${id}`, {
+                await fetch(`https://47.120.14.174:443/petHospital/tests/${id}`, {
                     method: 'DELETE',
                 }).then((response) => {
                     if (response.status === 200) {
-                        //DONE：重新加载数据 filter一下
-                        setTestData(
-                            testData.filter((data) => {
-                                return data.testId !== id
-                            })
-                        )
+                        setCount(count + 1)
                         console.log('删除成功！')
                         //返回删除成功的提示
-                        success()
+                        message.success("删除成功！")
                     } else {
                         console.log('删除失败！')
-                        fail()
+                        message.error("删除失败，请稍后再试！")
                     }
                 }).catch(e => {
                     console.log('错误:', e)
-                    fail()
+                    message.error("删除失败，请稍后再试！")
                 });
             },
             onCancel() {
@@ -257,7 +234,7 @@ const Test: React.FC = () => {
 
     useEffect(() => {
         //获取后台数据
-        fetch('http://localhost:8080/petHospital/tests'
+        fetch('https://47.120.14.174:443/petHospital/tests'
         )
             .then(
                 (response) => response.json(),
@@ -288,11 +265,12 @@ const Test: React.FC = () => {
 
     return (
         <div>
-            {contextHolder}
-            {/* 新增考试 button */}
-            <Link to="/systemManage/test/insert">
-                <Button type="primary" ghost>新增考试场次</Button>
-            </Link>
+            <div style={{ textAlign: 'right', margin: 16 }}>
+                {/* 新增考试 button */}
+                <Link to="/systemManage/test/insert">
+                    <Button type="primary" ghost>新增考试场次</Button>
+                </Link>
+            </div>
             <Table style={{ margin: 16 }} columns={columns} dataSource={testData} pagination={{ position: ['bottomCenter'] }} />;
         </div>
     )

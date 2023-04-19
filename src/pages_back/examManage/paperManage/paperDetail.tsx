@@ -3,23 +3,7 @@ import { useParams } from 'react-router-dom';
 import { MinusCircleOutlined, PlusOutlined, TagTwoTone, LeftCircleTwoTone, LeftOutlined, FileTextTwoTone } from '@ant-design/icons';
 import { Form, Space, List, Divider, Input } from 'antd';
 import BackButton from '../../global/backButton.tsx';
-
-
-interface Question {
-    questionId: number,
-    choice: string,
-    // choiceList: string[],
-    score: number,
-    description: string,
-    questionType: string
-}
-
-interface PaperDetailType {
-    paperId: number,
-    paperName: string,
-    score: number,
-    questionList: Question[]
-}
+import { PaperDetailType } from './paperType.tsx';
 
 const PaperDetail = () => {
     const params = useParams();
@@ -47,7 +31,7 @@ const PaperDetail = () => {
             questionList: []
         };
         //获取后台数据
-        fetch(`http://localhost:8080/petHospital/papers/${params.paper_id}?front=false`)
+        fetch(`https://47.120.14.174:443/petHospital/papers/${params.paper_id}?front=false`)
             .then(
                 (response) => response.json(),
             )

@@ -410,13 +410,13 @@ const MedicineInfo: React.FC = () => {
                 }).then((response) => {
                     if (response.status === 200) {
                         //console.log('删除成功！')
-                        message.success("操作成功！");
+                        message.success("删除成功！");
                         //删除的事件 DELETE
                         setMedicineData(medicineData.filter((item) => { return item.id !== id }));
                         //返回删除成功的提示
                     } else {
                         //console.log('删除失败！')
-                        message.error("操作失败，请重试！");
+                        message.error("删除失败，请重试！");
                     }
                 }).catch(e => {
                     //console.log('错误:', e)

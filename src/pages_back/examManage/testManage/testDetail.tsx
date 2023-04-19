@@ -50,12 +50,11 @@ const TestDetail = () => {
             >
                 <Form.Item label="试卷名称" name="paperName" >
                     {/* <span style={{ fontSize: '16px', border: '2px solid #ddd', padding: '8px', borderRadius: '15px' }}>{<FileTextTwoTone />} {detail.paperName}</span> */}
-                    <Input readOnly = {true} prefix={<FileTextTwoTone />} size='large' />
+                    <Input readOnly={true} prefix={<FileTextTwoTone />} size='large' />
                 </Form.Item>
 
                 <Form.Item label="简介" name="intro">
-                    <TextArea readOnly = {true}>
-                    </TextArea>
+                    <TextArea readOnly = {true} rows={5} />
                 </Form.Item>
 
                 <Form.Item label="标签" name="tag">
@@ -83,7 +82,7 @@ const TestDetail = () => {
                                 <List.Item.Meta
                                     avatar={<Avatar src={`https://xsgames.co/randomusers/avatar.php?g=pixel&key=${index}`} />}
                                     title={<a>{item.email}</a>}
-                                    description={"参加考试的学生" + (index+1)}
+                                    description={"参加考试的学生" + (index + 1)}
                                 />
                             </List.Item>
                         )}

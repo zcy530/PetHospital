@@ -33,6 +33,7 @@ import DepartmentInfo from './hospitalManage/departmentManage/departmentManage.t
 import VaccineInfo from './hospitalManage/vaccineManage/vaccineManage.tsx';
 import QuestionDetail from './examManage/questionManage/questionDetail.tsx';
 import QuestionUpdate from './examManage/questionManage/questionUpdate.tsx';
+import InspectionInfo from './hospitalManage/inspectionItemManage/inspectionItemInfo.tsx';
 
 import {
   ContainerOutlined,
@@ -48,7 +49,8 @@ import {
   IdcardOutlined,
   TeamOutlined,
   PartitionOutlined,
-  CalendarOutlined
+  CalendarOutlined,
+  ProfileOutlined
 } from '@ant-design/icons';
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -83,6 +85,8 @@ const items: MenuItem[] = [
     getItem(<Link to="/systemManage/department" style={{ textDecoration: 'none' }}>科室管理</Link>, '/department', <ContactsOutlined />),
     getItem(<Link to="/systemManage/medicine" style={{ textDecoration: 'none' }}>药品管理</Link>, '/medicine', <HddOutlined />),
     getItem(<Link to="/systemManage/vaccine" style={{ textDecoration: 'none' }}>疫苗管理</Link>, '/vaccine', <MedicineBoxOutlined />),
+    getItem(<Link to="/systemManage/inspection" style={{ textDecoration: 'none' }}>检查管理</Link>, '/inspection', <ProfileOutlined />),
+
   ]),
   getItem('职能学习管理', 'study', <IdcardOutlined />, [
     getItem(<Link to="/systemManage/role" style={{ textDecoration: 'none' }}>岗位角色管理</Link>, '/role', <TeamOutlined />),
@@ -146,6 +150,7 @@ function SystemManage() {
             <Route path="medicine" element={<MedicineInfo />} />
             <Route path="medicine/detail/:id" element={<MedicineDetail />} />
             <Route path="vaccine" element={<VaccineInfo />} />
+            <Route path="inspection" element={<InspectionInfo />} />
             <Route path="process" element={<ProcessInfo />} />
             <Route path="process/insert" element={<ProcessInsert />} />
             <Route path="process/detail/:processId" element={<ProcessDetail />} />

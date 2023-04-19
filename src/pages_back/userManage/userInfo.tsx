@@ -541,11 +541,14 @@ const UserInfo: React.FC = () => {
       title: '序号',
       dataIndex: 'key',
       align: 'center',
+      render: (text, record, index) => `${text + 1}`,
+      width: '10%'
     },
     {
       title: '邮箱',
       dataIndex: 'email',
       align: 'center',
+      width: '30%',
       // key: 'email',
       ...getColumnSearchProps('email'),
     },
@@ -553,6 +556,7 @@ const UserInfo: React.FC = () => {
       title: '班级',
       dataIndex: 'userClass',
       align: 'center',
+      width: '20%'
     },
     {
       title: '角色',

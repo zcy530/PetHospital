@@ -11,8 +11,6 @@ import {
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { Container } from 'react-bootstrap';
-import PaperSelect from '../paperSelect.tsx';
-import StudentSelect from '../studentSelect.tsx';
 import TextArea from 'antd/es/input/TextArea';
 import BackButton from '../../global/backButton.tsx';
 import { TestDetailType } from './testType.tsx';
@@ -35,13 +33,7 @@ interface paperOption {
     name: string
 }
 
-interface defaultOption {
-    value: number,
-    label: string
-}
-
 const { Option } = Select;
-
 
 const TestUpdate: React.FC = () => {
     const param = useParams();
@@ -53,22 +45,22 @@ const TestUpdate: React.FC = () => {
         console.log('Received values of form:', values);
     };
 
-
-    //从子组件获取paperId并传回
-    const getPaperId = (id: number) => {
-        form.setFieldValue('paperId', id);
+    const [paperId, setPaperId] = useState(0);
+    const handlePaperChange = (e) => {
+        console.log(e);
+        setPaperId(e);
+        form.setFieldValue('paperId', e);
     }
 
-    //从子组件获得studentIdList并传回
-    const getUserList = (idList: number[]) => {
-        form.setFieldValue('userList', idList);
+    const [userList, setUserList] = useState<number[]>()
+    const handleStudentChange = (e) => {
+        console.log(e);
+        setUserList(e); //设置userList
+        form.setFieldValue('userList', e);
     }
 
     //获取原场次信息
     const [detail, setDetail] = useState<TestDetailType>({});
-    const [defaultPaper, setDefaultPaper] = useState<defaultOption>({});
-    const [userList, setUserList] = useState<defaultOption[]>([]);
-
 
     //时间格式的转换 GMT转string
     const GMTToStr = (time: string) => {
@@ -144,7 +136,7 @@ const TestUpdate: React.FC = () => {
                 (response) => response.json(),
             )
             .then((data) => {
-                console.log(data.result);
+                // console.log(data.result);
                 let res = data.result;
                 //设置detail值为data
                 setDetail(res);
@@ -155,21 +147,18 @@ const TestUpdate: React.FC = () => {
 
                 form.setFieldValue("testName", res.testName)
                 //原始试卷
-                form.setFieldValue("paperId", { "value": res.paperId, "label": res.paperName })
+                form.setFieldValue("paperId", res.paperId)
                 form.setFieldValue("intro", res.intro)
                 form.setFieldValue("tag", res.tag)
                 form.setFieldValue("testDate", [begin, end])
 
-                //设置默认的users和paper
-                // setUserList(res.userList)
-                let list: defaultOption[] = []
+                //设置默认的users
+                let list: number[] = []
                 res.userList.map(user => {
-                    list.push({ "value": user.userId, "label": user.email });
+                    list.push(user.userId);
                 }
                 )
-                setUserList(list);
-                setDefaultPaper({ "value": res.paperId, "label": res.paperName });
-
+                console.log(list)
                 form.setFieldValue("userList", list)
             })
             .catch((err) => {
@@ -261,11 +250,12 @@ const TestUpdate: React.FC = () => {
                             showSearch //带搜索的选择框
                             style={{ width: 160 }}
                             placeholder="Select a paper"
+                            onChange={handlePaperChange}
                         >
                             {
                                 paperList ? (
                                     paperList.map(paper =>
-                                        <Option key={paper.id}> {paper.name} </Option>
+                                        <Option value={paper.id}> {paper.name} </Option>
                                     )
                                 ) : (
                                     <>
@@ -299,11 +289,12 @@ const TestUpdate: React.FC = () => {
                             mode="multiple"
                             allowClear
                             style={{ width: '100%' }}
-                            placeholder="选择参加考试的学生">
+                            placeholder="选择参加考试的学生"
+                            onChange={handleStudentChange} >
                             {
                                 studentList ? (
                                     studentList.map(student =>
-                                        <Option key={student.userId}> {student.email} </Option>
+                                        <Option value={student.userId}> {student.email} </Option>
                                     )
                                 ) : (
                                     <>

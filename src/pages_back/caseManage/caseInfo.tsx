@@ -202,11 +202,11 @@ const CaseInfo: React.FC = () => {
                     if (response.status === 200) {
                         //TODO：重新加载页面（好像并不合适）
                         //console.log('删除成功！')
-                        message.success("操作成功！");
+                        message.success("删除成功！");
                         //返回删除成功的提示
                     } else {
                         //console.log('删除失败！')
-                        message.error("操作失败！");
+                        message.error("删除失败，请稍后再试！");
                     }
                 }).catch(e => {
                     //console.log('错误:', e)

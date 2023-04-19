@@ -37,17 +37,17 @@ const CaseInsert: React.FC = () => {
   //处理多选框
   const [options, setOptions] = useState([]);
   useEffect(() => {
-    fetch('http://localhost:8080/petHospital/diseases'
+    fetch('https://47.120.14.174:443/petHospital/diseases'
     )
       .then(
         (response) => response.json(),
       )
       .then((data) => {
-        console.log(data.result);
+        //console.log(data.result);
         setOptions(data.result);
       })
       .catch((err) => {
-        console.log(err.message);
+        //console.log(err.message);
       });
   }, []);
   const { Option } = Select;
@@ -59,11 +59,11 @@ const CaseInsert: React.FC = () => {
     if (values.front_graph) {
       values.front_graph = values.front_graph[0]
     }
-    console.log(values);
-    console.log(JSON.stringify(values))
+    //console.log(values);
+    //console.log(JSON.stringify(values))
     // var formData = new FormData(values);
-    // console.log(formData)
-    fetch('http://localhost:8080/petHospital/cases', {
+    // //console.log(formData)
+    fetch('https://47.120.14.174:443/petHospital/cases', {
       method: 'POST',
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
@@ -72,7 +72,7 @@ const CaseInsert: React.FC = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        //console.log(data);
         let res = data.success;
         if (res === true) {
           message.success("添加成功！")
@@ -81,14 +81,14 @@ const CaseInsert: React.FC = () => {
         else fail();
       })
       .catch((err) => {
-        console.log(err.message);
+        //console.log(err.message);
       });
   }
 
 
   //获取到检查项目信息
   const getInspectionTable = (val: returnType[]) => {
-    // console.log(val);
+    // //console.log(val);
     form.setFieldValue('inspection_cases', val);
   }
 
@@ -105,13 +105,13 @@ const CaseInsert: React.FC = () => {
           form={form} name="case_insert"
           onFinish={onFinish}
         >
-          <Form.Item name="case_title" label="病例名称">
+          <Form.Item name="case_title" label="病例名称" rules={[{ required: true, message: '请输入病例名称！' }]}>
             <Input />
           </Form.Item>
           <Form.Item name="front_graph" label="病例封面图">
             <ImageUpload num={1} mult={false} />
           </Form.Item>
-          <Form.Item name="disease_id" label="疾病名称">
+          <Form.Item name="disease_id" label="疾病名称" rules={[{ required: true, message: '请选择疾病名称！' }]}>
             <Select optionLabelProp="key">
               {options.map(item => (
                 <Option key={item.diseaseName} value={item.diseaseId}>{item.diseaseName}</Option>

@@ -157,6 +157,7 @@ const ProcessInsert = () => {
             data[i].sortNum = i + 1;
         }
         setDataSource(data);
+        form.setFieldValue("operationList", data);
     }
 
     function addOperation(obj) {
@@ -174,6 +175,7 @@ const ProcessInsert = () => {
         setCount(count + 1);
         // console.log(count);
         setDataSource(data);
+        form.setFieldValue("operationList", data);
     }
 
     const onCreate = (values: OperationType) => {
@@ -260,7 +262,7 @@ const ProcessInsert = () => {
 
         // console.log(values)
         // console.log(JSON.stringify(values))
-        fetch('http://localhost:8080/petHospital/processes', {
+        fetch('https://47.120.14.174:443/petHospital/processes', {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
@@ -296,14 +298,14 @@ const ProcessInsert = () => {
                     form={form} name="process_insert"
                     onFinish={onFinish}
                 >
-                    <Form.Item name="processName" label="流程名称">
+                    <Form.Item name="processName" label="流程名称" rules={[{ required: true, message: '请输入流程名称！' }]}>
                         <Input />
                     </Form.Item>
                     <Form.Item name="intro" label="流程描述">
                         <TextArea rows={4} />
                     </Form.Item>
 
-                    <Form.Item name="operationList" label="操作列表" >
+                    <Form.Item name="operationList" label="操作列表" rules={[{ required: true, message: '请至少添加一个操作！' }]}>
                         <DndContext onDragEnd={onDragEnd}>
                             <SortableContext
                                 // rowKey array

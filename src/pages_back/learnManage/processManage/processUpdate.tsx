@@ -103,7 +103,7 @@ const CollectionCreateForm: React.FC<CollectionCreateFormProps> = ({
                         form.resetFields();
                     })
                     .catch((info) => {
-                        console.log('Validate Failed:', info);
+                        ////console.log('Validate Failed:', info);
                     });
             }}
         >
@@ -113,13 +113,13 @@ const CollectionCreateForm: React.FC<CollectionCreateFormProps> = ({
                 name="form_in_modal"
                 initialValues={{ modifier: 'public' }}
             >
-                <Form.Item name="operationName" label="操作名称">
+                <Form.Item name="operationName" label="操作名称" rules={[{ required: true, message: '请输入操作名称！' }]}>
                     <Input />
                 </Form.Item>
                 <Form.Item name="intro" label="操作说明">
                     <TextArea rows={2} />
                 </Form.Item>
-                <Form.Item name="url" label="操作情况图片" valuePropName="fileList">
+                <Form.Item name="url" label="操作情况图片" valuePropName="fileList" rules={[{ required: true, message: '请插入操作情况图片！' }]}>
                     <ImageUpload num={1} mult={false} />
                 </Form.Item>
             </Form>
@@ -131,7 +131,7 @@ const CollectionCreateForm: React.FC<CollectionCreateFormProps> = ({
 const ProcessUpdate = () => {
 
     const params = useParams();
-    console.log(params)
+    //console.log(params)
 
     const [count, setCount] = useState(3);
     const [open, setOpen] = useState(false);
@@ -158,6 +158,7 @@ const ProcessUpdate = () => {
             data[i].sortNum = i + 1;
         }
         setDataSource(data);
+        form.setFieldValue("operationList", data);
     }
 
     function addOperation(obj) {
@@ -169,18 +170,19 @@ const ProcessUpdate = () => {
             intro: obj.intro,
         }
         const data: OperationType[] = cloneDeep(dataSource);
-        // console.log(addObj)
+        // //console.log(addObj)
         data.push(addObj)
         for (let i = 0; i < data.length; i++) {
             data[i].sortNum = i + 1;
         }
         setCount(count + 1);
-        // console.log(count);
+        // //console.log(count);
         setDataSource(data);
+        form.setFieldValue("operationList", data);
     }
 
     const onCreate = (values: OperationType) => {
-        // console.log('Received values of form: ', values);
+        // //console.log('Received values of form: ', values);
         addOperation(values)
         setOpen(false);
     };
@@ -225,15 +227,15 @@ const ProcessUpdate = () => {
     ];
 
     const onDragEnd = ({ active, over }: DragEndEvent) => {
-        // console.log(active.id)
-        // console.log(over)
-        // console.log(over?.id)
+        // //console.log(active.id)
+        // //console.log(over)
+        // //console.log(over?.id)
         if (active.id !== over?.id) {
             const previous = dataSource;
             const activeIndex = previous.findIndex((i) => i.key === active.id);
             const overIndex = previous.findIndex((i) => i.key === over?.id);
             const list = arrayMove(previous, activeIndex, overIndex);
-            // console.log(dataSource);
+            // //console.log(dataSource);
             for (let i = 0; i < list.length; i++) {
                 list[i].sortNum = i + 1;
             }
@@ -248,13 +250,13 @@ const ProcessUpdate = () => {
 
     useEffect(() => {
         //获取后台数据
-        fetch(`http://localhost:8080/petHospital/processes/${params.processId}`
+        fetch(`https://47.120.14.174:443/petHospital/processes/${params.processId}`
         )
             .then(
                 (response) => response.json(),
             )
             .then((data) => {
-                // console.log(data.result);
+                // //console.log(data.result);
                 const tempProcess: ProcessType = {
                     processId: data.result.processId,
                     processName: data.result.processName,
@@ -273,18 +275,19 @@ const ProcessUpdate = () => {
                     );
                 }));
                 setDataSource(tempOperationList);
+                form.setFieldValue("operationList", tempOperationList);
                 setCount(tempOperationList.length + 1);
             })
             .catch((err) => {
-                console.log(err.message);
+                //console.log(err.message);
             });
     }, []);
 
 
     function onFinish(values: any): void {
-        // console.log(values)
-        // console.log(dataSource)
-        // console.log(count)
+        // //console.log(values)
+        // //console.log(dataSource)
+        // //console.log(count)
         values.operationList = (dataSource.map((item) => {
             return ({
                 sortNum: item.sortNum,
@@ -294,9 +297,9 @@ const ProcessUpdate = () => {
             }
             );
         }));
-        // console.log(values)
-        // console.log(JSON.stringify(values))
-        fetch(`http://localhost:8080/petHospital/processes/${params.processId}`, {
+        // //console.log(values)
+        // //console.log(JSON.stringify(values))
+        fetch(`https://47.120.14.174:443/petHospital/processes/${params.processId}`, {
             method: 'PUT',
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
@@ -305,7 +308,7 @@ const ProcessUpdate = () => {
         })
             .then((response) => response.json())
             .then((data) => {
-                console.log(data);
+                //console.log(data);
                 let res = data.success;
                 if (res === true) {
                     message.success("修改成功！")
@@ -316,7 +319,7 @@ const ProcessUpdate = () => {
                 }
             })
             .catch((err) => {
-                console.log(err.message);
+                //console.log(err.message);
             });
 
     }
@@ -334,14 +337,14 @@ const ProcessUpdate = () => {
                     onFinish={onFinish}
                 >
                     <Form.Item name="processId" hidden={true} />
-                    <Form.Item name="processName" label="流程名称">
+                    <Form.Item name="processName" label="流程名称" rules={[{ required: true, message: '请输入流程名称！' }]}>
                         <Input />
                     </Form.Item>
                     <Form.Item name="intro" label="流程描述">
                         <TextArea rows={4} />
                     </Form.Item>
 
-                    <Form.Item name="operationList" label="操作列表" >
+                    <Form.Item name="operationList" label="操作列表" rules={[{ required: true, message: '请至少添加一个操作！' }]}>
                         <DndContext onDragEnd={onDragEnd}>
                             <SortableContext
                                 // rowKey array

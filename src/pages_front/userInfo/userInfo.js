@@ -9,6 +9,7 @@ import FaceIcon from '@mui/icons-material/Face';
 import ClassIcon from '@mui/icons-material/Class';
 import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
 import { Button, TextField } from '@mui/material';
+// import Notif from "./Notif.js";
 
 function UserInfoPage() {
     const userLogin = useSelector(state => state.userLogin);
@@ -47,30 +48,33 @@ function UserInfoPage() {
           console.log(err);
         })
         changeShow();
+        // Notif.pop({message: "修改成功"});
     }
     return (
         <div className='userInfo'>
-          <img className='userImage' src={userURl} alt = ""/>
-          <div className='userCard'>
-            <div className='infoCard'>
-              <InfoBar Component={EmailIcon} info = {userinfo.email}/>
-              <InfoBar Component={FaceIcon} info = {map.get(userinfo.role)}/>
-              <InfoBar Component={ClassIcon} info = {userinfo.userClass + "班"}/>
-            </div>
-            <div className='passChangeCard'>
-              {showButton
-              ? <Button variant="text" onClick={() => changeShow()}>Change Password</Button>
-              : <div className='textF'>
-                <TextField
-                  id="standard-password-input"
-                  label="Password"
-                  type="password"
-                  autoComplete="current-password"
-                  variant="standard"
-                  onChange = {(e) => setpassword(e.target.value)}
-                />
-                <AutoFixNormalIcon fontSize = "large" onClick={() => changePassword(password)}/>
-              </div>}
+          <div className='userCard_whole'>
+            <img className='userImage' src={userURl} alt = ""/>
+            <div className='userCard'>
+              <div className='infoCard'>
+                <InfoBar Component={EmailIcon} info = {userinfo.email}/>
+                <InfoBar Component={FaceIcon} info = {map.get(userinfo.role)}/>
+                <InfoBar Component={ClassIcon} info = {userinfo.userClass + "班"}/>
+              </div>
+              <div className='passChangeCard'>
+                {showButton
+                ? <Button variant="text" onClick={() => changeShow()}>Change Password</Button>
+                : <div className='textF'>
+                  <TextField
+                    id="standard-password-input"
+                    label="Password"
+                    type="password"
+                    autoComplete="current-password"
+                    variant="standard"
+                    onChange = {(e) => setpassword(e.target.value)}
+                  />
+                  <AutoFixNormalIcon fontSize = "large" onClick={() => changePassword(password)}/>
+                </div>}
+              </div>
             </div>
           </div>
         </div>

@@ -33,3 +33,13 @@ export interface PostQuestion {
     questionId: number,
     score: number
 }
+
+
+//用于增添考题的类型
+export interface Question {
+    questionId: number,
+    choice: string,
+    score: number,
+    description: string,
+    questionType: string
+}

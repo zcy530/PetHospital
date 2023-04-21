@@ -180,7 +180,7 @@ const UserInfo: React.FC = () => {
   const hasSelected = selectedRowKeys.length > 0;
   useEffect(() => {
     //获取后台数据
-    fetch('http://localhost:8080/petHospital/users'
+    fetch('https://47.120.14.174:443/petHospital/users'
     )
       .then(
         (response) => response.json(),
@@ -244,7 +244,7 @@ const UserInfo: React.FC = () => {
             .then((values) => {
               form.resetFields();
               onCreate(values);
-              fetch('http://localhost:8080/petHospital/users', {
+              fetch('https://47.120.14.174:443/petHospital/users', {
                 method: 'POST',
                 headers: {
                   'Content-type': 'application/json; charset=UTF-8',
@@ -358,8 +358,7 @@ const UserInfo: React.FC = () => {
             .then((values) => {
               form.resetFields();
               onCreate(values);
-              //TODO: fetch update 
-              fetch(`http://localhost:8080/petHospital/users/` + record.userId, {
+              fetch(`https://47.120.14.174:443/petHospital/users/` + record.userId, {
                 method: 'PATCH',
                 body: JSON.stringify({
                   "userId": record.userId,
@@ -462,7 +461,7 @@ const UserInfo: React.FC = () => {
       async onOk() {
         console.log('要删除：' + userList)
         //删除的事件 DELETE
-        fetch(`http://localhost:8080/petHospital/users/batch`, {
+        fetch(`https://47.120.14.174:443/petHospital/users/batch`, {
           method: 'POST',
           body: JSON.stringify(userList),
           headers: {
@@ -507,7 +506,7 @@ const UserInfo: React.FC = () => {
       async onOk() {
         console.log('OK');
         //删除的事件 DELETE
-        await fetch(`http://localhost:8080/petHospital/users/${id}`, {
+        await fetch(`https://47.120.14.174:443/petHospital/users/${id}`, {
           method: 'DELETE',
         }).then((response) => {
           if (response.status === 200) {
@@ -542,14 +541,14 @@ const UserInfo: React.FC = () => {
       title: '序号',
       dataIndex: 'key',
       align: 'center',
-      // key: 'userId',
-      // ...getColumnSearchProps('userId'),
-      // render: (text) => <a>{text}</a>,
+      render: (text, record, index) => `${text + 1}`,
+      width: '10%'
     },
     {
       title: '邮箱',
       dataIndex: 'email',
       align: 'center',
+      width: '30%',
       // key: 'email',
       ...getColumnSearchProps('email'),
     },
@@ -557,6 +556,7 @@ const UserInfo: React.FC = () => {
       title: '班级',
       dataIndex: 'userClass',
       align: 'center',
+      width: '20%'
     },
     {
       title: '角色',
@@ -597,42 +597,42 @@ const UserInfo: React.FC = () => {
 
   return (
     userData ? (
-      <div>
-      <Space size={700}>
-        <Space>
-          <Button type="primary" onClick={reload} disabled={!hasSelected} loading={loading}>
-            Reload
-          </Button>
-          <span style={{ marginLeft: 8 }}>
-            {hasSelected ? `选择了 ${selectedRowKeys.length} 个用户` : ''}
-          </span>
+      <div style={{margin: 16}}>
+        <Space size={700}>
+          <Space>
+            <Button type="primary" onClick={reload} disabled={!hasSelected} loading={loading}>
+              Reload
+            </Button>
+            <span style={{ marginLeft: 8 }}>
+              {hasSelected ? `选择了 ${selectedRowKeys.length} 个用户` : ''}
+            </span>
+          </Space>
+          <Space wrap>
+            <Button type="primary" ghost onClick={addUsers}>新增用户</Button>
+            {/* TODO:批量删除用户  */}
+            <Button type="primary" danger ghost onClick={batchDel}>删除用户</Button>
+          </Space>
         </Space>
-        <Space wrap>
-          <Button type="primary" ghost onClick={addUsers}>新增用户</Button>
-          {/* TODO:批量删除用户  */}
-          <Button type="primary" danger ghost onClick={batchDel}>删除用户</Button>
-        </Space>
-      </Space>
 
-      {/* 创建用户的表单 open为true时弹出 */}
-      <UserCreateForm
-        open={createFormOpen}
-        onCreate={onCreate}
-        onCancel={() => {
-          setCreateFormOpen(false);
-        }} />
+        {/* 创建用户的表单 open为true时弹出 */}
+        <UserCreateForm
+          open={createFormOpen}
+          onCreate={onCreate}
+          onCancel={() => {
+            setCreateFormOpen(false);
+          }} />
 
-      {/* 编辑用户的表单 open为true时弹出 */}
-      <UserEditForm
-        open={editFormOpen}
-        record={editRecord}
-        onCreate={onCreate}
-        onCancel={() => {
-          setEditFormOpen(false);
-        }} />
+        {/* 编辑用户的表单 open为true时弹出 */}
+        <UserEditForm
+          open={editFormOpen}
+          record={editRecord}
+          onCreate={onCreate}
+          onCancel={() => {
+            setEditFormOpen(false);
+          }} />
 
-      <Table rowSelection={rowSelection} rowKey={record => record.key} columns={columns} dataSource={userData} style={{ margin: 16 }} pagination={{ position: ['bottomCenter'] }} />
-    </div >
+        <Table rowSelection={rowSelection} rowKey={record => record.key} columns={columns} dataSource={userData} style={{ margin: 16 }} pagination={{ position: ['bottomCenter'] }} />
+      </div >
     ) : (
       <>
         <Loading />

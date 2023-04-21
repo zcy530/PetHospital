@@ -1,45 +1,54 @@
 // 疫苗管理的界面
 import React, { useEffect, useRef, useState } from "react";
-import { Button, Input, Form, InputRef, Space, Table, Modal, message } from 'antd';
+import { Button, Input, Select, Form, InputRef, Space, Table, Modal, message, InputNumber } from 'antd';
 import { ColumnsType } from "antd/es/table";
 import { DeleteTwoTone, SearchOutlined, EditTwoTone, ExclamationCircleFilled, MedicineBoxTwoTone, BookTwoTone } from '@ant-design/icons';
 import { ColumnType, FilterConfirmProps } from "antd/es/table/interface";
 import Highlighter from 'react-highlight-words';
-import { VaccineType } from "./vaccineType.tsx";
+import { InspectionItemType } from "./inspectionItemType.tsx";
 import TextArea from "antd/es/input/TextArea";
 
 
 //------------------------------------------
 interface CollectionCreateFormProps {
     open: boolean;
-    onCreate: (values: VaccineType) => void;
+    onCreate: (values: InspectionItemType) => void;
     onCancel: () => void;
 }
 
 interface CollectionEditFormProps {
     open: boolean;
-    record: VaccineType;
-    onCreate: (values: VaccineType) => void;
+    record: InspectionItemType;
+    onCreate: (values: InspectionItemType) => void;
     onCancel: () => void;
 }
-//----------------------------------------------
 
-const VaccineInfo: React.FC = () => {
+interface department {
+    id: number,
+    text: string,
+    value: string
+}
+
+const { Option } = Select;
+
+const InspectionInfo: React.FC = () => {
     //定义表格数据使用
-    const [vaccineData, setVaccineData] = useState<VaccineType[]>([]);
+    const [inspectionData, setInspectionData] = useState<InspectionItemType[]>([]);
     //count监听变化
     const [count, setCount] = useState(0);
+    const [departmentList, setDepartmentList] = useState<department[]>([]);
 
     useEffect(() => {
+        getAllDepartment();
         //获取后台数据
-        fetch('https://47.120.14.174:443/petHospital/vaccines'
+        fetch('https://47.120.14.174:443/petHospital/inspections'
         )
             .then(
                 (response) => response.json(),
             )
             .then((data) => {
                 console.log(data.result);
-                setVaccineData(data.result);
+                setInspectionData(data.result);
                 //设置posts值为data
             })
             .catch((err) => {
@@ -47,11 +56,31 @@ const VaccineInfo: React.FC = () => {
             });
     }, [count]);
 
+    const getAllDepartment = () => {
+        //获取后台数据
+        fetch('https://47.120.14.174:443/petHospital/departments'
+        )
+            .then(
+                (response) => response.json(),
+            )
+            .then((data) => {
+                console.log(data.result);
+                let list: department[] = [];
+                data.result.map(res => {
+                    list.push({ "id": res.departmentId, "text": res.departmentName, "value": res.departmentName })
+                })
+                setDepartmentList(list)
+            })
+            .catch((err) => {
+                console.log(err.message);
+            });
+    }
+
     //定义两个变量 一个对应创建的窗口 一个对应编辑的窗口
     const [createFormOpen, setCreateFormOpen] = useState(false);
     const [editFormOpen, setEditFormOpen] = useState(false);
     //editRecord用于记录点击的record的信息，传给编辑窗口
-    const [editRecord, setEditRecord] = useState<VaccineType>({});
+    const [editRecord, setEditRecord] = useState<InspectionItemType>({});
 
     const onCreate = (values: any) => {
         console.log('Received values of form: ', values);
@@ -60,12 +89,12 @@ const VaccineInfo: React.FC = () => {
     };
 
     //新增操作
-    const addVaccine = () => {
+    const addItem = () => {
         setCreateFormOpen(true);
     }
 
-    //新建疫苗的表单
-    const VaccineCreateForm: React.FC<CollectionCreateFormProps> = ({
+    //新建项目的表单
+    const ItemCreateForm: React.FC<CollectionCreateFormProps> = ({
         open,
         onCreate,
         onCancel,
@@ -75,7 +104,7 @@ const VaccineInfo: React.FC = () => {
             //用Modal弹出表单
             <Modal
                 open={open} //是
-                title="添加疫苗信息"
+                title="添加检查项目信息"
                 okText="确定"
                 cancelText="取消"
                 onCancel={onCancel}
@@ -85,15 +114,17 @@ const VaccineInfo: React.FC = () => {
                         .then((values) => {
                             form.resetFields();
                             onCreate(values);
-                            fetch('https://47.120.14.174:443/petHospital/vaccines', {
+                            fetch('https://47.120.14.174:443/petHospital/inspections', {
                                 method: 'POST',
                                 headers: {
                                     'Content-type': 'application/json; charset=UTF-8',
                                 },
                                 body: JSON.stringify({
-                                    "id": 0,
+                                    "inspectionItemId": 0,
+                                    "fee": values.fee,
                                     "intro": values.intro,
-                                    "name": values.name
+                                    "itemName": values.itemName,
+                                    "departmentId": values.departmentId
                                 })
                             })
                                 .then((response) => response.json())
@@ -123,33 +154,46 @@ const VaccineInfo: React.FC = () => {
                     name="form_in_modal"
                     initialValues={{ modifier: 'public' }}
                 >
-                    {/* 填写邮箱 */}
                     <Form.Item
-                        name="name"
-                        label="疫苗名称"
-                        rules={[{ required: true, message: 'Please input vaccine name!' }]}
+                        name="itemName"
+                        label="检查项目名称"
+                        rules={[{ required: true, message: 'Please input inspection name!' }]}
                     >
-                        <Input prefix={<MedicineBoxTwoTone />} placeholder="Vaccine name" />
+                        <Input placeholder="Inspection name" />
                     </Form.Item>
-                    {/* 填写密码 */}
-                    <Form.Item name="intro" label="疫苗简介"
+                    <Form.Item name="intro" label="检查项目简介"
                         rules={[{ required: true, message: 'Please input introduction!' }]}
                     >
                         <TextArea placeholder="Introduction" rows={3} />
                     </Form.Item>
-
+                    <Form.Item name="departmentId" label="相关科室"
+                        rules={[{ required: true, message: 'Please select department!' }]}
+                    >
+                        <Select placeholder="选择相关科室">
+                            {
+                                departmentList.map(department => (
+                                    <Option value={department.id}>{department.text}</Option>
+                                ))
+                            }
+                        </Select>
+                    </Form.Item>
+                    <Form.Item name="fee" label="费用"
+                        rules={[{ required: true, message: 'Please input fee!' }]}
+                    >
+                        <InputNumber min={0} />
+                    </Form.Item>
                 </Form>
             </Modal>
         )
     };
 
     //编辑操作
-    const editVaccine = () => {
+    const editItem = () => {
         //跳出编辑的对话框
         setEditFormOpen(true);
     };
 
-    const VaccineEditForm: React.FC<CollectionEditFormProps> = ({
+    const ItemEditForm: React.FC<CollectionEditFormProps> = ({
         open,
         record,
         onCreate,
@@ -157,8 +201,11 @@ const VaccineInfo: React.FC = () => {
     }) => {
         const [form] = Form.useForm();
         //set field value
-        form.setFieldValue("name", record.name);
+        form.setFieldValue("itemName", record.itemName);
+        form.setFieldValue("departmentId", record.departmentId);
         form.setFieldValue("intro", record.intro);
+        form.setFieldValue("fee", record.fee);
+
         return (
             //用Modal弹出表单
             <Modal
@@ -173,12 +220,14 @@ const VaccineInfo: React.FC = () => {
                         .then((values) => {
                             form.resetFields();
                             onCreate(values);
-                            fetch(`https://47.120.14.174:443/petHospital/vaccines/` + record.id, {
+                            fetch(`https://47.120.14.174:443/petHospital/inspections/` + record.inspectionItemId, {
                                 method: 'PUT',
                                 body: JSON.stringify({
-                                    "id": record.id,
+                                    "inspectionItemId": record.imspectionItemId,
+                                    "fee": values.fee,
                                     "intro": values.intro,
-                                    "name": values.name
+                                    "itemName": values.itemName,
+                                    "departmentId": values.departmentId
                                 }),
                                 headers: {
                                     'Content-type': 'application/json; charset=UTF-8',
@@ -220,21 +269,33 @@ const VaccineInfo: React.FC = () => {
                     initialValues={{ modifier: 'public' }}
                 >
                     <Form.Item
-                        name="name"
-                        label="疫苗名称"
-                        rules={[{ required: true, message: 'Please input vaccine name!' }]}
+                        name="itemName"
+                        label="检查项目名称"
+                        rules={[{ required: true, message: 'Please input inspection name!' }]}
                     >
-                        <Input prefix={<MedicineBoxTwoTone />} placeholder="Vaccine name" />
+                        <Input placeholder="Inspection name" />
                     </Form.Item>
-
-                    <Form.Item
-                        name="intro"
-                        label="疫苗简介"
+                    <Form.Item name="intro" label="检查项目简介"
                         rules={[{ required: true, message: 'Please input introduction!' }]}
                     >
                         <TextArea placeholder="Introduction" rows={3} />
                     </Form.Item>
-
+                    <Form.Item name="departmentId" label="相关科室"
+                        rules={[{ required: true, message: 'Please select department!' }]}
+                    >
+                        <Select placeholder="选择相关科室">
+                            {
+                                departmentList.map(department => (
+                                    <Option value={department.id}>{department.text}</Option>
+                                ))
+                            }
+                        </Select>
+                    </Form.Item>
+                    <Form.Item name="fee" label="费用"
+                        rules={[{ required: true, message: 'Please input fee!' }]}
+                    >
+                        <InputNumber min={0} />
+                    </Form.Item>
                 </Form>
             </Modal>
         )
@@ -242,7 +303,7 @@ const VaccineInfo: React.FC = () => {
 
     //表格列搜索功能
     //列的下标
-    type DataIndex = keyof VaccineType;
+    type DataIndex = keyof InspectionItemType;
 
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
@@ -345,7 +406,7 @@ const VaccineInfo: React.FC = () => {
             ),
     });
 
-    //删除药品
+    //删除
     const del = (id: number) => {
         //弹出对话框 是否删除？
         showDeleteConfirm(id);
@@ -354,30 +415,30 @@ const VaccineInfo: React.FC = () => {
     const { confirm } = Modal;
     const showDeleteConfirm = (id: number) => {
         confirm({
-            title: '确认删除该疫苗吗？',
+            title: '确认删除该检查项目吗？',
             icon: <ExclamationCircleFilled />,
             // content: '用户id为:' + id,
             okText: '确定',
             okType: 'danger',
             cancelText: '取消',
             async onOk() {
-                console.log('OK');
-                fetch(`https://47.120.14.174:443/petHospital/vaccines/${id}`, {
+                fetch(`https://47.120.14.174:443/petHospital/inspections/${id}`, {
                     method: 'DELETE',
-                }).then((response) => {
-                    if (response.status === 200) {
+                }).then(
+                    (response) => response.json()
+                ).then((data) => {
+                    if (data.status === 200) {
                         console.log('删除成功！')
-                        message.success("删除成功！");
-                        //删除的事件 DELETE
-                        setVaccineData(vaccineData.filter((item) => { return item.id !== id }));
                         //返回删除成功的提示
-                    } else {
+                        message.success("删除成功！")
+                        setCount(count + 1)
+                    } else { //status===409 有关关联的病例
                         console.log('删除失败！')
-                        message.error("删除失败，请重试！");
+                        message.error(data.message)
                     }
                 }).catch(e => {
                     console.log('错误:', e)
-                    fail()
+                    message.error("删除失败，请重试！")
                 });
             },
             onCancel() {
@@ -409,26 +470,45 @@ const VaccineInfo: React.FC = () => {
     }
 
     // 定义列
-    const columns: ColumnsType<VaccineType> = [
+    const columns: ColumnsType<InspectionItemType> = [
         {
             title: '序号',
             dataIndex: 'index',
             render: (text, record, index) => `${(pageOption.pageNo - 1) * pageOption.pageSize + (index + 1)}`,
             align: 'center',
+            width: '10%'
         },
         {
             title: '名称',
-            dataIndex: 'name',
+            dataIndex: 'itemName',
             align: 'center',
             // width: '50%',
             // 该列添加搜索功能
-            ...getColumnSearchProps('name'),
+            ...getColumnSearchProps('itemName'),
         },
         {
             title: '简介',
             dataIndex: 'intro',
             align: 'center',
             width: '30%',
+        },
+        {
+            title: '相关科室',
+            dataIndex: 'departmentName',
+            align: 'center',
+            width: '20%',
+            // 该列添加筛选功能
+            filters: departmentList,
+            filterMode: 'tree',
+            filterSearch: true,
+            onFilter: (text: string, record) => record.departmentName.startsWith(text),
+        },
+        {
+            title: '费用',
+            dataIndex: 'fee',
+            align: 'center',
+             // sort 
+             sorter: (a, b) => (a.fee > b.fee) ? 1 : -1,
         },
         {
             title: '操作',
@@ -440,11 +520,11 @@ const VaccineInfo: React.FC = () => {
                         console.log(record)
                         //这一行的数据赋值给editRecord
                         setEditRecord(record)
-                        editVaccine()
+                        editItem();
                     }
                     } />
                     <DeleteTwoTone onClick={() => {
-                        del(record.id)
+                        del(record.inspectionItemId)
                     }} />
 
                 </Space>
@@ -455,10 +535,11 @@ const VaccineInfo: React.FC = () => {
     return (
         <div>
             <div style={{ textAlign: 'right', margin: 16 }}>
-                <Button type="primary" ghost onClick={addVaccine}>新增疫苗</Button>
+                <Button type="primary" ghost onClick={addItem}>新增检查项目</Button>
             </div>
+
             {/* 新建疫苗的表单 open为true时弹出 */}
-            <VaccineCreateForm
+            <ItemCreateForm
                 open={createFormOpen}
                 onCreate={onCreate}
                 onCancel={() => {
@@ -466,16 +547,17 @@ const VaccineInfo: React.FC = () => {
                 }} />
 
             {/* 编辑疫苗的表单 open为true时弹出 */}
-            <VaccineEditForm
+            <ItemEditForm
                 open={editFormOpen}
                 record={editRecord}
                 onCreate={onCreate}
                 onCancel={() => {
                     setEditFormOpen(false);
                 }} />
-            <Table columns={columns} dataSource={vaccineData} style={{ margin: 16 }} pagination={paginationProps} />
+
+            <Table columns={columns} dataSource={inspectionData} style={{ margin: 16 }} pagination={paginationProps} />
         </div >
     );
 }
 
-export default VaccineInfo;
+export default InspectionInfo;

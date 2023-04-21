@@ -57,7 +57,7 @@ const DiseaseManage: React.FC = () => {
                             form.resetFields();
                             onCreate(values);
                             console.log(values.diseaseName + ' ' + values.typeName)
-                            fetch('http://localhost:8080/petHospital/diseases', {
+                            fetch('https://47.120.14.174:443/petHospital/diseases', {
                                 method: 'POST',
                                 headers: {
                                     'Content-type': 'application/json; charset=UTF-8',
@@ -105,7 +105,7 @@ const DiseaseManage: React.FC = () => {
                         label="疾病类别"
                         rules={[{ required: true, message: 'Please select the type of disease!' }]}
                     >
-                        <Select placeholder="Select type">
+                        <Select placeholder="选择疾病类别">
                             {/* 循环遍历渲染数组对象 */}
                             {
                                 diseaseCategory.map(disease => (
@@ -142,7 +142,7 @@ const DiseaseManage: React.FC = () => {
                             form.resetFields();
                             onCreate(values);
                             console.log(values.diseaseName + ' ' + values.typeName)
-                            fetch('http://localhost:8080/petHospital/diseases/' + record.diseaseId, {
+                            fetch('https://47.120.14.174:443/petHospital/diseases/' + record.diseaseId, {
                                 method: 'PUT',
                                 headers: {
                                     'Content-type': 'application/json; charset=UTF-8',
@@ -160,12 +160,13 @@ const DiseaseManage: React.FC = () => {
                                     let res = data.result.modifiedRecordCount;
                                     console.log(res);
                                     if (res === 1) {
-                                        success();
+                                        message.success("修改成功！")
                                         setCount(count + 1); //数据页面更新
                                     }
-                                    else fail();
+                                    else message.error("修改失败，请稍后再试！")
                                 })
                                 .catch((err) => {
+                                    message.error("修改失败，请稍后再试！")
                                     console.log(err.message);
                                 });
                         })
@@ -314,7 +315,7 @@ const DiseaseManage: React.FC = () => {
 
     useEffect(() => {
         //获取后台数据
-        fetch('http://localhost:8080/petHospital/diseases'
+        fetch('https://47.120.14.174:443/petHospital/diseases'
         )
             .then(
                 (response) => response.json(),
@@ -358,21 +359,19 @@ const DiseaseManage: React.FC = () => {
             async onOk() {
                 console.log('OK');
                 //删除的事件 DELETE
-                await fetch(`http://localhost:8080/petHospital/diseases/${id}`, {
+                await fetch(`https://47.120.14.174:443/petHospital/diseases/${id}`, {
                     method: 'DELETE',
-                }).then((response) => {
-                    if (response.status === 200) {
+                }).then(
+                    (response) => response.json()
+                ).then((data) => {
+                    if (data.status === 200) {
                         console.log('删除成功！')
                         //返回删除成功的提示
                         message.success("删除成功！")
-                        setDiseaseData(
-                            diseaseData.filter((data) => {
-                                return data.diseaseId !== id
-                            })
-                        )
-                    } else {
+                        setCount(count + 1)
+                    } else { //status===409 有关关联的病例
                         console.log('删除失败！')
-                        message.error("删除失败，请重试！")
+                        message.error(data.message)
                     }
                 }).catch(e => {
                     console.log('错误:', e)
@@ -385,23 +384,43 @@ const DiseaseManage: React.FC = () => {
         });
     };
 
+      //分页默认值，记得import useState
+      const [pageOption, setPageOption] = useState({
+        pageNo: 1,  //当前页为1
+        pageSize: 10, //一页10行
+    })
+
+    //分页配置
+    const paginationProps = {
+        current: pageOption.pageNo,
+        pageSize: pageOption.pageSize,
+        onChange: (current, size) => paginationChange(current, size)
+    }
+
+    //当翻页时，改变当前为第current页，current和size这两参数是onChange API自带的，会帮你算出来你现在在第几页，这一页有多少行数据。
+    const paginationChange = async (current, size) => {
+        //前面用到useState
+        setPageOption({
+            pageNo: current, //当前所在页面
+            pageSize: size,  //一页有几行
+        })
+    }
+
     // 定义列
     const columns: ColumnsType<DiseaseInfo> = [
         {
             title: '序号',
             dataIndex: 'index',
-            render: (text, record, index) => `${index + 1}`,
+            render: (text, record, index) => `${(pageOption.pageNo - 1) * pageOption.pageSize + (index + 1)}`,
             align: 'center',
+            width: '10%'
             // key: 'userId',
         },
         {
             title: '疾病名称',
             dataIndex: 'diseaseName',
             align: 'center',
-            // 该列添加搜索功能
-            ...getColumnSearchProps('diseaseName'),
-            // key: 'email',
-            //   ...getColumnSearchProps('email'),
+            ...getColumnSearchProps('diseaseName')
         },
         {
             title: '疾病类别',
@@ -439,7 +458,9 @@ const DiseaseManage: React.FC = () => {
     return (
         diseaseData ? (
             <div>
-                <Button type="primary" ghost onClick={addDisease}>新增病种</Button>
+                <div style={{ textAlign: 'right', margin: 16 }}>
+                    <Button type="primary" ghost onClick={addDisease}>新增病种</Button>
+                </div>
                 <DiseaseCreateForm
                     open={createOpenForm}
                     onCreate={onCreate}
@@ -447,7 +468,6 @@ const DiseaseManage: React.FC = () => {
                         setCreateFormOpen(false);
                     }}
                 />
-
                 <DiseaseEditForm
                     open={editFormOpen}
                     record={editRecord}
@@ -455,9 +475,8 @@ const DiseaseManage: React.FC = () => {
                     onCancel={() => {
                         setEditFormOpen(false);
                     }} />
-
-                {/* 表单 */}
-                <Table columns={columns} dataSource={diseaseData} style={{ margin: 16 }} pagination={{ position: ['bottomCenter'] }} />
+                <Table columns={columns} dataSource={diseaseData} style={{ margin: 16 }} pagination={paginationProps}
+                    loading={diseaseData.length === 0} />
             </div>) : (
             <>
                 <Loading />

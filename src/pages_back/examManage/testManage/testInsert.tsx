@@ -16,8 +16,6 @@ import TextArea from 'antd/es/input/TextArea';
 import BackButton from '../../global/backButton.tsx';
 import { useNavigate } from 'react-router-dom';
 
-// TODO: 新增每场考试，可以选择相应的考试试卷(select?)，开始时间(DatePicker)和结束时间，以及哪些学生(multi-select)可以参加考试。
-
 dayjs.extend(customParseFormat);
 //时间范围选择器
 const { RangePicker } = DatePicker;
@@ -71,7 +69,7 @@ const TestInsert: React.FC = () => {
             intro = values.intro;
             tag = values.tag;
             userList = values.userList;
-            fetch('http://localhost:8080/petHospital/tests', {
+            fetch('https://47.120.14.174:443/petHospital/tests', {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json; charset=UTF-8',
@@ -80,7 +78,7 @@ const TestInsert: React.FC = () => {
                     "beginDate": beginDate,
                     "endDate": endDate,
                     "intro": intro,
-                    "paperID": paperId,
+                    "paperId": paperId,
                     "tag": tag,
                     "testId": 0,
                     "testName": testName,

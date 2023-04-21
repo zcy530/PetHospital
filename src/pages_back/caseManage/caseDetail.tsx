@@ -9,7 +9,7 @@ const CaseDetail = () => {
 
 
     const params = useParams();
-    console.log(params)
+    //console.log(params)
 
     //显示在表格中的类型
     interface TableDataType {
@@ -35,12 +35,12 @@ const CaseDetail = () => {
 
     useEffect(() => {
         //获取后台数据
-        fetch(`http://localhost:8080/petHospital/cases/${params.case_id}/detail`)
+        fetch(`https://47.120.14.174:443/petHospital/cases/${params.case_id}/detail`)
             .then(
                 (response) => response.json(),
             )
             .then(async (data) => {
-                console.log(data.result);
+                //console.log(data.result);
                 const data1 = data.result;
                 setCaseData(data1);
                 const tempInspectionData = data1.inspectionCaseList?.map((item, i) => {
@@ -52,12 +52,12 @@ const CaseDetail = () => {
                         inspection_graphs: (item.inspectionGraphs?.sort(sortBy('sortNum'))).map(j => { return j.url }),
                     }
                 })
-                console.log(tempInspectionData);
+                //console.log(tempInspectionData);
                 setInspectionData(tempInspectionData);
 
             })
             .catch((err) => {
-                console.log(err.message);
+                //console.log(err.message);
             });
     }, []);
 

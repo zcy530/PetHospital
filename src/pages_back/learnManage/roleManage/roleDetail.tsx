@@ -11,7 +11,7 @@ import { EyeOutlined } from '@ant-design/icons';
 const RoleDetail = () => {
 
     const params = useParams();
-    // console.log(params)
+    // //console.log(params)
 
     const [role, setRole] = useState<RoleType>();
     const [dataSource, setDataSource] = useState<ProcessType[]>();
@@ -19,13 +19,13 @@ const RoleDetail = () => {
 
     useEffect(() => {
         //获取后台数据
-        fetch(`http://localhost:8080/petHospital/actors/${params.actorId}`
+        fetch(`https://47.120.14.174:443/petHospital/actors/${params.actorId}`
         )
             .then(
                 (response) => response.json(),
             )
             .then((data) => {
-                // console.log(data.result);
+                // //console.log(data.result);
                 const tempRole: RoleType = {
                     actorId: data.result.processId,
                     name: data.result.name,
@@ -36,7 +36,7 @@ const RoleDetail = () => {
                 setDataSource(data.result.processList);
             })
             .catch((err) => {
-                console.log(err.message);
+                //console.log(err.message);
             });
     }, []);
 

@@ -26,7 +26,7 @@ const RoleInsert = () => {
 
     //监听选择框编号
     const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-        console.log('selectedRowKeys changed: ', newSelectedRowKeys);
+        //console.log('selectedRowKeys changed: ', newSelectedRowKeys);
         setSelectedRowKeys(newSelectedRowKeys);
     };
 
@@ -68,27 +68,27 @@ const RoleInsert = () => {
 
     useEffect(() => {
         //获取后台数据
-        fetch('http://localhost:8080/petHospital/processes'
+        fetch('https://47.120.14.174:443/petHospital/processes'
         )
             .then(
                 (response) => response.json(),
             )
             .then((data) => {
-                // console.log(data.result);
+                // //console.log(data.result);
                 setDataSource(data.result);
             })
             .catch((err) => {
-                console.log(err.message);
+                //console.log(err.message);
             });
     }, []);
 
 
     function onFinish(values: any): void {
-        console.log(values)
+        //console.log(values)
         values.processList = selectedRowKeys;
-        console.log(values)
-        console.log(JSON.stringify(values))
-        fetch('http://localhost:8080/petHospital/actors', {
+        //console.log(values)
+        //console.log(JSON.stringify(values))
+        fetch('https://47.120.14.174:443/petHospital/actors', {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
@@ -97,7 +97,7 @@ const RoleInsert = () => {
         })
             .then((response) => response.json())
             .then((data) => {
-                // console.log(data);
+                // //console.log(data);
                 let res = data.success;
                 if (res === true) {
                     message.success("添加成功！")
@@ -108,7 +108,7 @@ const RoleInsert = () => {
                 }
             })
             .catch((err) => {
-                console.log(err.message);
+                //console.log(err.message);
             });
     }
 
@@ -127,7 +127,7 @@ const RoleInsert = () => {
 
                 >
                     <Form.Item name="actorId" hidden={true} />
-                    <Form.Item name="name" label="角色名称">
+                    <Form.Item name="name" label="角色名称" rules={[{ required: true, message: '请输入角色名称！' }]}>
                         <Input />
                     </Form.Item>
                     <Form.Item name="content" label="工作内容">

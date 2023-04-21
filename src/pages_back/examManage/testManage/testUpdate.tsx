@@ -6,16 +6,16 @@ import {
     Button,
     DatePicker,
     message,
+    Select,
 } from 'antd';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { Container } from 'react-bootstrap';
-import PaperSelect from '../paperSelect.tsx';
-import StudentSelect from '../studentSelect.tsx';
 import TextArea from 'antd/es/input/TextArea';
 import BackButton from '../../global/backButton.tsx';
 import { TestDetailType } from './testType.tsx';
 import { useNavigate, useParams } from 'react-router-dom';
+import Loading from '../../global/loading.tsx';
 
 // TODO: 新增每场考试，可以选择相应的考试试卷(select?)，开始时间(DatePicker)和结束时间，以及哪些学生(multi-select)可以参加考试。
 
@@ -28,10 +28,12 @@ interface studentOption {
     email: string
 }
 
-interface defaultOption {
-    value: number,
-    label: string
+interface paperOption {
+    id: number,
+    name: string
 }
+
+const { Option } = Select;
 
 const TestUpdate: React.FC = () => {
     const param = useParams();
@@ -43,57 +45,22 @@ const TestUpdate: React.FC = () => {
         console.log('Received values of form:', values);
     };
 
-
-    //从子组件获取paperId并传回
-    const getPaperId = (id: number) => {
-        form.setFieldValue('paperId', id);
+    const [paperId, setPaperId] = useState(0);
+    const handlePaperChange = (e) => {
+        console.log(e);
+        setPaperId(e);
+        form.setFieldValue('paperId', e);
     }
 
-    //从子组件获得studentIdList并传回
-    const getUserList = (idList: number[]) => {
-        form.setFieldValue('userList', idList);
+    const [userList, setUserList] = useState<number[]>()
+    const handleStudentChange = (e) => {
+        console.log(e);
+        setUserList(e); //设置userList
+        form.setFieldValue('userList', e);
     }
 
     //获取原场次信息
     const [detail, setDetail] = useState<TestDetailType>({});
-    const [defaultPaper, setDefaultPaper] = useState<defaultOption>({});
-    const [userList, setUserList] = useState<defaultOption[]>([]);
-
-    useEffect(() => {
-        fetch("http://localhost:8080/petHospital/tests/" + param.testId, { method: 'GET' })
-            .then(
-                (response) => response.json(),
-            )
-            .then((data) => {
-                console.log(data.result);
-                let res = data.result;
-                //设置detail值为data
-                setDetail(res);
-                // form setFieldValue
-                // 时间转换为dayjs
-                const begin = dayjs(res.beginDate);
-                const end = dayjs(res.endDate);
-
-                form.setFieldValue("testName", res.testName)
-                form.setFieldValue("paperId", res.paperId)
-                form.setFieldValue("intro", res.intro)
-                form.setFieldValue("tag", res.tag)
-                form.setFieldValue("testDate", [begin, end])
-
-                //设置默认的users和paper
-                // setUserList(res.userList)
-                let list: defaultOption[] = []
-                res.userList.map(user => {
-                    list.push({ "value": user.userId, "label": user.email });
-                }
-                )
-                setUserList(list);
-                setDefaultPaper({ "value": res.paperId, "label": res.paperName });
-            })
-            .catch((err) => {
-                console.log(err.message);
-            });
-    }, [])
 
     //时间格式的转换 GMT转string
     const GMTToStr = (time: string) => {
@@ -125,7 +92,7 @@ const TestUpdate: React.FC = () => {
             intro = values.intro;
             tag = values.tag;
             userList = values.userList;
-            fetch('http://localhost:8080/petHospital/tests/' + param.testId, {
+            fetch('https://47.120.14.174:443/petHospital/tests/' + param.testId, {
                 method: 'PUT',
                 headers: {
                     'Content-type': 'application/json; charset=UTF-8',
@@ -163,6 +130,97 @@ const TestUpdate: React.FC = () => {
         })
     }
 
+    const getTestDetail = () => {
+        fetch("https://47.120.14.174:443/petHospital/tests/" + param.testId, { method: 'GET' })
+            .then(
+                (response) => response.json(),
+            )
+            .then((data) => {
+                // console.log(data.result);
+                let res = data.result;
+                //设置detail值为data
+                setDetail(res);
+                // form setFieldValue
+                // 时间转换为dayjs
+                const begin = dayjs(res.beginDate);
+                const end = dayjs(res.endDate);
+
+                form.setFieldValue("testName", res.testName)
+                //原始试卷
+                form.setFieldValue("paperId", res.paperId)
+                form.setFieldValue("intro", res.intro)
+                form.setFieldValue("tag", res.tag)
+                form.setFieldValue("testDate", [begin, end])
+
+                //设置默认的users
+                let list: number[] = []
+                res.userList.map(user => {
+                    list.push(user.userId);
+                }
+                )
+                console.log(list)
+                form.setFieldValue("userList", list)
+            })
+            .catch((err) => {
+                console.log(err.message);
+            });
+    }
+
+    const [paperList, setPaper] = useState<paperOption[]>([]);
+
+    const getPaperList = () => {
+        fetch('https://47.120.14.174:443/petHospital/papers'
+        )
+            .then(
+                (response) => response.json(),
+            )
+            .then((data) => {
+                // console.log(data.result);
+                const lists = data.result;
+                let paper_List: paperOption[] = [];
+                lists.map(list => {
+                    paper_List.push({ "id": list.paperId, "name": list.paperName })
+                })
+                //赋值给paper
+                setPaper(paper_List);
+            })
+            .catch((err) => {
+                console.log(err.message);
+            });
+    }
+
+    const [studentList, setStudent] = useState<studentOption[]>([]);
+    const getStudentList = () => {
+        fetch('https://47.120.14.174:443/petHospital/users')
+            .then(
+                (response) => response.json(),
+            )
+            .then((data) => {
+                // console.log(data.result);
+                const lists = data.result;
+                let student_List: studentOption[] = [];
+                lists.map(list => {
+                    if (list.role === 'student')
+                        student_List.push({ "userId": list.userId, "email": list.email })
+                })
+                //赋值给paper
+                setStudent(student_List);
+            })
+            .catch((err) => {
+                console.log(err.message);
+            });
+    }
+
+
+    useEffect(() => {
+        //后台获取数据
+        getTestDetail();
+        //试卷列表和学生列表
+        getPaperList();
+        getStudentList();
+    }, [])
+
+
     return (
         <Container style={{ width: '100%', height: '100%' }}>
             <div style={{ textAlign: 'left', backgroundColor: 'white', padding: 50, borderRadius: 10 }}>
@@ -187,7 +245,25 @@ const TestUpdate: React.FC = () => {
 
                     <Form.Item label="选择试卷" name="paperId"
                         rules={[{ required: true, message: 'Paper is required!' }]}>
-                        <PaperSelect defaultPaper={defaultPaper} getPaper={getPaperId} />
+                        <Select
+                            size="large"
+                            showSearch //带搜索的选择框
+                            style={{ width: 160 }}
+                            placeholder="Select a paper"
+                            onChange={handlePaperChange}
+                        >
+                            {
+                                paperList ? (
+                                    paperList.map(paper =>
+                                        <Option value={paper.id}> {paper.name} </Option>
+                                    )
+                                ) : (
+                                    <>
+                                        <Loading />
+                                    </>
+                                )
+                            }
+                        </Select>
                     </Form.Item>
 
                     <Form.Item label="标签" name="tag">
@@ -207,9 +283,28 @@ const TestUpdate: React.FC = () => {
                     </Form.Item>
 
                     <Form.Item label="参考学生" name="userList">
-                        <StudentSelect userList={userList} getStudent={getUserList} />
-                    </Form.Item>
+                        <Select
+                            size="large"
+                            showSearch //带搜索的选择框
+                            mode="multiple"
+                            allowClear
+                            style={{ width: '100%' }}
+                            placeholder="选择参加考试的学生"
+                            onChange={handleStudentChange} >
+                            {
+                                studentList ? (
+                                    studentList.map(student =>
+                                        <Option value={student.userId}> {student.email} </Option>
+                                    )
+                                ) : (
+                                    <>
+                                        <Loading />
+                                    </>
+                                )
+                            }
 
+                        </Select>
+                    </Form.Item>
                     <Form.Item style={{ textAlign: 'center' }}>
                         <Button type="primary" htmlType="submit" onClick={submitTest}>
                             提交
@@ -217,7 +312,7 @@ const TestUpdate: React.FC = () => {
                     </Form.Item>
                 </Form>
             </div>
-        </Container>
+        </Container >
     );
 
 }

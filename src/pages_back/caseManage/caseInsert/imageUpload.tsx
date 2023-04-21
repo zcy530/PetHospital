@@ -34,6 +34,7 @@ const ImageUpload: React.FC = (props) => {
         }
       })
       setFileList(tempFiles);
+      triggerChange(tempFiles);
       console.log(fileList)
     }
   }, []);
@@ -63,8 +64,8 @@ const ImageUpload: React.FC = (props) => {
   };
 
   const handleChange: UploadProps['onChange'] = ({ file, fileList }) => {
-    console.log(file); // file 是当前正在上传的 单个 img
-    console.log(fileList); // fileList 是已上传的全部 img 列表
+    // console.log(file); // file 是当前正在上传的 单个 img
+    // console.log(fileList); // fileList 是已上传的全部 img 列表
     //把上传好收到success的文件的url更新
     fileList.forEach(imgItem => {
       if (!imgItem.url && imgItem && imgItem.status === 'done' && imgItem.response && imgItem.response.result) {
@@ -86,7 +87,7 @@ const ImageUpload: React.FC = (props) => {
   return (
     <>
       <Upload
-        action="http://localhost:8080/petHospital/graphs"
+        action="https://47.120.14.174:443/petHospital/graphs"
         name='graphs'
         listType="picture-card"
         multiple={props.mult}

@@ -3,6 +3,7 @@ import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import {
     Form,
     Input,
+    List,
     Button,
     Select,
     Space,
@@ -20,6 +21,10 @@ import BackButton from '../../global/backButton.tsx';
 const { TextArea } = Input;
 const { Option } = Select;
 
+interface ChoiceOption {
+    choice: string
+}
+
 //编辑问题
 const QuestionUpdate = () => {
     const param = useParams();
@@ -29,7 +34,7 @@ const QuestionUpdate = () => {
     const navigate = useNavigate(); //跳转路由
 
     useEffect(() => {
-        fetch("http://localhost:8080/petHospital/questions/" + param.questionId, { method: 'GET' })
+        fetch("https://47.120.14.174:443/petHospital/questions/" + param.questionId, { method: 'GET' })
             .then(
                 (response) => response.json(),
             )
@@ -39,39 +44,86 @@ const QuestionUpdate = () => {
                 const type = res.questionType;
                 //设置detail值为data
                 setDetail(data.result);
+                //获取原始选项
+                const choices = getChoice(res.choice)
+                console.log(choices)
+                form.setFieldValue("choices", choices);
                 //form setValue 
                 if (type === '单选') {
                     setType('单选')
                     setSingle(false);
                     setMultiple(true);
                     setJudge(true);
-                    form.setFieldValue("choices", res.choices);
-                    form.setFieldValue("single_ans", res.ans);
+                    getSingleAns(res.choice, res.ans)
                 } else if (type === '多选') {
                     setType('多选')
                     setSingle(true);
                     setMultiple(false);
                     setJudge(true)
-                    form.setFieldValue("choices", res.choices)
-                    form.setFieldValue("multi_ans", res.ans)
+                    getMultiAns(res.choice, res.ans)
                 } else {
                     setType('判断')
                     setSingle(true);
                     setMultiple(true);
                     setJudge(false)
-                    form.setFieldValue("judge_ans", res.ans)
+                    getJudgeAns(res.choice, res.ans)
                 }
+                //set form value
                 form.setFieldValue("questionType", type)
                 form.setFieldValue("description", res.description)
                 form.setFieldValue("keyword", res.keyword)
                 form.setFieldValue("diseaseId", res.disease.diseaseId)
-                //TODO: 选项如何渲染？？
-
             })
             .catch((err) => {
                 console.log(err.message);
             });
     }, []);
+
+
+    //获取原始表单的选项 并且set
+    const getChoice = (resChoice: string[]) => {
+        let choices: ChoiceOption[] = []
+        resChoice.map(c => {
+            choices.push({ "choice": c })
+        })
+        return choices;
+    }
+
+    //根据原始答案set表单中的选项
+    const getSingleAns = (choices: string[], ans: string[]) => {
+        //获取ans在choices里面的下标
+        const res = getIndex(choices, ans);
+        console.log(res);
+        const index = res[0];
+        form.setFieldValue("single_ans", index.toString());
+    }
+
+    const getMultiAns = (choices: string[], ans: string[]) => {
+        const res = getIndex(choices, ans);
+        console.log(res);
+        let index: string[] = [];
+        res.map(r => {
+            index.push(r.toString())
+        })
+        form.setFieldValue("multi_ans", index);
+    }
+
+    const getJudgeAns = (choices: string[], ans: string[]) => {
+        const res = getIndex(choices, ans);
+        console.log(res);
+        const index = res[0];
+        console.log("index为" + index.toString())
+        form.setFieldValue("judge_ans", index.toString())
+    }
+
+    //获取ans在choices里面的下标
+    const getIndex = (choices: string[], ans: string[]) => {
+        let res: number[] = [];
+        ans.map(a => {
+            res.push(choices.indexOf(a));
+        })
+        return res;
+    }
 
     const onFinish = (values: any) => {
         console.log('Received values of form:', values);
@@ -144,7 +196,7 @@ const QuestionUpdate = () => {
             console.log(choice)
             console.log(ans)
 
-            fetch('http://localhost:8080/petHospital/questions/' + param.questionId, {
+            fetch('https://47.120.14.174:443/petHospital/questions/' + param.questionId, {
                 method: 'PUT',
                 headers: {
                     'Content-type': 'application/json; charset=UTF-8',
@@ -218,32 +270,50 @@ const QuestionUpdate = () => {
                         <Input />
                     </Form.Item>
 
-                    <Form.Item label="题目选项">
-                        <Form.List name="choices">
-                            {(fields, { add, remove }) => (
-                                <>
-                                    {fields.map(({ key, name, ...restField }) => (
-                                        <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
-                                            <Form.Item
-                                                {...restField}
-                                                name={[name, 'choice']}
-                                                rules={[{ required: true, message: '请填写选项内容' }]}
-                                            >
-                                                <Input placeholder="选项" />
-                                            </Form.Item>
-                                            <MinusCircleOutlined onClick={() => remove(name)} />
-                                        </Space>
-                                    ))}
-                                    <Form.Item>
-                                        <Button disabled={!judge} type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                                            添加选项
-                                            {/* TODO: 限制加4个选项 */}
-                                        </Button>
-                                    </Form.Item>
-                                </>
-                            )}
-                        </Form.List>
-                    </Form.Item>
+                    {/* 如果是判断 这里要隐藏 */}
+                    {judge === false ? (<>
+                        <Form.Item label="题目选项" >
+                            {/* 错和对 */}
+                            <List
+                                size="small"
+                                bordered
+                                dataSource={detail.choice}
+                                renderItem={(item) => (
+                                    <List.Item>
+                                        {item}
+                                    </List.Item>
+                                )}
+                            />
+                        </Form.Item>
+                    </>) : (<>
+                        <Form.Item label="题目选项" >
+                            <Form.List name="choices">
+                                {(fields, { add, remove }) => (
+                                    <>
+                                        {fields.map(({ key, name, ...restField }) => (
+                                            <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
+                                                <Form.Item
+                                                    {...restField}
+                                                    name={[name, 'choice']}
+                                                    rules={[{ required: true, message: '请填写选项内容' }]}
+                                                >
+                                                    <Input placeholder="选项" />
+                                                </Form.Item>
+                                                <MinusCircleOutlined onClick={() => remove(name)} />
+                                            </Space>
+                                        ))}
+                                        <Form.Item>
+                                            <Button disabled={!judge} type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                                                添加选项
+                                                {/* TODO: 限制加4个选项 */}
+                                            </Button>
+                                        </Form.Item>
+                                    </>
+                                )}
+                            </Form.List>
+                        </Form.Item>
+                    </>)}
+
 
                     <Form.Item label="单选题答案" name="single_ans">
                         <Radio.Group disabled={single}>

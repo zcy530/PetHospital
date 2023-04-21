@@ -9,7 +9,7 @@ import BackButton from "../../global/backButton.tsx";
 const ProcessDetail = () => {
 
     const params = useParams();
-    console.log(params)
+    //console.log(params)
 
     const [processData, setProcessData] = useState<ProcessType>();
     const [dataSource, setDataSource] = useState<OperationType[]>();
@@ -17,13 +17,13 @@ const ProcessDetail = () => {
 
     useEffect(() => {
         //获取后台数据
-        fetch(`http://localhost:8080/petHospital/processes/${params.processId}`
+        fetch(`https://47.120.14.174:443/petHospital/processes/${params.processId}`
         )
             .then(
                 (response) => response.json(),
             )
             .then((data) => {
-                console.log(data.result);
+                //console.log(data.result);
                 const tempProcess: ProcessType = {
                     processId: data.result.processId,
                     processName: data.result.processName,
@@ -43,7 +43,7 @@ const ProcessDetail = () => {
                 setDataSource(tempOperationList)
             })
             .catch((err) => {
-                console.log(err.message);
+                //console.log(err.message);
             });
     }, []);
 

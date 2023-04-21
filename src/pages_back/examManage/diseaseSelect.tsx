@@ -13,7 +13,7 @@ const DiseaseTypeSelect: React.FC = () => {
     const [disease, setDisease] = useState<diseaseOption[]>([]);
 
     useEffect(() => {
-        fetch('http://localhost:8080/petHospital/diseases'
+        fetch('https://47.120.14.174:443/petHospital/diseases'
         )
           .then(
             (response) => response.json(),

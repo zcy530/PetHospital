@@ -3,24 +3,36 @@
     height: calc(2vh + 500px);
     width: 100%;
 }
+.userCard_whole{
+    position: absolute;
+    left: 20%;
+    top: 10%;
+    height: 71%;
+    width: 60%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
 .userImage{
     position: absolute;
-    left: 10%;
-    top: 10%;
-    width: 15%;
+    top: 0;
+    left: 0;
+    width: 42%;
+    padding: 5%;
+    border-right: 1px blanchedalmond solid;
+    /* background-color: aquamarine; */
 }
 
 .userCard{
     position: absolute;
-    left: 30%;
+    left: 45%;
     top: 15%;
-    width: 20%;
+    width: 40%;
+    margin-left: 5%;
     height: auto;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     background-color: #B9D3EE;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 .infoCard{
     margin-left: 2%;

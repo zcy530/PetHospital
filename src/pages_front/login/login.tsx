@@ -91,7 +91,7 @@ const Login = () => {
                     </Form.Group>
                     <Button type="submit" variant="primary">LOG IN</Button>
                     <Button type="button" variant="primary">
-                        <Link to='/forgetPassword' style={{textDecoration: 'none', color:'white'}}>
+                        <Link to='/sendEmail' style={{textDecoration: 'none', color:'white'}}>
                             FORGET PWD
                         </Link>
                     </Button>

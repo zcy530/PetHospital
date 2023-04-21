@@ -8,7 +8,7 @@ const noticeStyle = {
         right: '50px',
     }
 }
-const Notif = (() => {
+const Notif = (function(){
     let notification = null;
     const pop = (config) => {
         const {message, showIcon, closeIcon} = config;

@@ -2,20 +2,20 @@ import React, {useEffect, useState} from "react";
 import { Container, Row, Col, Alert } from "react-bootstrap";
 import Cat from "../../Assets/image/cat.svg";
 import { Form, Button } from 'react-bootstrap';
-import { loginInfo } from "./loginType";
+import { forgetInfo } from "./forgetType";
 import { useDispatch, useSelector } from "react-redux";
 import { login, registerout } from "../../actions/userActions";
 import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
 
-    const initailLoginInfo : loginInfo= {
+    const initailLoginInfo : forgetInfo= {
         email:'',
         password:'',
         rememberMe:false,
     }
 
-    const [userLoginInfo, setUserLoginInfo] = useState<loginInfo>(initailLoginInfo);
+    const [userLoginInfo, setUserLoginInfo] = useState<forgetInfo>(initailLoginInfo);
     const [email,setEmail] = useState<string>('');
     const [password,setPassword] = useState<string>('');
     const [remember, setRemember] = useState<boolean>(false);
@@ -91,7 +91,7 @@ const Login = () => {
                     </Form.Group>
                     <Button type="submit" variant="primary">LOG IN</Button>
                     <Button type="button" variant="primary">
-                        <Link to='/forgetPassword' style={{textDecoration: 'none', color:'white'}}>
+                        <Link to>
                             FORGET PWD
                         </Link>
                     </Button>

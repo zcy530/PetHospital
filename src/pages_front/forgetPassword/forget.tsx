@@ -4,74 +4,60 @@ import Cat from "../../Assets/image/cat.svg";
 import { Form, Button } from 'react-bootstrap';
 import { forgetInfo } from "./forgetType";
 import { useDispatch, useSelector } from "react-redux";
-import { login, registerout } from "../../actions/userActions";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Forget = () => {
+    // const initailForgetInfo : forgetInfo = {
+    //     email:'',
+    //     password:'',
+    //     code:'',
+    // }
 
-    const initailLoginInfo : forgetInfo= {
-        email:'',
-        code:'',
-    }
-
-    const [userLoginInfo, setUserLoginInfo] = useState<forgetInfo>(initailLoginInfo);
+    // const [userForgetInfo, setUserForgetInfo] = useState<forgetInfo>(initailForgetInfo);
+    const [emailcode, setemailcode] = useState<string>('');
     const [email,setEmail] = useState<string>('');
     const [password,setPassword] = useState<string>('');
-    const [remember, setRemember] = useState<boolean>(false);
-    const [show, setShow] = useState<boolean>(true);
 
     const navigate = useNavigate()
-    const dispatch = useDispatch()
 
-    // 从 redux 拿到全局的 userInfo state
     const userLogin = useSelector((state:any) => state.userLogin)
     const { error, userInfo } = userLogin
-    const userRegister = useSelector((state:any) => state.userRegister)
-    const { userRegisterInfo } = userRegister
 
-    // 检测到登录成功就跳转到 home
     useEffect(() => {
-        if(userInfo) {
-            console.log(userInfo)
-            navigate('/',{replace: true})
-        }
-    },[userInfo])
 
-    const submitHandler = (e) => {
-        e.preventDefault()
-        // 执行登录动作
-        dispatch(login(email, password))
-        dispatch(registerout())
-    };
-
+    },[email])
+    const sendEmail = () => {
+        axios({
+            url: 'https://47.120.14.174:443/petHospital/user/code?email=' + email,
+            method: "post",
+          }).then(res => {
+            console.log(res);
+          }).catch(err => {
+            console.log(err);
+          })
+    }
+    const resetPassword = (e) => {
+        e.preventDefault();
+        axios({
+            url: 'https://47.120.14.174:443/petHospital/user/password/forget',
+            method: "patch",
+            data: {'email': email,
+                    'password': password,
+                    'code': emailcode },
+          }).then(res => {
+            navigate('/login',{replace: true})
+          }).catch(err => {
+            console.log(err);
+          })
+    }
     return (
         <section>
             <Container className="login-content">
             <Row>
-
                 {!userInfo &&                 
                 <Col className="login">
-                
-                    { show && userRegisterInfo && 
-                    <Alert 
-                        variant='success' 
-                        className="login-alert" 
-                        onClose={() => {setShow(false)}}
-                        dismissible>
-                        Register successfully! You can login and visit the website now!
-                    </Alert>
-                    }
-
-                    { show && error &&
-                    <Alert 
-                        variant='danger' 
-                        className="login-alert" 
-                        onClose={() => setShow(false)}
-                        dismissible>
-                        Error: Wrong password!
-                    </Alert>
-                    } 
-                    <Form onSubmit={submitHandler}>
+                    <Form onSubmit={resetPassword}>
                     <Form.Group className="mb-3" controlId="useremail">
                         <Form.Label>Email address</Form.Label>
                         <Form.Control 
@@ -88,15 +74,21 @@ const Forget = () => {
                         value={password} 
                         onChange={(e)=>setPassword(e.target.value)}/>
                     </Form.Group>
-                    <Button type="submit" variant="primary">LOG IN</Button>
-                    <Button type="button" variant="primary">
-                        <Link to>
-                            FORGET PWD
-                        </Link>
+                    <Form.Group className="mb-3" controlId="userCode">
+                    <Form.Label>Input your code</Form.Label>
+                    <Form.Control 
+                      type="input"
+                      placeholder="Input your email code" 
+                      value={emailcode} 
+                      onChange={(e)=>setemailcode(e.target.value)}/>
+                    </Form.Group>
+                    <Button type="button" variant="primary" onClick={sendEmail}>SEND EMAIL</Button>
+                    <Button type="submit" variant="primary">
+                            RESET PWD
                     </Button>
                     </Form>
                     <div className="login-option">
-                    New user having no account? <Link to="/register">Register</Link>
+                        Have an Account? <Link to="/login">Login</Link>
                     </div>
                     </Col>
                 }

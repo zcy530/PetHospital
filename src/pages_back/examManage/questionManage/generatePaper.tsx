@@ -224,7 +224,7 @@ const GeneratePaper = () => {
                                             name={[index, 'score']}
                                             rules={[{ required: true, message: 'Question score is required' }]}>
 
-                                            <InputNumber key={index} prefix="分值：" style={{ width: '30%', marginLeft: '16px' }} max='100' min='0'
+                                            <InputNumber key={index} prefix="分值：" style={{ width: '30%', marginLeft: '16px' }} max='200' min='0'
                                                 onChange={(value) => { countScore(value, question.questionId) }}
                                             ></InputNumber>
                                         </Form.Item>
@@ -237,7 +237,7 @@ const GeneratePaper = () => {
 
 
                     <Form.Item label="试卷总分" name="score" >
-                        <InputNumber min={0} max={100}></InputNumber>
+                        <InputNumber min={0} max={200}></InputNumber>
                     </Form.Item>
 
                     <Form.Item style={{ textAlign: 'center' }}>

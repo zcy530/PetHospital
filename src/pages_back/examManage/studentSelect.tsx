@@ -26,7 +26,7 @@ const StudentSelect = (props) => {
                 const lists = data.result;
                 let student_List: studentOption[] = [];
                 lists.map(list => {
-                    if (list.role === 'student')
+                    if (list.role === 'user')
                         student_List.push({ "userId": list.userId, "email": list.email })
                 })
                 //赋值给paper
@@ -46,7 +46,7 @@ const StudentSelect = (props) => {
     return (
         <Select
             size="large"
-            showSearch //带搜索的选择框
+            // showSearch //带搜索的选择框
             mode="multiple"
             allowClear
             style={{ width: '100%' }}

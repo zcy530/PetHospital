@@ -14,7 +14,7 @@ import {
 } from 'antd';
 import { Container } from 'react-bootstrap';
 import { diseaseType } from '../../diseaseManage/diseaseType.tsx'
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { QuestionDetailType } from './questionType.tsx'
 import BackButton from '../../global/backButton.tsx';
 
@@ -24,6 +24,8 @@ const { Option } = Select;
 interface ChoiceOption {
     choice: string
 }
+const options: string[] = ['A', 'B', 'C', 'D'];
+
 
 //编辑问题
 const QuestionUpdate = () => {
@@ -272,26 +274,15 @@ const QuestionUpdate = () => {
 
                     {/* 如果是判断 这里要隐藏 */}
                     {judge === false ? (<>
-                        <Form.Item label="题目选项" >
-                            {/* 错和对 */}
-                            <List
-                                size="small"
-                                bordered
-                                dataSource={detail.choice}
-                                renderItem={(item) => (
-                                    <List.Item>
-                                        {item}
-                                    </List.Item>
-                                )}
-                            />
-                        </Form.Item>
+
                     </>) : (<>
                         <Form.Item label="题目选项" >
-                            <Form.List name="choices">
+                            <Form.List name="choices" >
                                 {(fields, { add, remove }) => (
                                     <>
                                         {fields.map(({ key, name, ...restField }) => (
                                             <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
+                                                {options[key]}
                                                 <Form.Item
                                                     {...restField}
                                                     name={[name, 'choice']}
@@ -299,15 +290,9 @@ const QuestionUpdate = () => {
                                                 >
                                                     <Input placeholder="选项" />
                                                 </Form.Item>
-                                                <MinusCircleOutlined onClick={() => remove(name)} />
+                                                {/* <MinusCircleOutlined onClick={() => remove(name)} /> */}
                                             </Space>
                                         ))}
-                                        <Form.Item>
-                                            <Button disabled={!judge} type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                                                添加选项
-                                                {/* TODO: 限制加4个选项 */}
-                                            </Button>
-                                        </Form.Item>
                                     </>
                                 )}
                             </Form.List>

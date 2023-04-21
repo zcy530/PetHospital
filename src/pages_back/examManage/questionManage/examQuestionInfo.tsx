@@ -275,7 +275,6 @@ const QuestionInfo: React.FC = () => {
                     </Link>
                     <DeleteTwoTone onClick={() => {
                         del(record.questionId)
-                        //添加filter方法
                     }
                     } />
                 </Space>

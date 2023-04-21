@@ -81,6 +81,7 @@ const PaperUpdate = () => {
             let sum = 0;
             //获取表单中题目列表
             const list = form.getFieldValue("questionList");
+            setQuestionList(questionList);
             console.log(list)
             list.map(q => {
                 console.log('题目' + q.questionId + '的分数为：' + q.score)
@@ -102,7 +103,11 @@ const PaperUpdate = () => {
     const deleteQuestion = (id: number) => {
         console.log("删除了考题" + id)
         //删除该考题
-        setQuestionList(questionList.filter(question => { return question.questionId != id }))
+        let list = questionList.filter(question => { return question.questionId != id })
+        console.log(list)
+        //设置表单的值
+        form.setFieldValue("questionList", list)
+        setQuestionList(list)
         setCount(count + 1);
     }
 
@@ -121,6 +126,7 @@ const PaperUpdate = () => {
             list.push(q)
         })
         // list.push(selectedList);
+        // 为什么每次add完 修改的分数重置了
         setQuestionList(list);
         form.setFieldValue("questionList", list)
         setCount(count + 1)

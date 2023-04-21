@@ -170,7 +170,7 @@ const QuestionTable: React.FC = (props) => {
                         "choice": str,
                         "description": res.description,
                         "questionType": res.questionType,
-                        "score": 0
+                        "score": null
                     })
                     //设置questionList的值
                     // setAddList(list)

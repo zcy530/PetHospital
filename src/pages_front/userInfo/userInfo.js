@@ -9,6 +9,7 @@ import FaceIcon from '@mui/icons-material/Face';
 import ClassIcon from '@mui/icons-material/Class';
 import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
 import { Button, TextField } from '@mui/material';
+import { Alert,Snackbar } from '@mui/material';
 
 function UserInfoPage() {
     const userLogin = useSelector(state => state.userLogin);
@@ -17,6 +18,7 @@ function UserInfoPage() {
     const [userinfo, setuserinfo] = useState({});
     const [showButton, setshow] = useState(true);
     const [password, setpassword] = useState("");
+    const [show, setonshow] = useState(false);
     const map = new Map();
     map.set("manager", "管理员");
     map.set("user", "普通用户");
@@ -44,11 +46,18 @@ function UserInfoPage() {
           headers: {'Authorization':token,'content-Type': 'application/json'},
         }).then(res => {
           console.log(res);
+          setonshow(true);
         }).catch(err => {
           console.log(err);
         })
         changeShow();
     }
+    const handleClose = (event, reason) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+      setonshow(false);
+    };
     return (
         <div className='userInfo'>
           <div className='userCard_whole'>
@@ -77,6 +86,13 @@ function UserInfoPage() {
                   />
                   <AutoFixNormalIcon fontSize = "large" onClick={() => changePassword(password)}/>
                 </div>}
+                {show && 
+                <Snackbar open={show} anchorOrigin={{vertical : 'top', horizontal : 'center',}} autoHideDuration={1000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                  密码修改成功！
+                  </Alert>
+                </Snackbar>
+                }
               </div>
             </div>
           </div>

@@ -207,11 +207,11 @@ const TestUpdate: React.FC = () => {
                 (response) => response.json(),
             )
             .then((data) => {
-                // console.log(data.result);
+                console.log(data.result);
                 const lists = data.result;
                 let student_List: studentOption[] = [];
                 lists.map(list => {
-                    if (list.role === 'student')
+                    if (list.role === 'user')
                         student_List.push({ "userId": list.userId, "email": list.email })
                 })
                 //赋值给paper
@@ -224,11 +224,12 @@ const TestUpdate: React.FC = () => {
 
 
     useEffect(() => {
-        //后台获取数据
-        getTestDetail();
+        
         //试卷列表和学生列表
         getPaperList();
         getStudentList();
+        //后台获取数据
+        getTestDetail();
     }, [])
 
 
@@ -246,7 +247,7 @@ const TestUpdate: React.FC = () => {
                 >
 
                     <Form.Item label="考试名称" name="testName"
-                        rules={[{ required: true, message: 'Test Name is required' }]}>
+                        rules={[{ required: true, message: '请输入考试名称！' }]}>
                         <Input prefix={<FileTextTwoTone />} size='large' />
                     </Form.Item>
 
@@ -255,7 +256,7 @@ const TestUpdate: React.FC = () => {
                     </Form.Item>
 
                     <Form.Item label="选择试卷" name="paperId"
-                        rules={[{ required: true, message: 'Paper is required!' }]}>
+                        rules={[{ required: true, message: '请选择试卷！' }]}>
                         <Select
                             size="large"
                             showSearch //带搜索的选择框
@@ -281,7 +282,7 @@ const TestUpdate: React.FC = () => {
                     </Form.Item>
 
                     <Form.Item label="考试时间" name="testDate"
-                        rules={[{ required: true, message: 'Time is required' }]}>
+                        rules={[{ required: true, message: '请设置考试时间！' }]}>
                         <RangePicker
                             size='large'
                             showTime={{
@@ -295,7 +296,7 @@ const TestUpdate: React.FC = () => {
                     <Form.Item label="参考学生" name="userList">
                         <Select
                             size="large"
-                            showSearch //带搜索的选择框
+                            // showSearch //带搜索的选择框
                             mode="multiple"
                             allowClear
                             style={{ width: '100%' }}

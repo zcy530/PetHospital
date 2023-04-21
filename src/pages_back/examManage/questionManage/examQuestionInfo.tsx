@@ -320,7 +320,7 @@ const QuestionInfo: React.FC = () => {
     return (
         questionData ? (
             <div style={{ margin: 16 }}>
-                <Space wrap size={700}>
+                <Space wrap size={600}>
                     <Space>
                         <Button type="primary" onClick={reload} disabled={!hasSelected} loading={loading}>
                             Reload

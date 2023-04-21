@@ -288,13 +288,15 @@ const UserInfo: React.FC = () => {
           <Form.Item
             name="email"
             label="邮箱"
-            rules={[{ required: true, message: 'Please input email!' }]}
+            //添加校验限制 必须只有字母和数字 有@
+            rules={[{ type:'email' , required: true, message: '请输入邮箱！邮箱由数字、字母、下划线组成，必须包含@' }]}
           >
             <Input prefix={<MailOutlined className="site-form-item-icon" />} placeholder="Email" />
           </Form.Item>
           {/* 填写密码 */}
           <Form.Item name="password" label="密码"
-            rules={[{ required: true, message: 'Please input password!' }]}
+            // 添加长度限制 不能有空格 字母和数字
+            rules={[{ required: true, min: 6, max: 6, message: '请输入密码！密码长度为6位' }]}
           >
             <Input.Password
               prefix={<LockOutlined />}
@@ -306,10 +308,10 @@ const UserInfo: React.FC = () => {
           <Form.Item
             name="role"
             label="角色"
-            rules={[{ required: true, message: 'Please select role!' }]}
+            rules={[{ required: true, message: '请选择角色！' }]}
           >
             <Select placeholder="Select role">
-              <Option value="student">student</Option>
+              <Option value="user">user</Option>
               <Option value="manager">manager</Option>
             </Select>
           </Form.Item>
@@ -317,9 +319,9 @@ const UserInfo: React.FC = () => {
           <Form.Item
             name="userClass"
             label="班级"
-            rules={[{ required: true, message: 'Please input class!' }]}
+            rules={[{ required: true, message: '请输入班级！' }]}
           >
-            <Input />
+            <Input placeholder='Class'/>
           </Form.Item>
         </Form>
       </Modal>
@@ -424,7 +426,7 @@ const UserInfo: React.FC = () => {
             rules={[{ required: true, message: 'Please select role!' }]}
           >
             <Select >
-              <Option value="student">student</Option>
+              <Option value="user">user</Option>
               <Option value="manager">manager</Option>
             </Select>
           </Form.Item>
@@ -593,8 +595,8 @@ const UserInfo: React.FC = () => {
 
   return (
     userData ? (
-      <div style={{margin: 16}}>
-        <Space size={700}>
+      <div style={{ margin: 16 }}>
+        <Space size={600}>
           <Space>
             <Button type="primary" onClick={reload} disabled={!hasSelected} loading={loading}>
               Reload

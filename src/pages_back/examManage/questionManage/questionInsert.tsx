@@ -143,8 +143,6 @@ const QuestionInsert: React.FC = () => {
                     let res = data.success;
                     if (res === true) {
                         message.success("添加成功！")
-                        //TODO： 跳转至 detail
-                        // 跳转至 paper-detail
                         navigate(`/systemManage/exercise/detail/${data.result.questionId}`, { replace: true })
                     }
                     else message.error("添加失败，请稍后再试！");

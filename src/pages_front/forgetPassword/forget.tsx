@@ -7,12 +7,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { login, registerout } from "../../actions/userActions";
 import { Link, useNavigate } from "react-router-dom";
 
-const Login = () => {
+const Forget = () => {
 
     const initailLoginInfo : forgetInfo= {
         email:'',
-        password:'',
-        rememberMe:false,
+        code:'',
     }
 
     const [userLoginInfo, setUserLoginInfo] = useState<forgetInfo>(initailLoginInfo);
@@ -111,4 +110,4 @@ const Login = () => {
     );
 }
 
-export default Login;
+export default Forget;

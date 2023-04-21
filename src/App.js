@@ -14,6 +14,7 @@ import Register from './pages_front/register/register.tsx';
 import Login from './pages_front/login/login.tsx';
 import ExamDetail from './pages_front/exam/examDetail.tsx';
 import UserInfo from './pages_front/userInfo/userInfo.tsx';
+import SendEmail from './pages_front/forgetPassword/sendEmail.tsx';
 import ForgetPassword from './pages_front/forgetPassword/forget.tsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./style.css";
@@ -39,6 +40,7 @@ function App() {
 				<Route path="/dutyLearn/role/:roleName" element={userInfo ? <Role /> : <Login />} /> 
 				<Route path="/userinfo" element={userInfo ? <UserInfo /> : <Login />}/>
 				<Route path='/systemManage/*' element={<SystemManage />} />
+				<Route path='/sendEmail' element={<SendEmail/>} />
 				<Route path='/forgetPassword' element = {<ForgetPassword />} />
 			</Routes>
 			</div>

@@ -9,7 +9,6 @@ import FaceIcon from '@mui/icons-material/Face';
 import ClassIcon from '@mui/icons-material/Class';
 import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
 import { Button, TextField } from '@mui/material';
-// import Notif from "./Notif.js";
 
 function UserInfoPage() {
     const userLogin = useSelector(state => state.userLogin);
@@ -48,7 +47,6 @@ function UserInfoPage() {
           console.log(err);
         })
         changeShow();
-        // Notif.pop({message: "修改成功"});
     }
     return (
         <div className='userInfo'>

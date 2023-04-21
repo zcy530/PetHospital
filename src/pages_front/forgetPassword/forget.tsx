@@ -1,32 +1,38 @@
 import React, {useEffect, useState} from "react";
-import { Container, Row, Col, Alert } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import Cat from "../../Assets/image/cat.svg";
 import { Form, Button } from 'react-bootstrap';
-import { forgetInfo } from "./forgetType";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { Alert,Snackbar } from '@mui/material';
 import axios from "axios";
 
 const Forget = () => {
-    // const initailForgetInfo : forgetInfo = {
-    //     email:'',
-    //     password:'',
-    //     code:'',
-    // }
-
-    // const [userForgetInfo, setUserForgetInfo] = useState<forgetInfo>(initailForgetInfo);
     const [emailcode, setemailcode] = useState<string>('');
     const [email,setEmail] = useState<string>('');
     const [password,setPassword] = useState<string>('');
+    const [emailError, setemailError] = useState<boolean>(false);
+    const [emailcodeError, setemailcodeError] = useState<boolean>(false);
 
     const navigate = useNavigate()
 
     const userLogin = useSelector((state:any) => state.userLogin)
     const { error, userInfo } = userLogin
 
-    useEffect(() => {
+    const handleClose1 = (event?: React.SyntheticEvent | Event, reason?: string) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+      setemailcodeError(false);
+    };    
+    
+    const handleClose2 = (event?: React.SyntheticEvent | Event, reason?: string) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+      setemailError(false);
+    };
 
-    },[email])
     const sendEmail = () => {
         axios({
             url: 'https://47.120.14.174:443/petHospital/user/code?email=' + email,
@@ -34,7 +40,7 @@ const Forget = () => {
           }).then(res => {
             console.log(res);
           }).catch(err => {
-            console.log(err);
+            setemailError(true);
           })
     }
     const resetPassword = (e) => {
@@ -48,13 +54,29 @@ const Forget = () => {
           }).then(res => {
             navigate('/login',{replace: true})
           }).catch(err => {
-            console.log(err);
+            setemailcodeError(true);
           })
     }
     return (
         <section>
             <Container className="login-content">
             <Row>
+              {
+                emailError && 
+                <Snackbar open={emailcodeError} autoHideDuration={800} onClose={handleClose2}>
+                  <Alert onClose={handleClose2} severity="warning" sx={{ width: '50%' }}>
+                    该邮箱不存在！
+                  </Alert>
+                </Snackbar>
+              }
+              {
+                emailcodeError && 
+                <Snackbar open={emailcodeError} autoHideDuration={800} onClose={handleClose1}>
+                  <Alert onClose={handleClose1} severity="warning" sx={{ width: '50%' }}>
+                    邮箱或验证码错误！
+                  </Alert>
+                </Snackbar>
+              }
                 {!userInfo &&                 
                 <Col className="login">
                     <Form onSubmit={resetPassword}>
@@ -92,7 +114,6 @@ const Forget = () => {
                     </div>
                     </Col>
                 }
-
                 <Col>
                 <img src={Cat} style={{ height: '500px' }} />
                 </Col>

@@ -15,8 +15,8 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 42%;
-    height: 45%;
+    width: 38%;
+    height: 50%;
     padding: 5%;
     border-right: 1px blanchedalmond solid;
     opacity: 0.4;
@@ -25,10 +25,10 @@
 }
 .userImage-down{
     position: absolute;
-    top: 45%;
+    top: 50%;
     left: 0;
-    width: 42%;
-    height: 55%;
+    width: 38%;
+    height: 50%;
     padding: 5%;
     border-right: 1px blanchedalmond solid;
     opacity: 0.8;
@@ -43,24 +43,25 @@
     width: 150px;
     height: 150px;
     margin-top:10%;
-    margin-left: 12%;
+    margin-left: 10%;
     border: 1px solid white;
     background-color: antiquewhite;
     border-radius: 100%;
     z-index: 999;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 .line{
     position: absolute;
-    top: 45%;
+    top: 50%;
     left: 0;
     height: 0;
-    width: 42%;
+    width: 38%;
     border-bottom: 1px solid white;
 }
 .userName{
     position: absolute;
     top: 70%;
-    left: 12%;
+    left: 10%;
 }
 
 .userCard{

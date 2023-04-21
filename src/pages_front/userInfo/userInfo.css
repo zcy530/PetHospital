@@ -11,14 +11,56 @@
     width: 60%;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
-.userImage{
+.userImage-up{
     position: absolute;
     top: 0;
     left: 0;
     width: 42%;
+    height: 45%;
     padding: 5%;
     border-right: 1px blanchedalmond solid;
-    /* background-color: aquamarine; */
+    opacity: 0.4;
+    background-image: url('./bg.jpeg');
+    
+}
+.userImage-down{
+    position: absolute;
+    top: 45%;
+    left: 0;
+    width: 42%;
+    height: 55%;
+    padding: 5%;
+    border-right: 1px blanchedalmond solid;
+    opacity: 0.8;
+    background-color: white;
+    
+}
+
+.image{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 150px;
+    height: 150px;
+    margin-top:10%;
+    margin-left: 12%;
+    border: 1px solid white;
+    background-color: antiquewhite;
+    border-radius: 100%;
+    z-index: 999;
+}
+.line{
+    position: absolute;
+    top: 45%;
+    left: 0;
+    height: 0;
+    width: 42%;
+    border-bottom: 1px solid white;
+}
+.userName{
+    position: absolute;
+    top: 70%;
+    left: 12%;
 }
 
 .userCard{

@@ -13,6 +13,7 @@ import { Button, TextField } from '@mui/material';
 function UserInfoPage() {
     const userLogin = useSelector(state => state.userLogin);
     const token = userLogin.userInfo.data.result.token;
+    const id = userLogin.userInfo.data.result.userId;
     const [userinfo, setuserinfo] = useState({});
     const [showButton, setshow] = useState(true);
     const [password, setpassword] = useState("");
@@ -51,7 +52,11 @@ function UserInfoPage() {
     return (
         <div className='userInfo'>
           <div className='userCard_whole'>
-            <img className='userImage' src={userURl} alt = ""/>
+            <div className='userImage-up' />
+            <div className='userImage-down' />
+            <img className = 'image' src={userURl} alt = ""/>
+            <div className='line'></div>
+            <h2 className='userName'>{map.get(userinfo.role)+id}</h2>
             <div className='userCard'>
               <div className='infoCard'>
                 <InfoBar Component={EmailIcon} info = {userinfo.email}/>

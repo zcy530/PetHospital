@@ -31,15 +31,15 @@ const CaseUpdate = () => {
     const navigate = useNavigate();
     const [caseData, setCaseData] = useState<CaseFormType>();
 
-    // console.log(params)
+    // //console.log(params)
     useEffect(() => {
         //获取后台数据
-        fetch(`http://localhost:8080/petHospital/cases/${params.case_id}/detail`)
+        fetch(`https://47.120.14.174:443/petHospital/cases/${params.case_id}/detail`)
             .then(
                 (response) => response.json(),
             )
             .then(async (data) => {
-                console.log(data.result);
+                //console.log(data.result);
                 //设置posts值为data
                 const rst = data.result;
 
@@ -58,12 +58,12 @@ const CaseUpdate = () => {
                     treatment_info: rst.treatmentInfo
                 }
                 form.setFieldsValue(formData1);
-                console.log(formData1);
-                console.log(caseData);
+                //console.log(formData1);
+                //console.log(caseData);
 
             })
             .catch((err) => {
-                console.log(err.message);
+                //console.log(err.message);
             });
     }, []);
 
@@ -71,17 +71,17 @@ const CaseUpdate = () => {
     //处理多选框
     const [options, setOptions] = useState([]);
     useEffect(() => {
-        fetch('http://localhost:8080/petHospital/diseases'
+        fetch('https://47.120.14.174:443/petHospital/diseases'
         )
             .then(
                 (response) => response.json(),
             )
             .then((data) => {
-                console.log(data.result);
+                //console.log(data.result);
                 setOptions(data.result);
             })
             .catch((err) => {
-                console.log(err.message);
+                //console.log(err.message);
             });
     }, []);
 
@@ -96,7 +96,7 @@ const CaseUpdate = () => {
 
     //获取到检查项目信息
     const getInspectionTable = (val: returnType[]) => {
-        // console.log(val);
+        // //console.log(val);
         form.setFieldValue('inspection_cases', val);
     }
 
@@ -104,9 +104,9 @@ const CaseUpdate = () => {
         if (values.front_graph) {
             values.front_graph = values.front_graph[0]
         }
-        console.log(values);
-        console.log(JSON.stringify(values))
-        fetch(`http://localhost:8080/petHospital/cases/${caseData?.caseId}`, {
+        //console.log(values);
+        //console.log(JSON.stringify(values))
+        fetch(`https://47.120.14.174:443/petHospital/cases/${caseData?.caseId}`, {
             method: 'PUT',
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
@@ -115,7 +115,7 @@ const CaseUpdate = () => {
         })
             .then((response) => response.json())
             .then((data) => {
-                console.log(data);
+                //console.log(data);
                 let res = data.success;
                 if (res === true) {
                     message.success("修改成功！")
@@ -126,7 +126,7 @@ const CaseUpdate = () => {
                 }
             })
             .catch((err) => {
-                console.log(err.message);
+                //console.log(err.message);
             });
     }
 
@@ -146,13 +146,13 @@ const CaseUpdate = () => {
                                 onFinish={onFinish}
                             >
                                 <Form.Item name="case_id" hidden={true} />
-                                <Form.Item name="case_title" label="病例名称" >
+                                <Form.Item name="case_title" label="病例名称" rules={[{ required: true, message: '请输入病例名称！' }]}>
                                     <Input />
                                 </Form.Item>
                                 <Form.Item name="front_graph" label="病例封面图">
                                     <ImageUpload num={1} mult={false} defaultImages={[caseData?.frontGraph]} />
                                 </Form.Item>
-                                <Form.Item name="disease_id" label="疾病名称">
+                                <Form.Item name="disease_id" label="疾病名称" rules={[{ required: true, message: '请选择疾病名称！' }]}>
                                     <Select optionLabelProp="key"  >
                                         {options.map(item => (
                                             <Option key={item.diseaseName} value={item.diseaseId}>{item.diseaseName}</Option>

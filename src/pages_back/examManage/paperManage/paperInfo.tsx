@@ -246,6 +246,7 @@ const Paper: React.FC = () => {
     return (
         <div>
             <Table style={{ margin: 16 }} columns={columns} dataSource={paperData} pagination={paginationProps} />
+
         </div>
     )
 }

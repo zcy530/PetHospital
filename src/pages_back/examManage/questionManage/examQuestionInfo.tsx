@@ -200,6 +200,13 @@ const QuestionInfo: React.FC = () => {
     //定义列
     const columns: ColumnsType<QuestionType> = [
         {
+            title: '序号',
+            dataIndex: 'key',
+            align: 'center',
+            render: (text, record, index) => `${text + 1}`,
+            width: '10%'
+        },
+        {
             title: '题目描述',
             dataIndex: 'description',
             key: 'description',
@@ -352,7 +359,7 @@ const QuestionInfo: React.FC = () => {
                     </Space>
                 </Space>
 
-                <Table style={{ margin: 16 }} rowSelection={rowSelection} columns={columns} dataSource={questionData} pagination={{ position: ['bottomCenter'] }} />;
+                <Table style={{ margin: 16 }} rowSelection={rowSelection} columns={columns} dataSource={questionData} />;
             </div >
         ) : (
             <>

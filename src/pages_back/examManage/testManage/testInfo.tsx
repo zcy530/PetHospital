@@ -159,8 +159,36 @@ const Test: React.FC = () => {
         });
     };
 
+        //分页默认值，记得import useState
+        const [pageOption, setPageOption] = useState({
+            pageNo: 1,  //当前页为1
+            pageSize: 10, //一页10行
+        })
+    
+        //分页配置
+        const paginationProps = {
+            current: pageOption.pageNo,
+            pageSize: pageOption.pageSize,
+            onChange: (current, size) => paginationChange(current, size)
+        }
+    
+        //当翻页时，改变当前为第current页，current和size这两参数是onChange API自带的，会帮你算出来你现在在第几页，这一页有多少行数据。
+        const paginationChange = async (current, size) => {
+            //前面用到useState
+            setPageOption({
+                pageNo: current, //当前所在页面
+                pageSize: size,  //一页有几行
+            })
+        }
+    
 
     const columns: ColumnsType<TestType> = [
+        {
+            title: '序号',
+            dataIndex: 'index',
+            render: (text, record, index) => `${(pageOption.pageNo - 1) * pageOption.pageSize + (index + 1)}`,
+            align: 'center',
+        },
         {
             title: '测试名称',
             dataIndex: 'testName',
@@ -271,7 +299,7 @@ const Test: React.FC = () => {
                     <Button type="primary" ghost>新增考试场次</Button>
                 </Link>
             </div>
-            <Table style={{ margin: 16 }} columns={columns} dataSource={testData} pagination={{ position: ['bottomCenter'] }} />;
+            <Table style={{ margin: 16 }} columns={columns} dataSource={testData} pagination={paginationProps}/>;
         </div>
     )
 };

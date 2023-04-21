@@ -7,6 +7,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { EyeOutlined } from '@ant-design/icons';
 import { RoleType } from "./roleType.tsx";
 import BackButton from "../../global/backButton.tsx";
+import Loading from "../../global/loading.tsx";
 
 
 
@@ -39,7 +40,7 @@ const RoleUpdate = () => {
 
     //监听选择框编号
     const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-        console.log('selectedRowKeys changed: ', newSelectedRowKeys);
+        //console.log('selectedRowKeys changed: ', newSelectedRowKeys);
         setSelectedRowKeys(newSelectedRowKeys);
     };
 
@@ -81,17 +82,17 @@ const RoleUpdate = () => {
 
     useEffect(() => {
         //获取后台数据
-        fetch('http://localhost:8080/petHospital/processes'
+        fetch('https://47.120.14.174:443/petHospital/processes'
         )
             .then(
                 (response) => response.json(),
             )
             .then((data) => {
-                // console.log(data.result);
+                // //console.log(data.result);
                 setDataSource(data.result);
             })
             .catch((err) => {
-                console.log(err.message);
+                //console.log(err.message);
             });
     }, []);
 
@@ -99,13 +100,13 @@ const RoleUpdate = () => {
 
     useEffect(() => {
         //获取后台数据
-        fetch(`http://localhost:8080/petHospital/actors/${params.actorId}`
+        fetch(`https://47.120.14.174:443/petHospital/actors/${params.actorId}`
         )
             .then(
                 (response) => response.json(),
             )
             .then((data) => {
-                // console.log(data.result);
+                // //console.log(data.result);
                 const tempRole: RoleType = {
                     actorId: data.result.actorId,
                     name: data.result.name,
@@ -113,22 +114,22 @@ const RoleUpdate = () => {
                     responsibility: data.result.responsibility,
                 }
                 form.setFieldsValue(tempRole);
-                console.log(data.result.processList)
+                //console.log(data.result.processList)
                 const tempSelectKeys: React.Key[] = data.result.processList.map((item) => { return item.processId });
-                console.log(tempSelectKeys)
+                //console.log(tempSelectKeys)
                 if (dataSource !== null) setSelectedRowKeys(tempSelectKeys);
             })
             .catch((err) => {
-                console.log(err.message);
+                //console.log(err.message);
             });
     }, []);
 
     function onFinish(values: any): void {
-        console.log(values)
+        //console.log(values)
         values.processList = selectedRowKeys;
-        console.log(values)
-        console.log(JSON.stringify(values))
-        fetch(`http://localhost:8080/petHospital/actors/${params.actorId}`, {
+        //console.log(values)
+        //console.log(JSON.stringify(values))
+        fetch(`https://47.120.14.174:443/petHospital/actors/${params.actorId}`, {
             method: 'PUT',
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
@@ -137,7 +138,7 @@ const RoleUpdate = () => {
         })
             .then((response) => response.json())
             .then((data) => {
-                // console.log(data);
+                // //console.log(data);
                 let res = data.success;
                 if (res === true) {
                     message.success("修改成功！")
@@ -148,7 +149,7 @@ const RoleUpdate = () => {
                 }
             })
             .catch((err) => {
-                console.log(err.message);
+                //console.log(err.message);
             });
     }
 
@@ -156,43 +157,50 @@ const RoleUpdate = () => {
     return (
         <Layout className='system-manage-content'>
             <div style={{ textAlign: 'left' }}><BackButton /></div>
-            <div style={{ textAlign: 'left' }}>
-                <Form
-                    labelCol={{ span: 4 }}
-                    wrapperCol={{ span: 14 }}
-                    layout="horizontal"
-                    style={{ maxWidth: '100%' }}
-                    form={form} name="process_insert"
-                    onFinish={onFinish}
-
-                >
-                    <Form.Item name="actorId" hidden={true} />
-                    <Form.Item name="name" label="角色名称">
-                        <Input />
-                    </Form.Item>
-                    <Form.Item name="content" label="工作内容">
-                        <TextArea rows={2} />
-                    </Form.Item>
-                    <Form.Item name="responsibility" label="职责">
-                        <TextArea rows={4} />
-                    </Form.Item>
-                    <Form.Item name="processList" label="操作列表" >
-                        <Table
-                            rowSelection={rowSelection}
-                            rowKey="processId"
-                            columns={columns}
-                            dataSource={dataSource}
-                            pagination={false}
-                            scroll={{ y: 800 }}
-
-                        />
-                    </Form.Item>
-
-                    <div style={{ textAlign: 'center', marginTop: 50 }} >
-                        <Button type="primary" htmlType="submit">提交</Button>
+            {
+                form && dataSource && selectedRowKeys ? (
+                    <div style={{ textAlign: 'left' }}>
+                        <Form
+                            labelCol={{ span: 4 }}
+                            wrapperCol={{ span: 14 }}
+                            layout="horizontal"
+                            style={{ maxWidth: '100%' }}
+                            form={form} name="process_insert"
+                            onFinish={onFinish}
+                        >
+                            <Form.Item name="actorId" hidden={true} />
+                            <Form.Item name="name" label="角色名称" rules={[{ required: true, message: '请输入角色名称！' }]}>
+                                <Input />
+                            </Form.Item>
+                            <Form.Item name="content" label="工作内容">
+                                <TextArea rows={2} />
+                            </Form.Item>
+                            <Form.Item name="responsibility" label="职责">
+                                <TextArea rows={4} />
+                            </Form.Item>
+                            <Form.Item name="processList" label="操作列表" >
+                                <Table
+                                    rowSelection={rowSelection}
+                                    rowKey="processId"
+                                    columns={columns}
+                                    dataSource={dataSource}
+                                    pagination={false}
+                                    scroll={{ y: 800 }}
+                                />
+                            </Form.Item>
+                            <div style={{ textAlign: 'center', marginTop: 50 }} >
+                                <Button type="primary" htmlType="submit">提交</Button>
+                            </div>
+                        </Form>
                     </div>
-                </Form>
-            </div>
+
+                ) : (
+                    <>
+                        <Loading />
+                    </>
+                )
+            }
+
         </Layout>
 
     );

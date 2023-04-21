@@ -9,6 +9,26 @@ import Highlighter from 'react-highlight-words';
 
 
 const ProcessInfo: React.FC = () => {
+    const [pageOption, setPageOption] = useState({
+        pageNo: 1,  //当前页为1
+        pageSize: 10, //一页10行
+    })
+
+    //分页配置
+    const paginationProps = {
+        current: pageOption.pageNo,
+        pageSize: pageOption.pageSize,
+        onChange: (current, size) => paginationChange(current, size)
+    }
+
+    //当翻页时，改变当前为第current页，current和size这两参数是onChange API自带的，会帮你算出来你现在在第几页，这一页有多少行数据。
+    const paginationChange = async (current, size) => {
+        //前面用到useState
+        setPageOption({
+            pageNo: current, //当前所在页面
+            pageSize: size,  //一页有几行
+        })
+    }
 
     /**
      * 定义表格数据
@@ -18,57 +38,20 @@ const ProcessInfo: React.FC = () => {
     const [processData, setProcessData] = useState<ProcessType[]>([]);
     useEffect(() => {
         //获取后台数据
-        fetch('http://localhost:8080/petHospital/processes'
+        fetch('https://47.120.14.174:443/petHospital/processes'
         )
             .then(
                 (response) => response.json(),
             )
             .then((data) => {
-                console.log(data.result);
+                ////console.log(data.result);
                 setProcessData(data.result);
                 //设置posts值为data
             })
             .catch((err) => {
-                console.log(err.message);
+                ////console.log(err.message);
             });
     }, []);
-
-    /**
-     * 多选部分
-     */
-
-    //用于多选的变量和函数
-    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-    const [loading, setLoading] = useState(false);
-
-    //重置选择状态
-    const reload = () => {
-        setLoading(true);
-        // ajax request after empty completing
-        setTimeout(() => {
-            setSelectedRowKeys([]);
-            setLoading(false);
-        }, 1000);
-    };
-
-    //监听选择框编号
-    const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-        console.log('selectedRowKeys changed: ', newSelectedRowKeys);
-        setSelectedRowKeys(newSelectedRowKeys);
-    };
-
-    //定义每行前面的选择框
-    const rowSelection = {
-        selectedRowKeys,
-        onChange: onSelectChange,
-    };
-    //被选的行数
-    const hasSelected = selectedRowKeys.length > 0;
-
-    //批量删除
-    const batchDel = () => {
-
-    }
 
 
     /**
@@ -185,9 +168,9 @@ const ProcessInfo: React.FC = () => {
     // 定义列
     const columns: ColumnsType<ProcessType> = [
         {
-            title: '流程id',
-            dataIndex: 'processId',
-            key: 'processId',
+            title: '序号',
+            width: '10%',
+            render: (text, record, index) => `${(pageOption.pageNo - 1) * pageOption.pageSize + (index + 1)}`,
             align: 'center',
         },
         {
@@ -234,7 +217,7 @@ const ProcessInfo: React.FC = () => {
 
     //删除操作
     const del = (id: number) => {
-        console.log("点击删除id为" + id + "的流程");
+        ////console.log("点击删除id为" + id + "的流程");
         //弹出对话框 是否删除？
         showDeleteConfirm(id);
     }
@@ -248,28 +231,28 @@ const ProcessInfo: React.FC = () => {
             okType: 'danger',
             cancelText: '取消',
             async onOk() {
-                console.log('OK');
+                ////console.log('OK');
                 //删除的事件 DELETE
                 const data: ProcessType[] = processData.filter((item: ProcessType) => item.processId !== id);
                 setProcessData(data);
-                fetch(`http://localhost:8080/petHospital/processes/${id}`, {
+                fetch(`https://47.120.14.174:443/petHospital/processes/${id}`, {
                     method: 'DELETE',
                 }).then((response) => {
                     if (response.status === 200) {
-                        console.log('删除成功！')
+                        ////console.log('删除成功！')
                         message.success("删除成功！");
                         //返回删除成功的提示
                     } else {
-                        console.log('删除失败！')
+                        ////console.log('删除失败！')
                         message.error("删除失败！");
                     }
                 }).catch(e => {
-                    console.log('错误:', e)
+                    ////console.log('错误:', e)
                     fail()
                 });
             },
             onCancel() {
-                console.log('Cancel');
+                ////console.log('Cancel');
             },
         });
     };
@@ -278,23 +261,14 @@ const ProcessInfo: React.FC = () => {
 
     return (
         <div>
-            <Space size={500}>
-                <Space>
-                    <Button type="primary" onClick={reload} disabled={!hasSelected} loading={loading}>
-                        Reload
-                    </Button>
-                    <span style={{ marginLeft: 8 }}>
-                        {hasSelected ? `选择了 ${selectedRowKeys.length} 个流程` : ''}
-                    </span>
-                </Space>
+            <div style={{ textAlign: 'right', margin: 16 }}>
                 <Space wrap>
                     <Link to="/systemManage/process/insert">
                         <Button type="primary" ghost>新增流程</Button>
                     </Link>
-                    <Button type="primary" danger ghost onClick={batchDel}>删除流程</Button>
                 </Space>
-            </Space>
-            <Table rowSelection={rowSelection} columns={columns} dataSource={processData} style={{ margin: 16 }} rowKey="processId" />
+            </div>
+            <Table columns={columns} dataSource={processData} style={{ margin: 16 }} rowKey="processId" pagination={paginationProps} />
         </div >
     );
 };

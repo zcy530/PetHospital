@@ -471,9 +471,10 @@ html {
 
 .system-manage-content {
   margin-top: 60px;
+  margin-bottom: 60px;
   padding: 30px;
-  margin-left: 40px;
-  margin-right: 40px;
+  margin-left: 16px;
+  margin-right: 16px;
   /* background-color:  #ffffff70; */
   border-radius: 10px;
 }

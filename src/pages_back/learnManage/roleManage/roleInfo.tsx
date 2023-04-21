@@ -9,6 +9,26 @@ import Highlighter from 'react-highlight-words';
 
 
 const RoleInfo = () => {
+    const [pageOption, setPageOption] = useState({
+        pageNo: 1,  //当前页为1
+        pageSize: 10, //一页10行
+    })
+
+    //分页配置
+    const paginationProps = {
+        current: pageOption.pageNo,
+        pageSize: pageOption.pageSize,
+        onChange: (current, size) => paginationChange(current, size)
+    }
+
+    //当翻页时，改变当前为第current页，current和size这两参数是onChange API自带的，会帮你算出来你现在在第几页，这一页有多少行数据。
+    const paginationChange = async (current, size) => {
+        //前面用到useState
+        setPageOption({
+            pageNo: current, //当前所在页面
+            pageSize: size,  //一页有几行
+        })
+    }
 
     /**
     * 定义表格数据
@@ -18,18 +38,18 @@ const RoleInfo = () => {
     const [roleData, setRoleData] = useState<RoleType[]>([]);
     useEffect(() => {
         //获取后台数据
-        fetch('http://localhost:8080/petHospital/actors'
+        fetch('https://47.120.14.174:443/petHospital/actors'
         )
             .then(
                 (response) => response.json(),
             )
             .then((data) => {
-                console.log(data.result);
+                ////console.log(data.result);
                 setRoleData(data.result);
                 //设置posts值为data
             })
             .catch((err) => {
-                console.log(err.message);
+                ////console.log(err.message);
             });
     }, []);
 
@@ -149,9 +169,9 @@ const RoleInfo = () => {
     // 定义列
     const columns: ColumnsType<RoleType> = [
         {
-            title: '角色id',
-            dataIndex: 'actorId',
-            key: 'actorId',
+            title: '序号',
+            width: '5%',
+            render: (text, record, index) => `${(pageOption.pageNo - 1) * pageOption.pageSize + (index + 1)}`,
             align: 'center',
         },
         {
@@ -159,7 +179,7 @@ const RoleInfo = () => {
             dataIndex: 'name',
             key: 'name',
             align: 'center',
-            // width: '50%',
+            width: '10%',
             // 该列添加搜索功能
             ...getColumnSearchProps('name'),
         },
@@ -197,7 +217,7 @@ const RoleInfo = () => {
 
     // 删除操作
     const del = (id: number) => {
-        console.log("点击删除id为" + id + "的角色");
+        //console.log("点击删除id为" + id + "的角色");
         //弹出对话框 是否删除？
         showDeleteConfirm(id);
     }
@@ -211,28 +231,28 @@ const RoleInfo = () => {
             okType: 'danger',
             cancelText: '取消',
             async onOk() {
-                console.log('OK');
+                //console.log('OK');
                 //删除的事件 DELETE
                 const data: RoleType[] = roleData.filter((item: RoleType) => item.actorId !== id);
                 setRoleData(data);
-                fetch(`http://localhost:8080/petHospital/actors/${id}`, {
+                fetch(`https://47.120.14.174:443/petHospital/actors/${id}`, {
                     method: 'DELETE',
                 }).then((response) => {
                     if (response.status === 200) {
-                        console.log('删除成功！')
+                        //console.log('删除成功！')
                         message.success("删除成功！");
                         //返回删除成功的提示
                     } else {
-                        console.log('删除失败！')
+                        //console.log('删除失败！')
                         message.error("删除失败！");
                     }
                 }).catch(e => {
-                    console.log('错误:', e)
+                    //console.log('错误:', e)
                     fail()
                 });
             },
             onCancel() {
-                console.log('Cancel');
+                //console.log('Cancel');
             },
         });
     };
@@ -243,16 +263,20 @@ const RoleInfo = () => {
 
     return (
         <div>
-            <Space size={500}>
-                <Space wrap>
-                    <Link to="/systemManage/role/insert">
-                        <Button type="primary" ghost>新增角色</Button>
-                    </Link>
+            <div style={{ textAlign: 'right', margin: 16 }}>
+                <Space size={500}>
+                    <Space wrap>
+                        <Link to="/systemManage/role/insert">
+                            <Button type="primary" ghost>新增角色</Button>
+                        </Link>
+                    </Space>
                 </Space>
-            </Space>
+            </div>
             <Table columns={columns} dataSource={roleData} style={{ margin: 16 }} rowKey="actorId"
+                pagination={paginationProps}
                 expandable={{
                     columnTitle: "角色职责",
+                    columnWidth: "5%",
                     defaultExpandAllRows: false,
                     expandedRowRender: (record) => <p style={{ margin: 0 }}>{record.responsibility}</p>,
                     rowExpandable: (record) => record.responsibility !== null,

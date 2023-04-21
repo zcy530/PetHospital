@@ -90,7 +90,11 @@ const Login = () => {
                         onChange={(e)=>setPassword(e.target.value)}/>
                     </Form.Group>
                     <Button type="submit" variant="primary">LOG IN</Button>
-                    <Button type="button" variant="primary">FORGET PWD</Button>
+                    <Button type="button" variant="primary">
+                        <Link to='/forgetPassword' style={{textDecoration: 'none', color:'white'}}>
+                            FORGET PWD
+                        </Link>
+                    </Button>
                     </Form>
                     <div className="login-option">
                     New user having no account? <Link to="/register">Register</Link>

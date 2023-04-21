@@ -78,7 +78,7 @@ const TestInsert: React.FC = () => {
                     "beginDate": beginDate,
                     "endDate": endDate,
                     "intro": intro,
-                    "paperID": paperId,
+                    "paperId": paperId,
                     "tag": tag,
                     "testId": 0,
                     "testName": testName,

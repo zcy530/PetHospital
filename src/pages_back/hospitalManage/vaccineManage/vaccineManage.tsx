@@ -367,13 +367,13 @@ const VaccineInfo: React.FC = () => {
                 }).then((response) => {
                     if (response.status === 200) {
                         console.log('删除成功！')
-                        message.success("操作成功！");
+                        message.success("删除成功！");
                         //删除的事件 DELETE
                         setVaccineData(vaccineData.filter((item) => { return item.id !== id }));
                         //返回删除成功的提示
                     } else {
                         console.log('删除失败！')
-                        message.error("操作失败，请重试！");
+                        message.error("删除失败，请重试！");
                     }
                 }).catch(e => {
                     console.log('错误:', e)
@@ -386,13 +386,34 @@ const VaccineInfo: React.FC = () => {
         });
     };
 
+    //分页默认值，记得import useState
+    const [pageOption, setPageOption] = useState({
+        pageNo: 1,  //当前页为1
+        pageSize: 10, //一页10行
+    })
+
+    //分页配置
+    const paginationProps = {
+        current: pageOption.pageNo,
+        pageSize: pageOption.pageSize,
+        onChange: (current, size) => paginationChange(current, size)
+    }
+
+    //当翻页时，改变当前为第current页，current和size这两参数是onChange API自带的，会帮你算出来你现在在第几页，这一页有多少行数据。
+    const paginationChange = async (current, size) => {
+        //前面用到useState
+        setPageOption({
+            pageNo: current, //当前所在页面
+            pageSize: size,  //一页有几行
+        })
+    }
 
     // 定义列
     const columns: ColumnsType<VaccineType> = [
         {
             title: '序号',
             dataIndex: 'index',
-            render: (text, record, index) => `${index + 1}`,
+            render: (text, record, index) => `${(pageOption.pageNo - 1) * pageOption.pageSize + (index + 1)}`,
             align: 'center',
         },
         {
@@ -452,7 +473,7 @@ const VaccineInfo: React.FC = () => {
                 onCancel={() => {
                     setEditFormOpen(false);
                 }} />
-            <Table columns={columns} dataSource={vaccineData} style={{ margin: 16 }} />
+            <Table columns={columns} dataSource={vaccineData} style={{ margin: 16 }} pagination={paginationProps} />
         </div >
     );
 }

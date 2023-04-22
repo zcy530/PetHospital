@@ -115,7 +115,7 @@ const CollectionCreateForm: React.FC<CollectionCreateFormProps> = ({
                 name="form_in_modal"
                 initialValues={{ modifier: 'public' }}
             >
-                <Form.Item name="operationName" label="操作名称">
+                <Form.Item name="operationName" label="操作名称" rules={[{ required: true, message: '请输入操作名称！' }]}>
                     <Input />
                 </Form.Item>
                 <Form.Item name="intro" label="操作说明">

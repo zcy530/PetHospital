@@ -119,7 +119,7 @@ const CollectionCreateForm: React.FC<CollectionCreateFormProps> = ({
                 <Form.Item name="intro" label="操作说明">
                     <TextArea rows={2} />
                 </Form.Item>
-                <Form.Item name="url" label="操作情况图片" valuePropName="fileList" rules={[{ required: true, message: '请插入操作情况图片！' }]}>
+                <Form.Item name="url" label="操作情况图片" valuePropName="fileList" >
                     <ImageUpload num={1} mult={false} />
                 </Form.Item>
             </Form>
@@ -162,13 +162,16 @@ const ProcessUpdate = () => {
     }
 
     function addOperation(obj) {
+        // console.log(obj)
         const addObj: OperationType = {
             key: count + 1,
             sortNum: -1,
-            url: obj.url[0],
-            operationName: obj.operationName,
-            intro: obj.intro,
+            ...obj
         }
+        if (addObj.url) {
+            addObj.url = addObj.url[0]
+        }
+        // console.log(addObj)
         const data: OperationType[] = cloneDeep(dataSource);
         // //console.log(addObj)
         data.push(addObj)

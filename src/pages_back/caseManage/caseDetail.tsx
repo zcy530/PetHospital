@@ -40,7 +40,7 @@ const CaseDetail = () => {
                 (response) => response.json(),
             )
             .then(async (data) => {
-                //console.log(data.result);
+                console.log(data.result);
                 const data1 = data.result;
                 setCaseData(data1);
                 const tempInspectionData = data1.inspectionCaseList?.map((item, i) => {
@@ -109,7 +109,17 @@ const CaseDetail = () => {
                 <Descriptions.Item label="疾病类型" >{caseData?.disease?.typeName}</Descriptions.Item>
                 <Descriptions.Item label="接诊信息" span={2}>{caseData?.admissionText} </Descriptions.Item>
                 <Descriptions.Item label="病例封面">
-                    <Image width={350} height={250} style={{ padding: '10px' }} src={caseData?.frontGraph} />
+                    {
+                        caseData?.frontGraph ? (
+                            <>
+                                <Image width={350} height={250} style={{ padding: '10px' }} src={caseData.frontGraph} />
+                            </>
+                        ) : (
+                            <>
+                            </>
+                        )
+                    }
+
                 </Descriptions.Item>
 
                 <Descriptions.Item label="接诊图片" span={2}>

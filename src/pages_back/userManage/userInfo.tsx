@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useSelector } from "react-redux";
 import type { ColumnsType, ColumnType } from 'antd/es/table';
 import {
   DeleteTwoTone,
@@ -35,6 +36,12 @@ interface CollectionEditFormProps {
 //----------------------------------------------
 
 const UserInfo: React.FC = () => {
+  //获取自己账号的id？
+  const userLogin = useSelector(state => state.userLogin)
+  const selfId = userLogin.userInfo.data.result.userId;
+
+  console.log("本用户为：" + selfId)
+
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   // 搜索输入框
@@ -288,13 +295,15 @@ const UserInfo: React.FC = () => {
           <Form.Item
             name="email"
             label="邮箱"
-            rules={[{ required: true, message: 'Please input email!' }]}
+            //添加校验限制 必须只有字母和数字 有@
+            rules={[{ type: 'email', required: true, message: '请输入邮箱！邮箱由数字、字母、下划线组成，必须包含@' }]}
           >
             <Input prefix={<MailOutlined className="site-form-item-icon" />} placeholder="Email" />
           </Form.Item>
           {/* 填写密码 */}
           <Form.Item name="password" label="密码"
-            rules={[{ required: true, message: 'Please input password!' }]}
+            // 添加长度限制 不能有空格 字母和数字
+            rules={[{ required: true, min: 6, max: 6, message: '请输入密码！密码长度为6位' }]}
           >
             <Input.Password
               prefix={<LockOutlined />}
@@ -306,10 +315,10 @@ const UserInfo: React.FC = () => {
           <Form.Item
             name="role"
             label="角色"
-            rules={[{ required: true, message: 'Please select role!' }]}
+            rules={[{ required: true, message: '请选择角色！' }]}
           >
             <Select placeholder="Select role">
-              <Option value="student">student</Option>
+              <Option value="user">user</Option>
               <Option value="manager">manager</Option>
             </Select>
           </Form.Item>
@@ -317,9 +326,9 @@ const UserInfo: React.FC = () => {
           <Form.Item
             name="userClass"
             label="班级"
-            rules={[{ required: true, message: 'Please input class!' }]}
+            rules={[{ required: true, message: '请输入班级！' }]}
           >
-            <Input />
+            <Input placeholder='Class' />
           </Form.Item>
         </Form>
       </Modal>
@@ -424,7 +433,7 @@ const UserInfo: React.FC = () => {
             rules={[{ required: true, message: 'Please select role!' }]}
           >
             <Select >
-              <Option value="student">student</Option>
+              <Option value="user">user</Option>
               <Option value="manager">manager</Option>
             </Select>
           </Form.Item>
@@ -445,11 +454,15 @@ const UserInfo: React.FC = () => {
   //删除操作
   const del = (id: number) => {
     console.log("点击删除id为" + id + "的用户");
-    //弹出对话框 是否删除？
-    showDeleteConfirm(id);
+    if (id === selfId) {
+      message.warning("不可以自己删除自己哦！")
+    }
+    else {
+      //弹出对话框 是否删除？
+      showDeleteConfirm(id);
+    }
   }
 
-  // TODO: 批量删除
   const batchDel = () => {
     confirm({
       title: '确认批量删除这些用户吗？',
@@ -460,32 +473,38 @@ const UserInfo: React.FC = () => {
       cancelText: '取消',
       async onOk() {
         console.log('要删除：' + userList)
-        //删除的事件 DELETE
-        fetch(`https://47.120.14.174:443/petHospital/users/batch`, {
-          method: 'POST',
-          body: JSON.stringify(userList),
-          headers: {
-            'Content-type': 'application/json; charset=UTF-8',
-          },
-        }).then((response) => response.json())
-          .then((data) => {
-            console.log(data);
-            let res = data.success;
-            if (res === true) {
-              if (data.result.modifiedRecordCount !== 0) {
-                message.success("删除成功！");
+        //如果要删除的用户里面存在自己，就提示！
+        if (userList.indexOf(selfId) >= 0) {
+          message.warning("不可以自己删除自己哦！")
+        }
+        else {
+          //删除的事件 DELETE
+          fetch(`https://47.120.14.174:443/petHospital/users/batch`, {
+            method: 'POST',
+            body: JSON.stringify(userList),
+            headers: {
+              'Content-type': 'application/json; charset=UTF-8',
+            },
+          }).then((response) => response.json())
+            .then((data) => {
+              console.log(data);
+              let res = data.success;
+              if (res === true) {
+                if (data.result.modifiedRecordCount !== 0) {
+                  message.success("删除成功！");
+                }
+                else message.error("删除失败，请稍后再试！");
               }
-              else message.error("删除失败，请稍后再试！");
-            }
-            else {
+              else {
+                message.error("删除失败，请稍后再试！");
+              }
+              setCount(count + 1); // 刷新界面
+            })
+            .catch((err) => {
+              console.log(err.message);
               message.error("删除失败，请稍后再试！");
-            }
-            setCount(count + 1); // 刷新界面
-          })
-          .catch((err) => {
-            console.log(err.message);
-            message.error("删除失败，请稍后再试！");
-          });
+            });
+        }
       },
       onCancel() {
         console.log('Cancel');
@@ -597,8 +616,8 @@ const UserInfo: React.FC = () => {
 
   return (
     userData ? (
-      <div style={{margin: 16}}>
-        <Space size={700}>
+      <div style={{ margin: 16 }}>
+        <Space size={600}>
           <Space>
             <Button type="primary" onClick={reload} disabled={!hasSelected} loading={loading}>
               Reload

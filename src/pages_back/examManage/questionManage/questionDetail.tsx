@@ -70,7 +70,7 @@ const QuestionDetail = () => {
                     name="keyword"
                     label="关键词:"
                 >
-                    <Tag color="geekblue" >{detail.keyword}</Tag>
+                    {detail.keyword ? <Tag color="geekblue" >{detail.keyword}</Tag> : '无'}
                     {/* <Input style={{ color: 'mediumpurple' }} readOnly={true} defaultValue={record.keyword} /> */}
                 </Form.Item>
                 <Form.Item

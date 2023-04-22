@@ -115,7 +115,7 @@ const TestInsert: React.FC = () => {
                 >
 
                     <Form.Item label="考试名称" name="testName"
-                        rules={[{ required: true, message: 'Test Name is required' }]}>
+                        rules={[{ required: true, message: '请输入考试名称！' }]}>
                         <Input prefix={<FileTextTwoTone />} size='large' />
                     </Form.Item>
 
@@ -124,7 +124,7 @@ const TestInsert: React.FC = () => {
                     </Form.Item>
 
                     <Form.Item label="选择试卷" name="paperId"
-                        rules={[{ required: true, message: 'Paper is required!' }]}>
+                        rules={[{ required: true, message: '请选择试卷！' }]}>
                         <PaperSelect getPaper={getPaperId} />
                     </Form.Item>
 
@@ -133,7 +133,7 @@ const TestInsert: React.FC = () => {
                     </Form.Item>
 
                     <Form.Item label="考试时间" name="testDate"
-                        rules={[{ required: true, message: 'Time is required' }]}>
+                        rules={[{ required: true, message: '请设置考试时间！' }]}>
                         <RangePicker
                             size='large'
                             showTime={{

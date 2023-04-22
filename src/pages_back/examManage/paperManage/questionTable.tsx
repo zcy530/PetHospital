@@ -7,14 +7,14 @@ import type { ColumnsType, ColumnType } from 'antd/es/table';
 import type { FilterConfirmProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
 import { diseaseType } from '../../diseaseManage/diseaseType.tsx'
-import { Link, useLocation } from 'react-router-dom';
+import { Question } from '../questionManage/questionType.tsx';
 import { QuestionType } from '../../examManage/questionManage/questionType.tsx'
 import Loading from '../../global/loading.tsx'
 
 
 type DataIndex = keyof QuestionType;
 
-const QuestionInfo: React.FC = () => {
+const QuestionTable: React.FC = (props) => {
 
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
@@ -112,59 +112,13 @@ const QuestionInfo: React.FC = () => {
             ),
     });
 
-    //删除考题
-    const del = (id: number) => {
-        //弹出对话框 是否删除？
-        showDeleteConfirm(id);
-    }
-
-    const { confirm } = Modal;
-    const showDeleteConfirm = (id: number) => {
-        confirm({
-            title: '确认删除该试题吗？',
-            icon: <ExclamationCircleFilled />,
-            okText: '确定',
-            okType: 'danger',
-            cancelText: '取消',
-            async onOk() {
-                console.log('OK');
-                //删除的事件 DELETE
-                await fetch(`https://47.120.14.174:443/petHospital/questions/${id}`, {
-                    method: 'DELETE',
-                }).then(
-                    (response) => response.json()
-                ).then((data) => {
-                    console.log(data)
-                    if (data.status === 200) {
-                        console.log('删除成功！')
-                        //返回删除成功的提示
-                        message.success("删除成功！")
-                        setQuestionData(
-                            questionData.filter((data) => {
-                                return data.questionId !== id
-                            })
-                        )
-                    } else {
-                        console.log('删除失败！')
-                        message.error(data.message)
-                    }
-                }
-                ).catch(e => {
-                    console.log('错误:', e)
-                    message.error("删除失败，请稍后再试！")
-                });
-            },
-            onCancel() {
-                console.log('Cancel');
-            },
-        });
-    };
-
     //表格前面的选择框
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
     //选中的问题
     const [questionList, setQuestionList] = useState<number[]>([]);
+
     const [loading, setLoading] = useState(false);
+
 
     //重置选择状态
     const reload = () => {
@@ -176,18 +130,62 @@ const QuestionInfo: React.FC = () => {
         }, 1000);
     };
 
+    //选中的问题
+    const [addList, setAddList] = useState<Question[]>([])
+
+
     const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-        console.log('selectedRowKeys changed: ', newSelectedRowKeys);
+        // console.log('selectedRowKeys changed: ', newSelectedRowKeys);
         setSelectedRowKeys(newSelectedRowKeys);
-        let questionIdList: number[] = [];
+        let selectedQuestions: number[] = [];
         newSelectedRowKeys.map((key) => {
-            console.log("对应的问题的id：" + questionData[key].questionId)
-            let id = questionData[key].questionId;
-            questionIdList.push(id); //加入问题id的列表
+            const id = questionData[key].questionId;
+            selectedQuestions.push(id)
         })
-        console.log('selectedQuestion changed: ', questionIdList);
-        setQuestionList(questionIdList)
+        // console.log(selectedQuestions)
+        setQuestionList(selectedQuestions)
     };
+
+    //点击确认后
+    const confirmAdd = () => {
+        let selectedList: Question[] = [];
+        questionList.map(async id => {
+            await fetch("https://47.120.14.174:443/petHospital/questions/" + id, { method: 'GET' })
+                .then(
+                    (response) => response.json(),
+                )
+                .then((data) => {
+                    // console.log(data.result);
+                    const res = data.result;
+                    //字符串数组拼接为字符串。。。
+                    let str = ''
+                    for (let i = 0; i < res.choice.length - 1; i++) {
+                        str += res.choice[i]
+                        str += ';'
+                    }
+                    str += res.choice[res.choice.length - 1]
+                    // let list = addList;
+                    selectedList.push({
+                        "questionId": res.questionId,
+                        "choice": str,
+                        "description": res.description,
+                        "questionType": res.questionType,
+                        "score": null
+                    })
+                    //设置questionList的值
+                    // setAddList(list)
+                })
+                .catch((err) => {
+                    console.log(err.message);
+                });
+        })
+        console.log(selectedList)
+        setTimeout(() => {
+            //传给父组件
+            props.getSelectedQuestions(selectedList); //传添加的问题列表
+            props.setOpen(false); //点击确认后窗口关闭
+        }, 1000)
+    }
 
     const rowSelection = {
         selectedRowKeys,
@@ -195,7 +193,6 @@ const QuestionInfo: React.FC = () => {
     };
 
     const hasSelected = selectedRowKeys.length > 0;
-
 
     //定义列
     const columns: ColumnsType<QuestionType> = [
@@ -260,26 +257,7 @@ const QuestionInfo: React.FC = () => {
                     </Tag>
                 </>
             ),
-        },
-        {
-            title: '操作',
-            align: 'center',
-            // key: 'action',
-            render: (_, record) => (
-                <Space size="middle">
-                    <Link to={`/systemManage/exercise/detail/${record.questionId}`}>
-                        <EyeOutlined />
-                    </Link>
-                    <Link to={`/systemManage/exercise/update/${record.questionId}`}>
-                        <EditTwoTone />
-                    </Link>
-                    <DeleteTwoTone onClick={() => {
-                        del(record.questionId)
-                    }
-                    } />
-                </Space>
-            ),
-        },
+        }
 
     ];
 
@@ -321,44 +299,24 @@ const QuestionInfo: React.FC = () => {
 
     }
 
-    const { state } = useLocation();
-
     return (
         questionData ? (
-            <div style={{ margin: 16 }}>
-                <Space wrap size={600}>
-                    <Space>
-                        <Button type="primary" onClick={reload} disabled={!hasSelected} loading={loading}>
-                            Reload
-                        </Button>
-                        <span style={{ marginLeft: 8 }}>
-                            {hasSelected ? `选择了 ${selectedRowKeys.length} 个考题` : ''}
-                        </span>
-                    </Space>
+            <div >
+                <Table style={{ margin: 16 }} rowSelection={rowSelection} columns={columns} dataSource={questionData}
+                    pagination={{ defaultPageSize: 5 }} />
+                {/* 设置每页显示五个题目 */}
+                <div style={{ textAlign: 'right', margin: 16 }}>
+                    {selectedRowKeys.length !== 0 ? (
+                        <>
+                            <Button type="primary" onClick={() => { confirmAdd() }}>确认添加</Button>
+                        </>
+                    ) : (
+                        <>
+                            <Button type="primary" onClick={hintError}>确认添加</Button>
 
-                    <Space>
-                        <Link to="/systemManage/exercise/insert">
-                            <Button type="primary" ghost>新增考题</Button>
-                        </Link>
-
-                        {/* 点击事件后的执行 */}
-                        {selectedRowKeys.length !== 0 ? (
-                            <Link to='/systemManage/exercise/generate'
-                                state={{ questionList: questionList }}
-                            >
-                                <Button type="primary">
-                                    生成试卷
-                                </Button>
-                            </Link>
-                        ) : (
-                            <Button type="primary" onClick={hintError}>
-                                生成试卷
-                            </Button>
-                        )}
-                    </Space>
-                </Space>
-
-                <Table style={{ margin: 16 }} rowSelection={rowSelection} columns={columns} dataSource={questionData} />;
+                        </>
+                    )}
+                </div>
             </div >
         ) : (
             <>
@@ -368,4 +326,4 @@ const QuestionInfo: React.FC = () => {
     )
 };
 
-export default QuestionInfo;
+export default QuestionTable;

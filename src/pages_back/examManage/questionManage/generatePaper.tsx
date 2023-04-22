@@ -115,9 +115,6 @@ const GeneratePaper = () => {
             setPost([question]);
         }
         console.log(post)
-        //给对应的表单questionList设置值
-        form.setFieldValue("questionList", post); //setField的时候post还没更新？？？一个bug
-        console.log(post)
         setCount(count + 1) //用于刷新score数据
     }
 
@@ -172,33 +169,10 @@ const GeneratePaper = () => {
                     style={{ maxWidth: '100%', marginLeft: 100, }}
                 >
                     <Form.Item label="试卷名称" name="paperName"
-                        rules={[{ required: true, message: 'Paper name is required' }]}>
+                        rules={[{ required: true, message: '请填写试卷名称！' }]}>
                         <Input prefix={<FileTextTwoTone />} size='large' placeholder='请填写试卷名称' />
                     </Form.Item>
 
-                    {/* <Form.Item label="问题列表" name={"questionList"}>
-                        <>
-                            {questions.map((question, index) => (
-                                <Form.Item rules={[{ required: true, message: 'Score is required' }]}>
-                                    <Space >
-                                        <span style={{ fontSize: '16px' }}>
-                                            {index + 1}.{' '}<b>({question.questionType}){' '}</b>{question.description}
-                                        </span>
-                                        <InputNumber key={index} prefix="分值：" style={{ width: '50%' }} max='100' min='0' onChange={(value) => { countScore(value, question.questionId) }}></InputNumber>
-                                    </Space>
-                                    <List
-                                        size='small'
-                                        style={{ margin: '16px' }}
-                                        bordered
-                                        dataSource={question.choice}
-                                        renderItem={(item) => <List.Item style={{ color: 'steelblue' }}>{item}</List.Item>}
-                                    />
-                                    <Divider></Divider>
-                                </Form.Item>
-
-                            ))}
-                        </>
-                    </Form.Item> */}
 
                     <Form.Item label="问题列表" >
                         {/* 通过Form.List渲染数组字段 */}
@@ -222,9 +196,9 @@ const GeneratePaper = () => {
                                         </Form.Item>
                                         <Form.Item {...question} key={question.questionId}
                                             name={[index, 'score']}
-                                            rules={[{ required: true, message: 'Question score is required' }]}>
+                                            rules={[{ required: true, message: '请设置分值！' }]}>
 
-                                            <InputNumber key={index} prefix="分值：" style={{ width: '30%', marginLeft: '16px' }} max='100' min='0'
+                                            <InputNumber prefix="分值：" style={{ width: '30%', marginLeft: '16px' }} max='200' min='0'
                                                 onChange={(value) => { countScore(value, question.questionId) }}
                                             ></InputNumber>
                                         </Form.Item>
@@ -237,7 +211,7 @@ const GeneratePaper = () => {
 
 
                     <Form.Item label="试卷总分" name="score" >
-                        <InputNumber min={0} max={100}></InputNumber>
+                        <InputNumber min={0} max={200}></InputNumber>
                     </Form.Item>
 
                     <Form.Item style={{ textAlign: 'center' }}>

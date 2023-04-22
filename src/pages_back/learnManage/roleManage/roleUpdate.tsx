@@ -42,6 +42,7 @@ const RoleUpdate = () => {
     const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
         //console.log('selectedRowKeys changed: ', newSelectedRowKeys);
         setSelectedRowKeys(newSelectedRowKeys);
+        form.setFieldValue("processList", newSelectedRowKeys);
     };
 
     //定义每行前面的选择框
@@ -178,7 +179,7 @@ const RoleUpdate = () => {
                             <Form.Item name="responsibility" label="职责">
                                 <TextArea rows={4} />
                             </Form.Item>
-                            <Form.Item name="processList" label="操作列表" >
+                            <Form.Item name="processList" label="流程列表" rules={[{ required: true, message: '请至少选择一个流程！' }]}>
                                 <Table
                                     rowSelection={rowSelection}
                                     rowKey="processId"

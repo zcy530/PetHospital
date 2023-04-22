@@ -7,7 +7,7 @@ const { Dragger } = Upload;
 
 //因为是要实现一个在formitem里的自定义组件，所以一定要有value和triggerChange函数，其中value的值会返回到表单当中
 const VideoUpload = (props) => {
-    console.log(props);
+    // console.log(props);
     const [fileList, setFileList] = useState<UploadFile[]>([]);
 
     useEffect(() => {
@@ -20,7 +20,7 @@ const VideoUpload = (props) => {
                 }
             })
             setFileList(tempFiles);
-            console.log(fileList);
+            // console.log(fileList);
         }
     }, []);
 
@@ -34,11 +34,13 @@ const VideoUpload = (props) => {
 
     const handleChange: UploadProps['onChange'] = ({ file, fileList }) => {
         const { status } = file;
-        if (status !== 'uploading') {
+        if (status === 'uploading') {
             // console.log(file, fileList);
+            props.getFileStatus(false);
         }
         if (status === 'done') {
             message.success(`${file.name} 上传成功.`);
+            props.getFileStatus(true)
             file.url = file.response.result;
         } else if (status === 'error') {
             message.error(`${file.name} 上传失败.`);

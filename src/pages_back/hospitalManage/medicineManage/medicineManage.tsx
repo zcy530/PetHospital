@@ -267,7 +267,7 @@ const MedicineInfo: React.FC = () => {
                         label="药品价格"
                         rules={[{ required: true, message: '请输入药品价格！' }]}
                     >
-                        <InputNumber addonAfter={<text>￥</text>} style={{ width: '100%' }} />
+                        <InputNumber addonAfter={<text>￥</text>} style={{ width: '100%' }} min='0' />
                     </Form.Item>
                     <Form.Item name="url" label="药品图片" rules={[{ required: true, message: '请上传药品图片！' }]}>
                         <ImageUpload num={1} mult={false} />
@@ -377,7 +377,7 @@ const MedicineInfo: React.FC = () => {
                         label="药品价格"
                         rules={[{ required: true, message: '请输入药品价格！' }]}
                     >
-                        <InputNumber addonAfter={<text>￥</text>} style={{ width: '100%' }} />
+                        <InputNumber addonAfter={<text>￥</text>} style={{ width: '100%' }} min='0' />
                     </Form.Item>
                     <Form.Item name="url" label="药品图片" rules={[{ required: true, message: '请上传药品图片！' }]}>
                         <ImageUpload num={1} mult={false} defaultImages={[editRecord?.url]} />

@@ -1,12 +1,12 @@
-import { Divider, Progress, Row } from "antd";
+import { Checkbox, Divider, Form } from "antd";
 import React, { useEffect, useState } from "react";
-import { Button, Form } from "react-bootstrap";
-import { oneExamQuestions } from "./mockExamData.tsx";
+import { Button} from "react-bootstrap";
 import { oneQuestionAnswer, examPaper } from "./examTypeDefine.tsx";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import FundClockProgress from "react-fundraising-countdown"
 import moment from 'moment'
+import { CheckboxValueType } from "antd/es/checkbox/Group.js";
 
 
 export interface examDetailsProps {
@@ -17,6 +17,7 @@ export interface examDetailsProps {
 
 const ExamDetail = (props: examDetailsProps) => {
 
+  const [form] = Form.useForm();
     const userLogin = useSelector((state:any) => state.userLogin)
     const { userInfo } = userLogin
   
@@ -50,13 +51,17 @@ const ExamDetail = (props: examDetailsProps) => {
     const config = {
         headers:{
           "Authorization": userInfo.data.result.token,
-        }
+        },
+        body: allQuestionAnswer,
       };
       
       const submitHandler = async() => {
+        
+        props.setStartExam(false);
+        props.setEndExam(true);
+
         const { data } = await axios.post(`https://47.120.14.174:443/petHospital/mytest/answer/${props.id}`,config);
         setSubmitStatus(data.success)
-        props.setEndExam(true);
         console.log(data);
       }
 
@@ -71,56 +76,62 @@ const ExamDetail = (props: examDetailsProps) => {
 
     return(
         // todo
-        // 1. 选择试题时选项时将答案添加到 setAllQuestionAnswer 数组里面
-        // 2. 提交试卷的接口对好
-        // 3. 倒计时做好
+        // 1. allQuestionAnswer 如何将数组去重
+        // 2. 侧边栏的筛选
+        // 3. 倒计时结束自动提交
         <div className="exam-container">
          <h2>{examPaperData.paperName}</h2>
-        <div style={{marginLeft:"350px",marginBottom:'20px',marginTop:'30px'}} >
-        <FundClockProgress 
-          campaignEndDate={moment().add(2, 'hours').format('YYYY-MM-DD HH:mm:ss')} 
-          icoClockStyle={{ backgroundColor: "#fff" }}
-          icoClockFlipStyle={{ backgroundColor: "#aec5da" }}
-          icoClockFlipTextStyle={{ color: "#000" }}
-          unitLabelContainerStyle={{ backgroundColor: "#fff" }}
-          unitLabelTextStyle={{ color: "#000", fontSize: "1.1em" }}
-        />
+        <div style={{margin:"auto",marginBottom:'20px',marginTop:'30px',width:'350px'}} >
+          <FundClockProgress 
+            campaignEndDate={moment().add(2, 'hours').format('YYYY-MM-DD HH:mm:ss')} 
+            icoClockStyle={{ backgroundColor: "#fff" }}
+            icoClockFlipStyle={{ backgroundColor: "#aec5da" }}
+            icoClockFlipTextStyle={{ color: "#000" }}
+            unitLabelContainerStyle={{ backgroundColor: "#fff" }}
+            unitLabelTextStyle={{ color: "#000", fontSize: "1.1em" }}
+          />
         </div>
         <Divider />
         <Form 
+          form={form}
           style={{marginLeft:'100px',marginRight:'100px',fontSize:'18px',textAlign:'left'}}>
             
             {examPaperData.questionList.map((question,index)=>(
-                <>
-                <Form.Group className="mb-3" controlId="question">
-                    <Form.Label>
-                      <b> {index+1}. {' '}({question.questionType}){' '}{question.description}</b>
-                    </Form.Label>
-                    <Form.Label>
-                        <b style={{marginLeft:'10px'}}>{'（'}分数:{' '}{question.score}{'）'}</b>
-                    </Form.Label>
-                    {/* 四个答案竖着排列 */}
-                    {question.choice.map((choice,subindex) => (
-                      <Form.Check  
-                        type="checkbox"
-                        onChange={() => {
-                          setThisQuestionAnswer({questionId:question.questionId, ans:choice, score:question.score.toString()});
-                          console.log(thisQuestionAnswer)
-                          setAllQuestionAnswer((allQuestionAnswer || []).concat([thisQuestionAnswer]));
-                          console.log(allQuestionAnswer)
-                        }}
-                        id={choice}
-                        label={choice}
-                      />
-                    ))}
-                </Form.Group>
+              <>
+                <Form.Item label={question.description} ></Form.Item>
+                <Checkbox.Group 
+                  options={question.choice} 
+                  onChange={(checkedValues: CheckboxValueType[])=> {
+                    const myans = checkedValues.join(';')
+                    
+                    console.log(myans)
+                      setThisQuestionAnswer(
+                        {questionId:question.questionId, 
+                         ans:myans, 
+                         score:question.score.toString()
+                        });
+                    
+                    // console.log(thisQuestionAnswer.ans)
+                    const index = (allQuestionAnswer).findIndex(item => item.questionId == thisQuestionAnswer.questionId);
+                    if(index == -1) {
+                      setAllQuestionAnswer((allQuestionAnswer||[]).concat([thisQuestionAnswer]));
+                    } else {
+                      (allQuestionAnswer||[]).splice(index,1,thisQuestionAnswer);
+                    }
+                    
+                    // console.log(allQuestionAnswer)
+                  }} 
+                  style={{fontSize:'30px'}} />
                 <Divider />
-                </>
+              </>
             ))}
             <Button 
               onClick={()=>{
-                props.setStartExam(false);
-                props.setEndExam(true);
+                setAllQuestionAnswer( ((allQuestionAnswer || []).filter(item => item.questionId !== 0)));
+                submitHandler();
+                console.log(allQuestionAnswer)
+                
+
               }}> 提交试卷
             </Button>
       </Form>

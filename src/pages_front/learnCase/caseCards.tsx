@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col} from 'antd';
+import { Row, Col, Pagination} from 'antd';
 import {Card}  from 'react-bootstrap';
 import { oneDiseaseCaseMenu } from './caseTypeDefine.tsx';
 import Link from 'antd/es/typography/Link';
@@ -39,6 +39,7 @@ const CaseCards = ( props: detailsProps) => {
 	},[props.id])
 
   return (
+    <>
     <Row gutter={16}>
       {allCase.map((value:oneDiseaseCaseMenu,i) => (
         <Col span={6}>
@@ -60,6 +61,8 @@ const CaseCards = ( props: detailsProps) => {
         </Col>
         ))}
     </Row>
+    <Pagination style={{marginTop:"20px"}} defaultCurrent={1} total={5} />
+    </>
   );
 };
 

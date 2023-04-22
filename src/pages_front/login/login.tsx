@@ -49,7 +49,6 @@ const Login = () => {
         <section>
             <Container className="login-content">
             <Row>
-
                 {!userInfo &&                 
                 <Col className="login">
                 
@@ -99,7 +98,7 @@ const Login = () => {
                 }
 
                 <Col>
-                <img src={Cat} style={{ height: '500px' }} />
+                <img src={Cat} style={{ height: '380px' }} />
                 </Col>
             </Row>
             </Container>

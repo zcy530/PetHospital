@@ -92,8 +92,9 @@ const ExamAnswerCheck = (props: examAnswerCheckProps) => {
                         id={choice}
                         label={choice}
                         defaultChecked={!(question.userAns==choice)}
-                        disabled={question.userAns==choice}
-                        />
+                        disabled={true}
+                        >
+                        </Form.Check>
                     ))}
                     
                 </Form.Group>

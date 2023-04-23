@@ -20,60 +20,48 @@ const PaperUpdate = () => {
     const [form] = Form.useForm();
     const navigate = useNavigate(); //跳转路由
 
-    // const [paperDetail, setPaperDetail] = useState<PaperDetailType>({
-    //     "paperId": 1,
-    //     "paperName": "",
-    //     "score": 100,
-    //     "questionList": [
-    //         {
-    //             "questionId": 0,
-    //             "choice": "",
-    //             "score": 0,
-    //             "description": "",
-    //             "questionType": ""
-    //         }
-    //     ]
-    // });
-
     const [questionList, setQuestionList] = useState<Question[]>([])
 
     const [count, setCount] = useState(0); //用于监听变化
 
+    const getPaperDetail = () => {
+        let detail: PaperDetailType = {
+            paperId: 0,
+            paperName: '',
+            score: 0,
+            questionList: []
+        };
+        //获取后台数据
+        fetch(`https://47.120.14.174:443/petHospital/papers/${params.paper_id}?front=false`)
+            .then(
+                (response) => response.json(),
+            )
+            .then((data) => {
+                console.log(data.result);
+                detail = data.result;
+                //赋值给问题列表
+                setQuestionList(detail.questionList);
+                //获取到试卷的detail。给form的各项赋值
+                form.setFieldValue("paperName", detail.paperName); //试卷名
+                form.setFieldValue("score", detail.score); //总分
+                const questionList = detail.questionList;
+                let list: PostQuestion[] = [];
+                for (let i = 0; i < questionList.length; i++) {
+                    console.log(questionList[i].score);
+                    list.push({ "questionId": questionList[i].questionId, "score": questionList[i].score });
+                }
+                console.log(list)
+                //初始questionlist赋值
+                form.setFieldValue("questionList", list)
+            })
+            .catch((err) => {
+                console.log(err.message);
+            });
+    }
+
     useEffect(() => {
         if (count === 0) { //分数无变化 渲染一次即可
-            let detail: PaperDetailType = {
-                paperId: 0,
-                paperName: '',
-                score: 0,
-                questionList: []
-            };
-            //获取后台数据
-            fetch(`https://47.120.14.174:443/petHospital/papers/${params.paper_id}?front=false`)
-                .then(
-                    (response) => response.json(),
-                )
-                .then((data) => {
-                    console.log(data.result);
-                    detail = data.result;
-                    // setPaperDetail(detail);
-                    //赋值给问题列表
-                    setQuestionList(detail.questionList);
-                    //获取到试卷的detail。给form的各项赋值
-                    form.setFieldValue("paperName", detail.paperName); //试卷名
-                    form.setFieldValue("score", detail.score); //总分
-                    const questionList = detail.questionList;
-                    let list: PostQuestion[] = [];
-                    for (let i = 0; i < questionList.length; i++) {
-                        console.log(questionList[i].score);
-                        list.push({ "questionId": questionList[i].questionId, "score": questionList[i].score });
-                    }
-                    console.log(list)
-                    //初始questionlist赋值
-                    form.setFieldValue("questionList", list)
-                })
-                .catch((err) => {
-                    console.log(err.message);
-                });
+            getPaperDetail();
         }
         else {
             console.log(questionList)
@@ -105,9 +93,9 @@ const PaperUpdate = () => {
         //删除该考题
         let list = questionList.filter(question => { return question.questionId != id })
         console.log(list)
+        setQuestionList(list)
         //设置表单的值
         form.setFieldValue("questionList", list)
-        setQuestionList(list)
         setCount(count + 1);
     }
 
@@ -122,7 +110,7 @@ const PaperUpdate = () => {
         console.log(selectedList)
         //获取questionList 加到 questionList里面 count + 1
         let list = questionList;
-        selectedList.map(q =>{
+        selectedList.map(q => {
             list.push(q)
         })
         // list.push(selectedList);

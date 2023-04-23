@@ -157,19 +157,19 @@ const InspectionInfo: React.FC = () => {
                     <Form.Item
                         name="itemName"
                         label="检查项目名称"
-                        rules={[{ required: true, message: 'Please input inspection name!' }]}
+                        rules={[{ required: true, message: '请输入检查项目名称！' }]}
                     >
                         <Input placeholder="Inspection name" />
                     </Form.Item>
                     <Form.Item name="intro" label="检查项目简介"
-                        rules={[{ required: true, message: 'Please input introduction!' }]}
+                        rules={[{ required: true, message: '请输入检查项目简介！' }]}
                     >
                         <TextArea placeholder="Introduction" rows={3} />
                     </Form.Item>
                     <Form.Item name="departmentId" label="相关科室"
-                        rules={[{ required: true, message: 'Please select department!' }]}
+                        rules={[{ required: true, message: '请选择相关科室！' }]}
                     >
-                        <Select placeholder="选择相关科室">
+                        <Select placeholder="department">
                             {
                                 departmentList.map(department => (
                                     <Option value={department.id}>{department.text}</Option>
@@ -178,7 +178,7 @@ const InspectionInfo: React.FC = () => {
                         </Select>
                     </Form.Item>
                     <Form.Item name="fee" label="费用"
-                        rules={[{ required: true, message: 'Please input fee!' }]}
+                        rules={[{ required: true, message: '请输入检查项目费用！' }]}
                     >
                         <InputNumber min={0} />
                     </Form.Item>
@@ -271,19 +271,19 @@ const InspectionInfo: React.FC = () => {
                     <Form.Item
                         name="itemName"
                         label="检查项目名称"
-                        rules={[{ required: true, message: 'Please input inspection name!' }]}
+                        rules={[{ required: true, message: '请输入检查项目名称！' }]}
                     >
                         <Input placeholder="Inspection name" />
                     </Form.Item>
                     <Form.Item name="intro" label="检查项目简介"
-                        rules={[{ required: true, message: 'Please input introduction!' }]}
+                        rules={[{ required: true, message: '请输入检查项目简介！' }]}
                     >
                         <TextArea placeholder="Introduction" rows={3} />
                     </Form.Item>
                     <Form.Item name="departmentId" label="相关科室"
-                        rules={[{ required: true, message: 'Please select department!' }]}
+                        rules={[{ required: true, message: '请选择相关科室！' }]}
                     >
-                        <Select placeholder="选择相关科室">
+                        <Select placeholder="department">
                             {
                                 departmentList.map(department => (
                                     <Option value={department.id}>{department.text}</Option>
@@ -292,7 +292,7 @@ const InspectionInfo: React.FC = () => {
                         </Select>
                     </Form.Item>
                     <Form.Item name="fee" label="费用"
-                        rules={[{ required: true, message: 'Please input fee!' }]}
+                        rules={[{ required: true, message: '请输入检查项目费用！' }]}
                     >
                         <InputNumber min={0} />
                     </Form.Item>

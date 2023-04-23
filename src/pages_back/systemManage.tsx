@@ -73,9 +73,9 @@ function getItem(
 
 const items: MenuItem[] = [
   // item: label key（写路径） icon children type
-  getItem(<Link to="/systemManage/case" style={{ textDecoration: 'none' }}>病例管理</Link>, '/case', <AppstoreAddOutlined />),
-  getItem(<Link to="/systemManage/disease" style={{ textDecoration: 'none' }}>病种管理</Link>, '/disease', <ContainerOutlined />),
-  getItem(<Link to="/systemManage/user" style={{ textDecoration: 'none' }}>用户管理</Link>, '/user', <UserOutlined />),
+  getItem(<Link to="/systemManage/case" style={{ textDecoration: 'none', fontWeight: 'bolder', fontSize: '18px' }}>病例管理</Link>, '/case', <AppstoreAddOutlined />),
+  getItem(<Link to="/systemManage/disease" style={{ textDecoration: 'none', fontWeight: 'bolder', fontSize: '18px' }}>病种管理</Link>, '/disease', <ContainerOutlined />),
+  getItem(<Link to="/systemManage/user" style={{ textDecoration: 'none', fontWeight: 'bolder', fontSize: '18px' }}>用户管理</Link>, '/user', <UserOutlined />),
   getItem('考试管理', 'exam', <ReconciliationOutlined />, [
     getItem(<Link to="/systemManage/exercise" style={{ textDecoration: 'none' }}>考题管理</Link>, '/exercise', <FolderOpenOutlined />),
     getItem(<Link to="/systemManage/paper" style={{ textDecoration: 'none' }}>试卷管理</Link>, '/paper', <FileTextOutlined />),

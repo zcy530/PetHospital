@@ -263,16 +263,22 @@ const UserInfo: React.FC = () => {
                   "userClass": values.userClass
                 })
               })
-                .then((response) => response.json())
-                .then((data) => {
-                  console.log(data);
-                  let res = data.success;
-                  if (res === true) {
-                    message.success("添加成功！");
-                    setCount(count + 1);
+                .then((response) => {
+                  if (response.status === 200) {
+                    response.json().then((data) => {
+                      console.log(data);
+                      const res = data.success;
+                      if (res === true) {
+                        message.success("添加成功！");
+                        setCount(count + 1);
+                      }
+                      else {
+                        message.error("添加失败，请稍后再试！");
+                      }
+                    })
                   }
-                  else {
-                    message.error("添加失败，请稍后再试！");
+                  else if (response.status === 400) {
+                    message.error("系统中已存在邮箱相同的用户，无法新增。");
                   }
                 })
                 .catch((err) => {
@@ -284,7 +290,6 @@ const UserInfo: React.FC = () => {
             });
         }}
       >
-        {/* {contextHolder} */}
         <Form
           form={form}
           layout="vertical"
@@ -303,7 +308,7 @@ const UserInfo: React.FC = () => {
           {/* 填写密码 */}
           <Form.Item name="password" label="密码"
             // 添加长度限制 不能有空格 字母和数字
-            rules={[{ required: true, min: 6, max: 6, message: '请输入密码！密码长度为6位' }]}
+            rules={[{ required: true, min: 6, max: 15, message: '请输入密码！密码长度为6-15位' }]}
           >
             <Input.Password
               prefix={<LockOutlined />}
@@ -383,20 +388,32 @@ const UserInfo: React.FC = () => {
                 .then((response) => response.json())
                 .then((data) => {
                   console.log(data)
-                  // 获取实际修改的数目
-                  if (data.success === true) {
-                    let res = data.result.modifiedRecordCount;
-                    console.log(res)
-                    if (res === 1) {
-                      message.success("修改成功！");
-                      setCount(count + 1); //数据页面更新
-                    }
-                    else {
-                      message.error("修改失败，请稍后再试！")
-                    }
-                  } else {
-                    message.error("修改失败，请稍后再试！")
+                  const status = data.status;
+                  const msg = data.message;
+                  console.log(status)
+                  console.log(msg)
+                  if (status === 200) {
+                    message.success("添加成功！");
+                    setCount(count + 1);
                   }
+                  else {
+                    message.error(msg);
+                  }
+
+                  // 获取实际修改的数目
+                  // if (data.success === true) {
+                  //   let res = data.result.modifiedRecordCount;
+                  //   console.log(res)
+                  //   if (res === 1) {
+                  //     message.success("修改成功！");
+                  //     setCount(count + 1); //数据页面更新
+                  //   }
+                  //   else {
+                  //     message.error("修改失败，请稍后再试！")
+                  //   }
+                  // } else {
+                  //   message.error("修改失败，请稍后再试！")
+                  // }
 
                 })
                 .catch((err) => {
@@ -421,7 +438,7 @@ const UserInfo: React.FC = () => {
           <Form.Item
             name="email"
             label="邮箱"
-            rules={[{ required: true, message: 'Please input email!' }]}
+            rules={[{ type: 'email', required: true, message: '请输入邮箱！邮箱由数字、字母、下划线组成，必须包含@' }]}
           >
             <Input prefix={<MailOutlined className="site-form-item-icon" />} />
           </Form.Item>
@@ -430,7 +447,7 @@ const UserInfo: React.FC = () => {
           <Form.Item
             name="role"
             label="角色"
-            rules={[{ required: true, message: 'Please select role!' }]}
+            rules={[{ required: true, message: '请选择角色！' }]}
           >
             <Select >
               <Option value="user">user</Option>
@@ -442,7 +459,7 @@ const UserInfo: React.FC = () => {
           <Form.Item
             name="userClass"
             label="班级"
-            rules={[{ required: true, message: 'Please input class!' }]}
+            rules={[{ required: true, message: '请输入班级！' }]}
           >
             <Input />
           </Form.Item>
@@ -504,6 +521,8 @@ const UserInfo: React.FC = () => {
               console.log(err.message);
               message.error("删除失败，请稍后再试！");
             });
+            //rowselect重置
+            setSelectedRowKeys([]);
         }
       },
       onCancel() {

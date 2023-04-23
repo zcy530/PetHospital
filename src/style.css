@@ -318,6 +318,10 @@ html {
   .ant-menu-sub {
     background-color: transparent !important;
   }
+  
+  .ant-menu {
+  text-align: left;
+  }
 
   .ant-menu-submenu-title{
     font-size: 18px;

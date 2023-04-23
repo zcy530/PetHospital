@@ -230,6 +230,18 @@ const QuestionUpdate = () => {
         )
     }
 
+    const multiSelectChange = (rule, value, callback) => {
+        if (value.length < 2) {
+            // message.error('请至少选择2个');
+            // form.setFieldsValue({
+            //     "multi_ans": _.take(value, 2),
+            // })
+            callback('请至少选择2个正确答案')
+        } else {
+            callback()
+        }
+    };
+
     return (
         <Container style={{ width: '100%', height: '100%' }}>
             <div style={{ textAlign: 'left', backgroundColor: 'white', padding: 50, borderRadius: 10 }}>
@@ -243,7 +255,7 @@ const QuestionUpdate = () => {
                     style={{ maxWidth: '100%', marginLeft: 100 }}
                 >
                     <Form.Item label="选择题型" name="questionType"
-                        rules={[{ required: true, message: 'Question type is required' }]}>
+                        rules={[{ required: true, message: '请选择题目类型！' }]}>
                         <Radio.Group name="questionType" value={type} buttonStyle="solid" onChange={typeChange}>
                             <Radio.Button value="单选">单选</Radio.Button>
                             <Radio.Button value="多选">多选</Radio.Button>
@@ -252,7 +264,7 @@ const QuestionUpdate = () => {
                     </Form.Item>
 
                     <Form.Item label="选择疾病类别" name="diseaseId"
-                        rules={[{ required: true, message: 'Disease  type is required' }]}>
+                        rules={[{ required: true, message: '请选择疾病类别！' }]}>
                         <Select placeholder="Select a disease type" >
                             {
                                 diseaseType.map(disease => (
@@ -263,7 +275,7 @@ const QuestionUpdate = () => {
                     </Form.Item>
 
                     <Form.Item label="题目描述" name="description"
-                        rules={[{ required: true, message: 'Required' }]}>
+                        rules={[{ required: true, message: '请填写题目描述！' }]}>
                         <TextArea rows={3} placeholder={detail.description} />
                     </Form.Item>
 
@@ -300,7 +312,9 @@ const QuestionUpdate = () => {
                     </>)}
 
 
-                    <Form.Item label="单选题答案" name="single_ans">
+                    <Form.Item label="单选题答案" name="single_ans"
+                        rules={[{ required: !single, message: '请选择题目答案！' }]}>
+
                         <Radio.Group disabled={single}>
                             <Radio value="0">A</Radio>
                             <Radio value="1">B</Radio>
@@ -309,8 +323,10 @@ const QuestionUpdate = () => {
                         </Radio.Group>
                     </Form.Item>
 
-                    <Form.Item label="多选题答案" name="multi_ans">
+                    <Form.Item label="多选题答案" name="multi_ans"
+                        rules={[{ required: !multiple, validator: multiSelectChange }]}>
                         <Checkbox.Group disabled={multiple}>
+                            {/* 多选至少选2个 */}
                             <Checkbox value="0">A</Checkbox>
                             <Checkbox value="1">B</Checkbox>
                             <Checkbox value="2">C</Checkbox>
@@ -318,7 +334,8 @@ const QuestionUpdate = () => {
                         </Checkbox.Group>
                     </Form.Item>
 
-                    <Form.Item label="判断题答案" name="judge_ans">
+                    <Form.Item label="判断题答案" name="judge_ans"
+                        rules={[{ required: !judge, message: '请选择题目答案！' }]}>
                         <Radio.Group disabled={judge}>
                             <Radio value="0"> 对 </Radio>
                             <Radio value="1"> 错 </Radio>

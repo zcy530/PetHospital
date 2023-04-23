@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Navbar, Nav,Container, NavDropdown, Form, Button} from "react-bootstrap";
 import CatAndDog from '../Assets/image/catanddog.svg'
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../actions/userActions";
 import { Alert } from "react-bootstrap";
@@ -9,9 +9,11 @@ import { Alert } from "react-bootstrap";
 const NavBar = () => {
 
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   const userLogin = useSelector((state:any) => state.userLogin)
   const { userInfo } = userLogin
   const [show, setShow] = useState<boolean>(true);
+  const [searchText, setSearchText] = useState<string>('')
 
   const logoutHandler = () => {
     dispatch(logout())
@@ -33,7 +35,7 @@ const NavBar = () => {
               <Nav.Link 
                 as={Link} 
                 onClick={() => setShow(true)}
-                to={userInfo? "/" : "/login"} >
+                to={userInfo? "/home" : "/login"} >
                   Home
               </Nav.Link>
             </Nav.Item>
@@ -116,10 +118,16 @@ const NavBar = () => {
           <Form.Control
             type="input"
             placeholder="Please input"
+            onChange={(e)=> {
+              setSearchText(e.target.value);
+              console.log(searchText);
+            }}
             className="me-2"
             aria-label="Search"
           />
-          <Button variant="primary">Search</Button>
+          <Button variant="primary" onClick={()=> {
+            navigate(`/search/${searchText}`)
+          }}>Search</Button>
         </Form>
        </Container>
      </Navbar>

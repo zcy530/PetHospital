@@ -55,34 +55,40 @@ const CaseInsert: React.FC = () => {
   //处理表单，onFinish负责最后的提交
   const [form] = Form.useForm();
   const navigate = useNavigate();
+  const [videoReady, setVideoReady] = useState(true);
   const onFinish = (values) => {
-    if (values.front_graph) {
-      values.front_graph = values.front_graph[0]
-    }
-    //console.log(values);
-    //console.log(JSON.stringify(values))
-    // var formData = new FormData(values);
-    // //console.log(formData)
-    fetch('https://47.120.14.174:443/petHospital/cases', {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-      },
-      body: JSON.stringify(values)
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        //console.log(data);
-        let res = data.success;
-        if (res === true) {
-          message.success("添加成功！")
-          navigate(`/systemManage/case/detail/${data.result.caseId}`, { replace: true })
-        }
-        else fail();
+    if (videoReady === false) {
+      message.loading("视频未上传成功，请稍等！");
+    } else {
+      if (values.front_graph) {
+        values.front_graph = values.front_graph[0]
+      }
+      console.log(values);
+      console.log(JSON.stringify(values))
+      // var formData = new FormData(values);
+      // //console.log(formData)
+      fetch('https://47.120.14.174:443/petHospital/cases', {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+        body: JSON.stringify(values)
       })
-      .catch((err) => {
-        //console.log(err.message);
-      });
+        .then((response) => response.json())
+        .then((data) => {
+          //console.log(data);
+          let res = data.success;
+          if (res === true) {
+            message.success("添加成功！")
+            navigate(`/systemManage/case/detail/${data.result.caseId}`, { replace: true })
+          }
+          else fail();
+        })
+        .catch((err) => {
+          //console.log(err.message);
+        });
+
+    }
   }
 
 
@@ -90,6 +96,10 @@ const CaseInsert: React.FC = () => {
   const getInspectionTable = (val: returnType[]) => {
     // //console.log(val);
     form.setFieldValue('inspection_cases', val);
+  }
+
+  const getFileStatus = (val) => {
+    setVideoReady(val);
   }
 
 
@@ -138,7 +148,7 @@ const CaseInsert: React.FC = () => {
             <ImageUpload num={8} mult={true} />
           </Form.Item>
           <Form.Item name="therapy_videos" label="治疗方案视频">
-            <VideoUpload />
+            <VideoUpload getFileStatus={getFileStatus} />
           </Form.Item>
           <div style={{ textAlign: 'center', marginTop: 50 }} >
             <Button type="primary" htmlType="submit">提交</Button>

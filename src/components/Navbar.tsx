@@ -94,14 +94,19 @@ const NavBar = () => {
                    Information
                 </Nav.Link>
               </NavDropdown.Item>
-              <NavDropdown.Item>
+
+              { userInfo && (userInfo.data.result.role=='manager') && 
+                <NavDropdown.Item>
                 <Nav.Link 
                   as={Link} 
-                  onClick={() => setShow(true)}
-                  to={ userInfo? "/systemManage" : "/login" }>
+                  onClick={() => {setShow(true);
+                  console.log(userInfo.data.result.role)}}
+                  to={ userInfo ? "/systemManage" : "/login" }>
                     Management System
                 </Nav.Link>
-              </NavDropdown.Item>
+               </NavDropdown.Item>
+              }
+              
 
             </NavDropdown>
           </Nav>

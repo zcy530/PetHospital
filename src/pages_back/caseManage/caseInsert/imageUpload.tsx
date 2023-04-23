@@ -18,7 +18,7 @@ const getBase64 = (file: RcFile): Promise<string> =>
 
 
 const ImageUpload: React.FC = (props) => {
-  console.log(props);
+  // console.log(props);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   // const [previewTitle, setPreviewTitle] = useState('');
@@ -35,7 +35,7 @@ const ImageUpload: React.FC = (props) => {
       })
       setFileList(tempFiles);
       triggerChange(tempFiles);
-      console.log(fileList)
+      // console.log(fileList)
     }
   }, []);
 

@@ -98,7 +98,7 @@ function Register() {
                 </Col>
 
                 <Col>
-                  <img src={Cat} style={{ height: '500px' }} />
+                  <img src={Cat} style={{ height: '300px' }} />
                 </Col>
             </Row>
             </Container>

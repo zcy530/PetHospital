@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import { Container, Row, Col, Alert } from "react-bootstrap";
-import Cat from "../../Assets/image/cat.svg";
+import Cat from "../../Assets/image/cat.png";
 import { Form, Button } from 'react-bootstrap';
 import { loginInfo } from "./loginType";
 import { useDispatch, useSelector } from "react-redux";

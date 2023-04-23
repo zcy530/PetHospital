@@ -46,6 +46,7 @@ const ExamDetail = (props: examDetailsProps) => {
     // 所有题目的答案的集合
     const [allQuestionAnswer, setAllQuestionAnswer] = useState<oneQuestionAnswer[]>(initial_paperAnswer);
     const [submitStatus, setSubmitStatus] = useState<boolean>(false);
+    const [cnt, setCnt] = useState<number>(0)
     
 
     const config = {
@@ -138,10 +139,13 @@ const ExamDetail = (props: examDetailsProps) => {
             ))}
             <Button 
               onClick={()=>{
-                setAllQuestionAnswer( ((allQuestionAnswer || []).filter(item => item.questionId !== 0)));
-                setTimeout(() => {
+                setCnt(cnt+1)
+                if (cnt==0) {
+                  setAllQuestionAnswer( ((allQuestionAnswer || []).filter(item => item.questionId !== 0)));
+                } else if (cnt == 1) {
                   submitHandler();
-                }, 2000);
+                }
+          
               }}> 提交试卷
             </Button>
       </Form>

@@ -266,7 +266,7 @@ html {
   }
 
   .learn-rightarea {
-    height: 800px;
+    
     margin-left: 40px;
     margin-right: 30px;
     padding: 0px;
@@ -497,4 +497,33 @@ html {
 .ant-select-disabled .ant-select-selection {
   background: #f9f9f9;
   cursor: not-allowed;
+}
+
+/* search */
+
+.search-bar {
+  background-color: #ffffff82;
+  border-radius: 20px;
+  margin-left: 100px;
+  margin-right: 100px;
+  padding: 30px;
+  
+}
+
+.search-area {
+  margin-top: 20px;
+  margin-left: 100px;
+  margin-right: 100px;
+}
+
+.search-card{
+  border-radius: 15px !important;
+  margin-bottom: 15px;
+  height: 287px;
+}
+
+.search-card Img {
+  height: 120px;
+  margin-left: auto;
+  margin-right: auto;
 }

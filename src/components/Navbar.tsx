@@ -35,7 +35,7 @@ const NavBar = () => {
               <Nav.Link 
                 as={Link} 
                 onClick={() => setShow(true)}
-                to={userInfo? "/home" : "/login"} >
+                to={userInfo? "/" : "/login"} >
                   Home
               </Nav.Link>
             </Nav.Item>

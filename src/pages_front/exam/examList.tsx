@@ -63,13 +63,17 @@ const ExamList = ( props: examListProps) => {
 
   // "2023-04-07T10:00:00.000+00:00"
   const getDateAndTimeFromString = (whenstart: string, whenend: string) => {
+    
     const date = whenstart.split('T')[0];
     const startime = whenstart.split('T')[1].split('.')[0];
     const endtime = whenend.split('T')[1].split('.')[0];
 
+    console.log(date)
+    console.log(startime)
+
     setYear(date.split('-')[0]);
     setMonth(date.split('-')[1]);
-    setDay(date.split('-')[1]);
+    setDay(date.split('-')[2]);
 
     setStartHour(startime.split(':')[0])
     setStartMinute(startime.split(':')[1])
@@ -111,9 +115,10 @@ const ExamList = ( props: examListProps) => {
                 extra={ <img width={200} alt="logo" src={props.chooseTab==1?cat:cat2}/>}
               >
                 {getDateAndTimeFromString(item.beginDate,item.endDate)}
+                
                 <List.Item.Meta className='exam-card-title'
                   title={<div style={{fontSize:'24px'}}><a>{item.testName}</a></div>}
-                  description={`考试时间：${year}-${month}-${day} ${startHour}:${startMinute}-${endHour}:${endMinute}`}
+                  description={`考试时间：${item.beginDate.split('T')[0]} ${item.beginDate.split('T')[1].split('.')[0]}-${item.endDate.split('T')[1].split('.')[0]}`}
                 /> {item.intro}
               </List.Item>
             )}

@@ -154,6 +154,18 @@ const QuestionInsert: React.FC = () => {
         )
     }
 
+    const multiSelectChange = (rule, value, callback) => {
+        if (value.length < 2) {
+            // message.error('请至少选择2个');
+            // form.setFieldsValue({
+            //     "multi_ans": _.take(value, 2),
+            // })
+            callback('请至少选择2个正确答案！')
+        } else {
+            callback()
+        }
+    };
+
     return (
         <Container style={{ width: '100%', height: '100%' }}>
 
@@ -236,7 +248,8 @@ const QuestionInsert: React.FC = () => {
                     </Form.Item>
 
                     <Form.Item label="多选题答案" name="multi_ans"
-                        rules={[{ required: !multiple, message: '请至少选择两个正确答案！' }]}>
+                        rules={[{ required: !multiple, validator: multiSelectChange }]}
+                    >
                         {/* 多选至少选2个 */}
                         <Checkbox.Group disabled={multiple}>
                             <Checkbox value="0">A</Checkbox>

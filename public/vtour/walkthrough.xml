@@ -21,7 +21,7 @@
 		</image>
 		<hotspot name="imagCharge"
          type="image"
-         url="skin/zoomicon.svg"
+         url="skin/processicon.png"
          keep="false"
          renderer="webgl"
          visible="true"
@@ -2344,7 +2344,7 @@
     </image>
 	<hotspot name="imagetest"
          type="image"
-         url="skin/zoomicon.svg"
+         url="skin/processicon.png"
          keep="false"
          renderer="webgl"
          visible="true"

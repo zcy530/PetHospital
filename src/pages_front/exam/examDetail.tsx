@@ -49,34 +49,46 @@ const ExamDetail = (props: examDetailsProps) => {
     
 
     const config = {
-        headers:{
+      headers:{
+        "Content-type": "application/json; charset=UTF-8",
+        "Authorization": userInfo.data.result.token,
+      },
+      body: JSON.stringify(allQuestionAnswer),
+    };
+      
+    const submitHandler = async() => {
+      
+      props.setStartExam(false);
+      props.setEndExam(true);
+
+      fetch(`https://47.120.14.174:443/petHospital/mytest/answer/${props.id}`, {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
           "Authorization": userInfo.data.result.token,
         },
-        body: allQuestionAnswer,
-      };
-      
-      const submitHandler = async() => {
-        
-        props.setStartExam(false);
-        props.setEndExam(true);
+        body: JSON.stringify(allQuestionAnswer)
+      }).then((res)=> {
+        console.log(res);
+      })
+    }
 
-        const { data } = await axios.post(`https://47.120.14.174:443/petHospital/mytest/answer/${props.id}`,config);
-        setSubmitStatus(data.success)
-        console.log(data);
+    useEffect(() => {
+      const getExamPaper = async() => {
+          const { data } = await axios.get(`https://47.120.14.174:443/petHospital/mytest/${props.id}`,config);
+          setExampaperData(data.result);
+          console.log(data.result)
       }
-
-      useEffect(() => {
-        const getExamPaper = async() => {
-            const { data } = await axios.get(`https://47.120.14.174:443/petHospital/mytest/${props.id}`,config);
-            setExampaperData(data.result);
-            console.log(data.result)
-        }
-        getExamPaper();
+      getExamPaper();
     },[props.id])
 
     return(
-        // todo
-        // 1. allQuestionAnswer 如何将数组去重
+        // 已经完成
+        // 1. allQuestionAnswer 数组去重，封装 json
+        // 2. 正确的提交试卷
+
+        // TODO
+        // 1. 离开界面时自动提交
         // 2. 侧边栏的筛选
         // 3. 倒计时结束自动提交
         <div className="exam-container">
@@ -105,13 +117,12 @@ const ExamDetail = (props: examDetailsProps) => {
                     const myans = checkedValues.join(';')
                     
                     console.log(myans)
-                      setThisQuestionAnswer(
-                        {questionId:question.questionId, 
-                         ans:myans, 
-                         score:question.score.toString()
-                        });
+                    setThisQuestionAnswer(
+                      {questionId:question.questionId, 
+                        ans:myans, 
+                        score:question.score.toString()
+                      });
                     
-                    // console.log(thisQuestionAnswer.ans)
                     const index = (allQuestionAnswer).findIndex(item => item.questionId == thisQuestionAnswer.questionId);
                     if(index == -1) {
                       setAllQuestionAnswer((allQuestionAnswer||[]).concat([thisQuestionAnswer]));
@@ -119,7 +130,7 @@ const ExamDetail = (props: examDetailsProps) => {
                       (allQuestionAnswer||[]).splice(index,1,thisQuestionAnswer);
                     }
                     
-                    // console.log(allQuestionAnswer)
+                    console.log(allQuestionAnswer)
                   }} 
                   style={{fontSize:'30px'}} />
                 <Divider />
@@ -128,10 +139,9 @@ const ExamDetail = (props: examDetailsProps) => {
             <Button 
               onClick={()=>{
                 setAllQuestionAnswer( ((allQuestionAnswer || []).filter(item => item.questionId !== 0)));
-                submitHandler();
-                console.log(allQuestionAnswer)
-                
-
+                setTimeout(() => {
+                  submitHandler();
+                }, 2000);
               }}> 提交试卷
             </Button>
       </Form>

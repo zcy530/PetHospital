@@ -44,13 +44,13 @@ const ExamAnswerCheck = (props: examAnswerCheckProps) => {
 
     useEffect(() => {
         const getExamAnswer = async() => {
-            const { data } = await axios.get(`https://47.120.14.174:443/petHospital/mytest/record/1`,config);
+            const { data } = await axios.get(`https://47.120.14.174:443/petHospital/mytest/record/${props.id}`,config);
             setExamPaperAnswer(data.result);
             console.log(data.result)
         }
 
         const getPaperName = async(id: number) => {
-            const { data } = await axios.get(`https://47.120.14.174:443/petHospital/mytest/1`,config);
+            const { data } = await axios.get(`https://47.120.14.174:443/petHospital/mytest/${props.id}`,config);
             setPaperName(data.result.paperName);
         }
         getExamAnswer();

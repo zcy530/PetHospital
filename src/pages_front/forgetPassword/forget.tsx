@@ -63,7 +63,7 @@ const Forget = () => {
             <Row>
               {
                 emailError && 
-                <Snackbar open={emailcodeError} autoHideDuration={800} onClose={handleClose2}>
+                <Snackbar open={emailError} autoHideDuration={800} onClose={handleClose2}>
                   <Alert onClose={handleClose2} severity="warning" sx={{ width: '50%' }}>
                     该邮箱不存在！
                   </Alert>

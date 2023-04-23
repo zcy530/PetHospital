@@ -127,13 +127,13 @@ const VaccineInfo: React.FC = () => {
                     <Form.Item
                         name="name"
                         label="疫苗名称"
-                        rules={[{ required: true, message: 'Please input vaccine name!' }]}
+                        rules={[{ required: true, message: '请输入疫苗名称' }]}
                     >
                         <Input prefix={<MedicineBoxTwoTone />} placeholder="Vaccine name" />
                     </Form.Item>
                     {/* 填写密码 */}
                     <Form.Item name="intro" label="疫苗简介"
-                        rules={[{ required: true, message: 'Please input introduction!' }]}
+                        rules={[{ required: true, message: '请输入疫苗简介' }]}
                     >
                         <TextArea placeholder="Introduction" rows={3} />
                     </Form.Item>
@@ -222,7 +222,7 @@ const VaccineInfo: React.FC = () => {
                     <Form.Item
                         name="name"
                         label="疫苗名称"
-                        rules={[{ required: true, message: 'Please input vaccine name!' }]}
+                        rules={[{ required: true, message: '请输入疫苗名称' }]}
                     >
                         <Input prefix={<MedicineBoxTwoTone />} placeholder="Vaccine name" />
                     </Form.Item>
@@ -230,7 +230,7 @@ const VaccineInfo: React.FC = () => {
                     <Form.Item
                         name="intro"
                         label="疫苗简介"
-                        rules={[{ required: true, message: 'Please input introduction!' }]}
+                        rules={[{ required: true, message: '请输入疫苗简介' }]}
                     >
                         <TextArea placeholder="Introduction" rows={3} />
                     </Form.Item>

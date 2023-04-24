@@ -9,40 +9,40 @@ import SingleFlow from './singleFlow.js'
 function Flow({roleId}) {
   const [resLen, setresLen] = useState(0);
   const [items, setItems] = useState([]);
-  const [onItemName, setonItemName] = useState("");
-  const [onItemOpe, setonItemOpe] = useState([]);
-  const [onItemLen, setonItemLen] = useState(0);
-  const [onItemIntro, setonItemIntro] = useState("");
   const [cntItem, setcntItems] = useState(0);
   const userLogin = useSelector(state => state.userLogin)
   const token = userLogin.userInfo.data.result.token;
   useEffect(() => {
-    axios({
-      url: `https://47.120.14.174:443/petHospital/roles/${roleId}/processes`,
-      method: "get",
-      headers: {'Authorization':token},
-    }).then(res => {
-      setresLen(res.data.result.length);
-      setItems(res.data.result);
-      initItem();
-    }).catch(err => {
-      console.log(err);
-    })
-  })
+    console.log(roleId)
+    if(roleId > 0){
+      axios({
+        url: `https://47.120.14.174:443/petHospital/roles/${roleId}/processes`,
+        method: "get",
+        headers: {'Authorization':token},
+      }).then(res => {
+        setresLen(res.data.result.length);
+        setItems(res.data.result);
+      }).catch(err => {
+        console.log(err);
+      })
+    }
+  },[roleId])
   const preClick = () => {
     setcntItems((cntItem - 1 + resLen) % resLen);
-    initItem();
   }
   const nextClick = () => {
     setcntItems((cntItem + 1) % resLen);
-    initItem();
   }
-  const initItem = () => {
-    setonItemName(items[cntItem].name);
-    setonItemOpe(items[cntItem].operationDTOList);
-    setonItemLen(items[cntItem].operationDTOList.length);
-    setonItemIntro(items[cntItem].intro);
+
+  if (items.length === 0) {
+    return <></>
   }
+
+  let onItemName = items[cntItem]?.name
+  let onItemOpe = items[cntItem]?.operationDTOList
+  let onItemLen = items[cntItem]?.operationDTOList.length
+  let onItemIntro = items[cntItem]?.intro
+
   return (
     <div className='flow'>
       <div className = "pre" onClick = {preClick}>&lt;</div>

@@ -23,7 +23,7 @@ function NewRole() {
           <Link className='text_a' to = "/dutyLearn">角色扮演/</Link>
           <Link className='text_b' to = {`/dutyLearn/role/${params.roleName}`}>{params.roleName}</Link>
         </div>
-        <Work roleName={params.roleName} getChildData={setId} />
+        <Work roleName={params.roleName} setRoleId={setId} roleId={roleId}/>
         <Flow roleId = {roleId}/>  
     </div>
   )

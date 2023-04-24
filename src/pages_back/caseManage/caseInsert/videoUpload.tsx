@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { InboxOutlined } from '@ant-design/icons';
-import type { UploadFile, UploadProps } from 'antd';
+import { Divider, UploadFile, UploadProps } from 'antd';
 import { message, Upload } from 'antd';
 
 const { Dragger } = Upload;
 
 //因为是要实现一个在formitem里的自定义组件，所以一定要有value和triggerChange函数，其中value的值会返回到表单当中
+// const VideoUpload: React.FC<VideoValueProps> = ({ value = {}, onChange }) => {
 const VideoUpload = (props) => {
-    // console.log(props);
+    console.log(props);
     const [fileList, setFileList] = useState<UploadFile[]>([]);
 
     useEffect(() => {
@@ -24,7 +25,6 @@ const VideoUpload = (props) => {
         }
     }, []);
 
-
     const triggerChange = (value) => {
         // console.log(value)
         // console.log(value.map(file => (file.url)))
@@ -33,20 +33,21 @@ const VideoUpload = (props) => {
     };
 
     const handleChange: UploadProps['onChange'] = ({ file, fileList }) => {
+
         const { status } = file;
         if (status === 'uploading') {
-            // console.log(file, fileList);
+            console.log(file, fileList);
             props.getFileStatus(false);
         }
         if (status === 'done') {
             message.success(`${file.name} 上传成功.`);
             props.getFileStatus(true)
             file.url = file.response.result;
+
         } else if (status === 'error') {
             message.error(`${file.name} 上传失败.`);
         }
         setFileList(fileList);
-        // console.log(fileList)
         triggerChange(fileList);
     };
 
@@ -74,11 +75,17 @@ const VideoUpload = (props) => {
                     可以上传一个或者多个视频
                 </p>
             </Dragger>
+            <Divider />
             <div>
                 {fileList?.map((item, i) => (
-                    <video id="playChatVideo" width="150" height="150" style={{ margin: '20' }} controls>
-                        <source src={item.url} type="video/mp4"></source>
-                    </video>
+                    item.url ? (
+                        <video id="playChatVideo" width="150" height="150" style={{ margin: '20' }} controls>
+                            <source src={item.url} type="video/mp4"></source>
+                        </video>
+
+                    ) : (
+                        <div></div>
+                    )
                 ))}
             </div>
         </div>

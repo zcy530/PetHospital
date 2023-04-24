@@ -10,11 +10,14 @@ import { mytoken } from '../token.js';
 import cat from '../../Assets/image/cat2.png'
 import cat2 from '../../Assets/image/cat3.png'
 import { useSelector } from 'react-redux';
+import moment from 'moment';
 
 export interface examListProps {
   chooseTab: number;
   setStartExam: (startExam: boolean) => void;
   setExamDetailId : (id: number) => void;
+  filterText: string[];
+  setFilterText: (text: string[]) => void;
 }  
 
 const ExamList = ( props: examListProps) => {
@@ -101,6 +104,7 @@ const ExamList = ( props: examListProps) => {
               </div>
             }
             renderItem={(item:any) => (
+              ( props.filterText.findIndex((i) => i != item.tag) != -1 && (              
               <List.Item
                 key={item.testId}
                 onClick={() => {
@@ -109,7 +113,7 @@ const ExamList = ( props: examListProps) => {
                 }}
                 actions={[
                   // <IconText icon={FormOutlined} text="共23道题" key="list-vertical-star-o" />,
-                  <IconText icon={ClockCircleOutlined} text={`时长150分钟`} key="list-vertical-like-o" />,
+                  // <IconText icon={ClockCircleOutlined} text={`时长:${(moment(item.endDate.split('T')[1].split('.')[0])).diff((item.beginDate.split('T')[1].split('.')[0]),"minute") }分钟`} key="list-vertical-like-o" />,
                   <IconText icon={TagsOutlined} text={item.tag} key="list-vertical-message" />,
                 ]}
                 extra={ <img width={200} alt="logo" src={props.chooseTab==1?cat:cat2}/>}
@@ -120,7 +124,7 @@ const ExamList = ( props: examListProps) => {
                   title={<div style={{fontSize:'24px'}}><a>{item.testName}</a></div>}
                   description={`考试时间：${item.beginDate.split('T')[0]} ${item.beginDate.split('T')[1].split('.')[0]}-${item.endDate.split('T')[1].split('.')[0]}`}
                 /> {item.intro}
-              </List.Item>
+              </List.Item>))
             )}
           />
           <Modal

@@ -62,9 +62,9 @@ export const dataFrom_oneDiseaseCaseMenu: oneDiseaseCaseMenu[] = [
 ]
 
 export const dataFrom_oneDiseaseCaseDetail: oneDiseaseCaseDetail = {
-  "caseId": 1,
-  "caseName": "英短猫胃炎病例",
-  "admissionText": "接诊信息患者是一只成年英短猫，情绪低落，厌食",
+  "caseId": 0,
+  "caseName": "",
+  "admissionText": "接",
   "admissionGraphList": [
      require('../../Assets/image/cat2.png'),
      require('../../Assets/image/cat3.png')
@@ -112,12 +112,7 @@ export const dataFrom_oneDiseaseCaseDetail: oneDiseaseCaseDetail = {
       "xxxt1",
       "xxxt2"
   ],
-  "treatmentVideoList": [
-      "xxxtv1",
-      "xxxtv2",
-      "xxxtv3",
-      "http://pet-hospital-back-end.oss-cn-shanghai.aliyuncs.com/67292video_publisher1/%E5%B1%8F%E5%B9%95%E5%BD%95%E5%88%B62023-03-21%2022.52.12.mov?Expires=1994771040&OSSAccessKeyId=LTAI5tCj8qSVUyDFvQG2nZ4A&Signature=vobRITQtLnAIh7VPDj08m3VgKHs%3D"
-  ]
+  "treatmentVideoList": []
 }
 
 export const caseData: diseaseCard[] = [

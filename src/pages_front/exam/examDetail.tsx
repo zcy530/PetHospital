@@ -87,10 +87,12 @@ const ExamDetail = (props: examDetailsProps) => {
         // 1. 离开界面时自动提交
         // 2. 侧边栏的筛选
         // 3. 倒计时结束自动提交
+        // 2023-04-07T10:00:00.000+00:00
         <div className="exam-container">
          <h2>{examPaperData.paperName}</h2>
         <div style={{margin:"auto",marginBottom:'20px',marginTop:'30px',width:'350px'}} >
           <FundClockProgress 
+            // campaignEndDate={moment('2023-4-26'+' '+'18:00:30').format('YYYY-MM-DD HH:mm:ss')} 
             campaignEndDate={moment().add(2, 'hours').format('YYYY-MM-DD HH:mm:ss')} 
             icoClockStyle={{ backgroundColor: "#fff" }}
             icoClockFlipStyle={{ backgroundColor: "#aec5da" }}

@@ -20,6 +20,7 @@ const Login = () => {
     const [password,setPassword] = useState<string>('');
     const [remember, setRemember] = useState<boolean>(false);
     const [show, setShow] = useState<boolean>(true);
+    const [wrongMessage, setWrongMessage] = useState<string>('');
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -32,11 +33,17 @@ const Login = () => {
 
     // 检测到登录成功就跳转到 home
     useEffect(() => {
+        if(error=='邮箱或密码错误') {
+            setWrongMessage('Wrong password or wrong email!');
+        } else {
+            setWrongMessage('Account does not exist!')
+        }
+        
         if(userInfo) {
             console.log(userInfo)
             navigate('/',{replace: true})
         }
-    },[userInfo])
+    },[userInfo,error])
 
     const submitHandler = (e) => {
         e.preventDefault()
@@ -68,7 +75,7 @@ const Login = () => {
                         className="login-alert" 
                         onClose={() => setShow(false)}
                         dismissible>
-                        Error: Wrong password!
+                        Error: {wrongMessage}
                     </Alert>
                     } 
                     <Form onSubmit={submitHandler}>

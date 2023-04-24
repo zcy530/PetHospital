@@ -85,7 +85,7 @@ const VideoUpload = (props) => {
             <div>
                 {fileList?.map((item, i) => (
                     item.url ? (
-                        <video id="playChatVideo" width="150" height="150" style={{ margin: '20' }} controls>
+                        <video id="playChatVideo" width="500" height="300" style={{ margin: '20' }} controls>
                             <source src={item.url} type="video/mp4"></source>
                         </video>
 

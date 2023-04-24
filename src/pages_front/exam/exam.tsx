@@ -19,6 +19,7 @@ const Exam = () => {
   const [chooseTab, setChooseTab] = useState<number>(1);
   const [examDetailId, setExamDetailId] = useState<number>(1);
   const [exitReminder, setExitReminder] = useState<boolean>(false);
+  const [filterText, setFilterText] = useState<string[]>(['']);
 
   const tabItems: MenuProps['items'] = ['所有考试','我的考试'].map((info, index) => {
       return {
@@ -35,7 +36,13 @@ const Exam = () => {
     } else if(checkExamAnswer) {
       return <ExamAnswerCheck id={examDetailId} setCheckExamAnswer={setCheckExamAnswer}/>
     } else {
-      return <ExamList chooseTab={chooseTab} setStartExam={setStartExam} setExamDetailId={setExamDetailId} />
+      return <ExamList 
+       chooseTab={chooseTab} 
+       setStartExam={setStartExam} 
+       setExamDetailId={setExamDetailId} 
+       filterText={filterText}
+       setFilterText={setFilterText}
+       />
     }
   }
 

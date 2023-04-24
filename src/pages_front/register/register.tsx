@@ -23,6 +23,7 @@ function Register() {
     const [role, setRole] = useState<string>('user');
     const [userClass, setUserClass] = useState<string>('');
     const [show, setShow] = useState<boolean>(true);
+    const [canclick, setCanclick] = useState<boolean>(false);
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -37,11 +38,14 @@ function Register() {
 
     // 检测到注册成功就跳转到 login
     useEffect(() => {
+        if(email && password && role && userClass) {
+            setCanclick(true);
+        }
         if(userRegisterInfo) {
             console.log(userRegisterInfo)
             navigate('/login',{replace: true})
         }
-    },[userRegisterInfo])
+    },[userRegisterInfo,email,password,role,userClass])
 
     return (
         <section>
@@ -90,7 +94,7 @@ function Register() {
                     <option value="user">User</option>
                     <option value="manager">Administer</option>
                 </Form.Select>
-                <Button type="submit" variant="primary">REGISTER</Button>
+                <Button type="submit" variant="primary" disabled={!canclick} >REGISTER</Button>
                 </Form>
                 <div className="login-option">
                   Have an Account? <Link to="/login">Login</Link>

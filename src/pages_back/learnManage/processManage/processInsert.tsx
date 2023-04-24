@@ -20,6 +20,7 @@ import { cloneDeep } from 'lodash';
 import ImageUpload from "../../caseManage/caseInsert/imageUpload.tsx";
 import { useNavigate } from "react-router-dom";
 import BackButton from "../../global/backButton.tsx";
+import { useSelector } from "react-redux";
 
 
 
@@ -131,6 +132,8 @@ const CollectionCreateForm: React.FC<CollectionCreateFormProps> = ({
 
 
 const ProcessInsert = () => {
+    const userLogin = useSelector((state: any) => state.userLogin)
+    const { userInfo } = userLogin
 
     const [count, setCount] = useState(3);
     const [open, setOpen] = useState(false);
@@ -266,6 +269,7 @@ const ProcessInsert = () => {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
+                "Authorization": userInfo.data.result.token,
             },
             body: JSON.stringify(values)
         })

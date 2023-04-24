@@ -6,9 +6,12 @@ import BackButton from "../../global/backButton.tsx";
 import { RoleType } from "./roleType.tsx";
 import { ProcessType } from "../processManage/processType.tsx";
 import { EyeOutlined } from '@ant-design/icons';
+import { useSelector } from "react-redux";
 
 
 const RoleDetail = () => {
+    const userLogin = useSelector((state: any) => state.userLogin)
+    const { userInfo } = userLogin
 
     const params = useParams();
     // //console.log(params)
@@ -19,8 +22,11 @@ const RoleDetail = () => {
 
     useEffect(() => {
         //获取后台数据
-        fetch(`https://47.120.14.174:443/petHospital/actors/${params.actorId}`
-        )
+        fetch(`https://47.120.14.174:443/petHospital/actors/${params.actorId}`, {
+            headers: {
+                "Authorization": userInfo.data.result.token,
+            }
+        })
             .then(
                 (response) => response.json(),
             )

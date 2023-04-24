@@ -11,7 +11,6 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-
 import { useForm } from 'antd/es/form/Form';
 import React, { useEffect, useState } from "react";
 import { OperationType, ProcessType } from "./processType.tsx";
@@ -19,6 +18,7 @@ import { cloneDeep } from 'lodash';
 import ImageUpload from "../../caseManage/caseInsert/imageUpload.tsx";
 import { useNavigate, useParams } from "react-router-dom";
 import BackButton from "../../global/backButton.tsx";
+import { useSelector } from "react-redux";
 
 
 const { TextArea } = Input;
@@ -129,6 +129,8 @@ const CollectionCreateForm: React.FC<CollectionCreateFormProps> = ({
 
 
 const ProcessUpdate = () => {
+    const userLogin = useSelector((state: any) => state.userLogin)
+    const { userInfo } = userLogin
 
     const params = useParams();
     //console.log(params)
@@ -253,8 +255,11 @@ const ProcessUpdate = () => {
 
     useEffect(() => {
         //获取后台数据
-        fetch(`https://47.120.14.174:443/petHospital/processes/${params.processId}`
-        )
+        fetch(`https://47.120.14.174:443/petHospital/processes/${params.processId}`, {
+            headers: {
+                "Authorization": userInfo.data.result.token,
+            }
+        })
             .then(
                 (response) => response.json(),
             )
@@ -306,6 +311,7 @@ const ProcessUpdate = () => {
             method: 'PUT',
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
+                "Authorization": userInfo.data.result.token,
             },
             body: JSON.stringify(values)
         })

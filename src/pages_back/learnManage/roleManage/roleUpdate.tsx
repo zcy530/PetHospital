@@ -8,11 +8,14 @@ import { EyeOutlined } from '@ant-design/icons';
 import { RoleType } from "./roleType.tsx";
 import BackButton from "../../global/backButton.tsx";
 import Loading from "../../global/loading.tsx";
+import { useSelector } from "react-redux";
 
 
 
 const { TextArea } = Input;
 const RoleUpdate = () => {
+    const userLogin = useSelector((state: any) => state.userLogin)
+    const { userInfo } = userLogin
 
     const params = useParams();
 
@@ -83,7 +86,11 @@ const RoleUpdate = () => {
 
     useEffect(() => {
         //获取后台数据
-        fetch('https://47.120.14.174:443/petHospital/processes'
+        fetch('https://47.120.14.174:443/petHospital/processes', {
+            headers: {
+                "Authorization": userInfo.data.result.token,
+            }
+        }
         )
             .then(
                 (response) => response.json(),
@@ -101,7 +108,11 @@ const RoleUpdate = () => {
 
     useEffect(() => {
         //获取后台数据
-        fetch(`https://47.120.14.174:443/petHospital/actors/${params.actorId}`
+        fetch(`https://47.120.14.174:443/petHospital/actors/${params.actorId}`, {
+            headers: {
+                "Authorization": userInfo.data.result.token,
+            }
+        }
         )
             .then(
                 (response) => response.json(),
@@ -134,6 +145,7 @@ const RoleUpdate = () => {
             method: 'PUT',
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
+                "Authorization": userInfo.data.result.token,
             },
             body: JSON.stringify(values)
         })

@@ -3,14 +3,16 @@ import { useForm } from "antd/es/form/Form";
 import React, { useEffect, useState } from "react";
 import { ProcessType } from "../processManage/processType.tsx";
 import { ColumnsType } from "antd/es/table/InternalTable.js";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { EyeOutlined } from '@ant-design/icons';
-import { RoleType } from "./roleType.tsx";
 import BackButton from "../../global/backButton.tsx";
+import { useSelector } from "react-redux";
 
 
 const { TextArea } = Input;
 const RoleInsert = () => {
+    const userLogin = useSelector((state: any) => state.userLogin)
+    const { userInfo } = userLogin
 
 
     const [form] = useForm();
@@ -69,7 +71,11 @@ const RoleInsert = () => {
 
     useEffect(() => {
         //获取后台数据
-        fetch('https://47.120.14.174:443/petHospital/processes'
+        fetch('https://47.120.14.174:443/petHospital/processes', {
+            headers: {
+                "Authorization": userInfo.data.result.token,
+            }
+        }
         )
             .then(
                 (response) => response.json(),
@@ -95,6 +101,7 @@ const RoleInsert = () => {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
+                "Authorization": userInfo.data.result.token,
             },
             body: JSON.stringify(values)
         })

@@ -1,24 +1,21 @@
 import React, { useState, useRef, useEffect } from 'react';
-import {
-    UploadOutlined,
-} from '@ant-design/icons';
 import type { ColumnsType, ColumnType } from 'antd/es/table';
 import { DeleteTwoTone, SearchOutlined, EditTwoTone, ExclamationCircleFilled, EyeOutlined } from '@ant-design/icons';
-import { Button, Input, InputRef, Modal, Space, Table, UploadFile, message } from 'antd'
+import { Button, Input, InputRef, Modal, Space, Table, message } from 'antd'
 import type { FilterConfirmProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
 //导入CaseData & CaseType
 import { CaseType } from "./caseType";
 import { Link } from "react-router-dom";
-import { Container } from 'react-bootstrap';
 import { diseaseCategory } from '../diseaseManage/diseaseType.tsx';
-import Loading from '../global/loading.tsx';
+import { useSelector } from 'react-redux';
 
 //列的下标
 type DataIndex = keyof CaseType;
 
 const CaseInfo: React.FC = () => {
-
+    const userLogin = useSelector((state: any) => state.userLogin)
+    const { userInfo } = userLogin
 
     //分页默认值，记得import useState
     const [pageOption, setPageOption] = useState({
@@ -47,7 +44,11 @@ const CaseInfo: React.FC = () => {
     const [caseData, setCaseData] = useState<CaseType[]>([]);
     useEffect(() => {
         //获取后台数据
-        fetch('https://47.120.14.174:443/petHospital/cases'
+        fetch('https://47.120.14.174:443/petHospital/cases', {
+            headers: {
+                "Authorization": userInfo.data.result.token,
+            }
+        }
         )
             .then(
                 (response) => response.json(),
@@ -198,6 +199,9 @@ const CaseInfo: React.FC = () => {
                 setCaseData(data);
                 fetch(`https://47.120.14.174:443/petHospital/cases/${id}`, {
                     method: 'DELETE',
+                    headers: {
+                        "Authorization": userInfo.data.result.token,
+                    }
                 }).then((response) => {
                     if (response.status === 200) {
                         //TODO：重新加载页面（好像并不合适）

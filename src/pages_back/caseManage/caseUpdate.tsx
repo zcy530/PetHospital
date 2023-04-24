@@ -1,21 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
-import { Divider, Layout, Row, Col, Badge, Descriptions, Image, Checkbox, Form, Input, Select, Button, Alert, Space, Spin, message } from 'antd';
-import axios from "axios";
-import { oneDiseaseCaseDetail } from './caseTypeDefine.tsx';
-// import { dataFrom_oneDiseaseCaseDetail } from './mockData.tsx';
-import Cat from "../../Assets/image/cat2.png";
+import { Layout, Form, Input, Select, Button, message } from 'antd';
 import { useNavigate, useParams } from 'react-router-dom';
 import ImageUpload from './caseInsert/imageUpload.tsx';
 import { useForm } from 'antd/es/form/Form.js';
-import { CaseFormType, InspectionType } from './caseType.tsx';
+import { CaseFormType } from './caseType.tsx';
 import InspectionTable from './caseInsert/inspectionTable.tsx';
 import VideoUpload from './caseInsert/videoUpload.tsx';
-import { CaseData } from './caseData.js';
-
-import { Switch } from 'antd';
 import Loading from '../global/loading.tsx';
 import BackButton from "../global/backButton.tsx";
+import { useSelector } from 'react-redux';
 
 export interface detailsProps {
     id: number;
@@ -25,6 +18,8 @@ export interface detailsProps {
 
 
 const CaseUpdate = () => {
+    const userLogin = useSelector((state: any) => state.userLogin)
+    const { userInfo } = userLogin
 
     const params = useParams();
     const [form] = useForm();
@@ -34,7 +29,11 @@ const CaseUpdate = () => {
     // //console.log(params)
     useEffect(() => {
         //获取后台数据
-        fetch(`https://47.120.14.174:443/petHospital/cases/${params.case_id}/detail`)
+        fetch(`https://47.120.14.174:443/petHospital/cases/${params.case_id}/detail`, {
+            headers: {
+                "Authorization": userInfo.data.result.token,
+            }
+        })
             .then(
                 (response) => response.json(),
             )
@@ -71,7 +70,11 @@ const CaseUpdate = () => {
     //处理多选框
     const [options, setOptions] = useState([]);
     useEffect(() => {
-        fetch('https://47.120.14.174:443/petHospital/diseases'
+        fetch('https://47.120.14.174:443/petHospital/diseases', {
+            headers: {
+                "Authorization": userInfo.data.result.token,
+            }
+        }
         )
             .then(
                 (response) => response.json(),
@@ -117,6 +120,7 @@ const CaseUpdate = () => {
                 method: 'PUT',
                 headers: {
                     'Content-type': 'application/json; charset=UTF-8',
+                    "Authorization": userInfo.data.result.token,
                 },
                 body: JSON.stringify(values)
             })

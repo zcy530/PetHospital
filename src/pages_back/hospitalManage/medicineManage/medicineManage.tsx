@@ -1,6 +1,6 @@
 //药品管理界面
 import React, { useEffect, useRef, useState } from "react";
-import { Button, Descriptions, Form, Input, InputNumber, InputRef, Modal, Space, Table, Tag, message } from "antd";
+import { Button, Form, Input, InputNumber, InputRef, Modal, Space, Table, Tag, message } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { Link } from "react-router-dom";
 import { DeleteTwoTone, SearchOutlined, EditTwoTone, ExclamationCircleFilled, EyeOutlined } from '@ant-design/icons';
@@ -8,10 +8,14 @@ import { ColumnType, FilterConfirmProps } from "antd/es/table/interface";
 import Highlighter from 'react-highlight-words';
 import { MedicineType } from "./medicineType.tsx";
 import ImageUpload from "../../caseManage/caseInsert/imageUpload.tsx";
+import { useSelector } from "react-redux";
 
 const { TextArea } = Input;
 
 const MedicineInfo: React.FC = () => {
+    const userLogin = useSelector((state: any) => state.userLogin)
+    const { userInfo } = userLogin
+
     //分页默认值，记得import useState
     const [pageOption, setPageOption] = useState({
         pageNo: 1,  //当前页为1
@@ -42,7 +46,11 @@ const MedicineInfo: React.FC = () => {
 
     useEffect(() => {
         //获取后台数据
-        fetch('https://47.120.14.174:443/petHospital/drugs'
+        fetch('https://47.120.14.174:443/petHospital/drugs', {
+            headers: {
+                "Authorization": userInfo.data.result.token,
+            }
+        }
         )
             .then(
                 (response) => response.json(),
@@ -211,6 +219,7 @@ const MedicineInfo: React.FC = () => {
                                 method: 'POST',
                                 headers: {
                                     'Content-type': 'application/json; charset=UTF-8',
+                                    "Authorization": userInfo.data.result.token,
                                 },
                                 body: JSON.stringify(values)
                             })
@@ -279,7 +288,7 @@ const MedicineInfo: React.FC = () => {
 
     //编辑操作
     const edit = (id: number) => {
-        //console.log("点击编辑id为" + id);
+        console.log("点击编辑id为" + id);
         //跳出编辑的对话框
         setEditFormOpen(true); //设置open为true，用于弹出弹出修改用户信息的表单
     };
@@ -302,8 +311,7 @@ const MedicineInfo: React.FC = () => {
                 cancelText="取消"
                 onCancel={onCancel}
                 onOk={() => {
-                    form
-                        .validateFields()
+                    form.validateFields()
                         .then((values) => {
                             form.resetFields();
                             onCreate();
@@ -311,11 +319,13 @@ const MedicineInfo: React.FC = () => {
                             values.url = values.url[0];
                             //console.log(values)
                             //console.log(JSON.stringify(values))
+                            console.log(editRecord?.id)
                             fetch(`https://47.120.14.174:443/petHospital/drugs/${editRecord?.id}`, {
                                 method: 'PUT',
                                 body: JSON.stringify(values),
                                 headers: {
                                     'Content-type': 'application/json; charset=UTF-8',
+                                    "Authorization": userInfo.data.result.token,
                                 }
                             })
                                 .then((response) => response.json())
@@ -407,6 +417,9 @@ const MedicineInfo: React.FC = () => {
                 //console.log('OK');
                 fetch(`https://47.120.14.174:443/petHospital/drugs/${id}`, {
                     method: 'DELETE',
+                    headers: {
+                        "Authorization": userInfo.data.result.token,
+                    }
                 }).then((response) => {
                     if (response.status === 200) {
                         //console.log('删除成功！')

@@ -41,13 +41,8 @@ const ExamDetail = (props: examDetailsProps) => {
 
     // 整套试卷题目的数据
     const [examPaperData, setExampaperData] = useState<examPaper>(initial_paper);
-    // 单个题目的答案
-    const [thisQuestionAnswer, setThisQuestionAnswer] = useState<oneQuestionAnswer>(initial_answer);
     // 所有题目的答案的集合
     const [allQuestionAnswer, setAllQuestionAnswer] = useState<oneQuestionAnswer[]>(initial_paperAnswer);
-    const [submitStatus, setSubmitStatus] = useState<boolean>(false);
-    const [cnt, setCnt] = useState<number>(0)
-    
 
     const config = {
       headers:{
@@ -57,7 +52,7 @@ const ExamDetail = (props: examDetailsProps) => {
       body: JSON.stringify(allQuestionAnswer),
     };
       
-    const submitHandler = async() => {
+    const submitHandler = async(answers) => {
       
       props.setStartExam(false);
       props.setEndExam(true);
@@ -68,7 +63,7 @@ const ExamDetail = (props: examDetailsProps) => {
           'Content-type': 'application/json; charset=UTF-8',
           "Authorization": userInfo.data.result.token,
         },
-        body: JSON.stringify(allQuestionAnswer)
+        body: JSON.stringify(answers)
       }).then((res)=> {
         console.log(res);
       })
@@ -118,34 +113,30 @@ const ExamDetail = (props: examDetailsProps) => {
                     const myans = checkedValues.join(';')
                     
                     console.log(myans)
-                    setThisQuestionAnswer(
-                      {questionId:question.questionId, 
+                    const thisQuestionAnswer = {
+                        questionId:question.questionId,
                         ans:myans, 
                         score:question.score.toString()
-                      });
-                    
-                    const index = (allQuestionAnswer).findIndex(item => item.questionId == thisQuestionAnswer.questionId);
-                    if(index == -1) {
-                      setAllQuestionAnswer((allQuestionAnswer||[]).concat([thisQuestionAnswer]));
-                    } else {
-                      (allQuestionAnswer||[]).splice(index,1,thisQuestionAnswer);
                     }
                     
-                    console.log(allQuestionAnswer)
-                  }} 
+                    const index = allQuestionAnswer.findIndex(item => item.questionId == thisQuestionAnswer.questionId);
+                    if(index == -1) {
+                      setAllQuestionAnswer(allQuestionAnswer.concat([thisQuestionAnswer]));
+                    } else {
+                      allQuestionAnswer.splice(index,1,thisQuestionAnswer);
+                    }
+                    
+                  }}
                   style={{fontSize:'30px'}} />
                 <Divider />
               </>
             ))}
             <Button 
               onClick={()=>{
-                setCnt(cnt+1)
-                if (cnt==0) {
-                  setAllQuestionAnswer( ((allQuestionAnswer || []).filter(item => item.questionId !== 0)));
-                } else if (cnt == 1) {
-                  submitHandler();
-                }
-          
+                  console.log(allQuestionAnswer)
+
+                  let answers = allQuestionAnswer.filter(item => item.questionId !== 0)
+                  submitHandler(answers);
               }}> 提交试卷
             </Button>
       </Form>

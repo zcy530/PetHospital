@@ -87,6 +87,7 @@ const CaseUpdate = () => {
 
     const { Option } = Select;
     const { TextArea } = Input;
+    const [videoReady, setVideoReady] = useState(true);
 
     interface returnType {
         inspection_item_id: number;
@@ -99,35 +100,43 @@ const CaseUpdate = () => {
         // //console.log(val);
         form.setFieldValue('inspection_cases', val);
     }
+    const getFileStatus = (val) => {
+        setVideoReady(val);
+    }
 
     const onFinish = (values) => {
-        if (values.front_graph) {
-            values.front_graph = values.front_graph[0]
-        }
-        //console.log(values);
-        //console.log(JSON.stringify(values))
-        fetch(`https://47.120.14.174:443/petHospital/cases/${caseData?.caseId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-type': 'application/json; charset=UTF-8',
-            },
-            body: JSON.stringify(values)
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                //console.log(data);
-                let res = data.success;
-                if (res === true) {
-                    message.success("修改成功！")
-                    navigate(`/systemManage/case/detail/${caseData?.caseId}`, { replace: true })
-                }
-                else {
-                    message.error("修改失败！")
-                }
+        if (videoReady === false) {
+            message.loading("视频未上传成功，请稍等！");
+        } else {
+            if (values.front_graph) {
+                values.front_graph = values.front_graph[0]
+            }
+            //console.log(values);
+            //console.log(JSON.stringify(values))
+            fetch(`https://47.120.14.174:443/petHospital/cases/${caseData?.caseId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8',
+                },
+                body: JSON.stringify(values)
             })
-            .catch((err) => {
-                //console.log(err.message);
-            });
+                .then((response) => response.json())
+                .then((data) => {
+                    //console.log(data);
+                    let res = data.success;
+                    if (res === true) {
+                        message.success("修改成功！")
+                        navigate(`/systemManage/case/detail/${caseData?.caseId}`, { replace: true })
+                    }
+                    else {
+                        message.error("修改失败！")
+                    }
+                })
+                .catch((err) => {
+                    //console.log(err.message);
+                });
+        }
+
     }
 
     return (
@@ -178,8 +187,8 @@ const CaseUpdate = () => {
                                 <Form.Item name="therapy_graphs" label="治疗方案图片" valuePropName="fileList">
                                     <ImageUpload num={8} mult={true} defaultImages={caseData?.treatmentGraphList} />
                                 </Form.Item>
-                                <Form.Item name="therapy_videos" label="治疗方案视频">
-                                    <VideoUpload defaultVideos={caseData?.treatmentVideoList} />
+                                <Form.Item name="therapy_videos" label="治疗方案视频" >
+                                    <VideoUpload defaultVideos={caseData?.treatmentVideoList} getFileStatus={getFileStatus} />
                                 </Form.Item>
                                 <div style={{ textAlign: 'center', marginTop: 50 }} >
                                     <Button type="primary" htmlType="submit">提交</Button>

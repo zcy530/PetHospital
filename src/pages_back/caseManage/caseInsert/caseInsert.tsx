@@ -80,6 +80,7 @@ const CaseInsert: React.FC = () => {
           let res = data.success;
           if (res === true) {
             message.success("添加成功！")
+            console.log(data.result.caseId)
             navigate(`/systemManage/case/detail/${data.result.caseId}`, { replace: true })
           }
           else fail();

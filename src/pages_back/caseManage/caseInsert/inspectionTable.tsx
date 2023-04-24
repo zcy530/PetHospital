@@ -4,7 +4,7 @@ import { Button, Form, Input, Modal, Select, Space, Table, Image } from 'antd';
 import { cloneDeep } from 'lodash';
 import { ColumnsType } from 'antd/es/table';
 import ImageUpload from './imageUpload.tsx';
-import { InspectionInfo } from '../caseType.tsx'
+import { useSelector } from 'react-redux';
 
 //返回给上层表单的类型
 interface returnType {
@@ -43,6 +43,8 @@ const CollectionCreateForm: React.FC<CollectionCreateFormProps> = ({
     onCancel,
 }) => {
     const [form] = Form.useForm();
+    const userLogin = useSelector((state: any) => state.userLogin)
+    const { userInfo } = userLogin
 
     //这是select的onchange函数，用于把对应的name存储到表单当中
     const handleChange = (value: string[], e) => {
@@ -54,8 +56,11 @@ const CollectionCreateForm: React.FC<CollectionCreateFormProps> = ({
     //处理多选框
     const [options, setOptions] = useState([]);
     useEffect(() => {
-        fetch('https://47.120.14.174:443/petHospital/inspections/items' //获取所有检查项
-        )
+        fetch('https://47.120.14.174:443/petHospital/inspections/items', {//获取所有检查项
+            headers: {
+                "Authorization": userInfo.data.result.token,
+            }
+        })
             .then(
                 (response) => response.json(),
             )

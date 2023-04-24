@@ -6,9 +6,13 @@ import { ColumnsType } from "antd/es/table/InternalTable.js";
 import { DeleteTwoTone, SearchOutlined, EditTwoTone, ExclamationCircleFilled, EyeOutlined } from '@ant-design/icons';
 import { ColumnType, FilterConfirmProps } from "antd/es/table/interface.js";
 import Highlighter from 'react-highlight-words';
+import { useSelector } from "react-redux";
 
 
 const RoleInfo = () => {
+    const userLogin = useSelector((state: any) => state.userLogin)
+    const { userInfo } = userLogin
+
     const [pageOption, setPageOption] = useState({
         pageNo: 1,  //当前页为1
         pageSize: 10, //一页10行
@@ -38,7 +42,11 @@ const RoleInfo = () => {
     const [roleData, setRoleData] = useState<RoleType[]>([]);
     useEffect(() => {
         //获取后台数据
-        fetch('https://47.120.14.174:443/petHospital/actors'
+        fetch('https://47.120.14.174:443/petHospital/actors', {
+            headers: {
+                "Authorization": userInfo.data.result.token,
+            }
+        }
         )
             .then(
                 (response) => response.json(),
@@ -237,6 +245,9 @@ const RoleInfo = () => {
                 setRoleData(data);
                 fetch(`https://47.120.14.174:443/petHospital/actors/${id}`, {
                     method: 'DELETE',
+                    headers: {
+                        "Authorization": userInfo.data.result.token,
+                    }
                 }).then((response) => {
                     if (response.status === 200) {
                         //console.log('删除成功！')

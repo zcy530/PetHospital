@@ -22,6 +22,7 @@ import ImageUpload from './imageUpload.tsx';
 import axios from 'axios';
 import BackButton from "../../global/backButton.tsx";
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const { TextArea } = Input;
 
@@ -33,12 +34,17 @@ interface returnType {
 
 
 const CaseInsert: React.FC = () => {
+  const userLogin = useSelector((state: any) => state.userLogin)
+  const { userInfo } = userLogin
 
   //处理多选框
   const [options, setOptions] = useState([]);
   useEffect(() => {
-    fetch('https://47.120.14.174:443/petHospital/diseases'
-    )
+    fetch('https://47.120.14.174:443/petHospital/diseases', {
+      headers: {
+        "Authorization": userInfo.data.result.token,
+      }
+    })
       .then(
         (response) => response.json(),
       )
@@ -71,6 +77,7 @@ const CaseInsert: React.FC = () => {
         method: 'POST',
         headers: {
           'Content-type': 'application/json; charset=UTF-8',
+          "Authorization": userInfo.data.result.token,
         },
         body: JSON.stringify(values)
       })
@@ -80,7 +87,6 @@ const CaseInsert: React.FC = () => {
           let res = data.success;
           if (res === true) {
             message.success("添加成功！")
-            console.log(data.result.caseId)
             navigate(`/systemManage/case/detail/${data.result.caseId}`, { replace: true })
           }
           else fail();

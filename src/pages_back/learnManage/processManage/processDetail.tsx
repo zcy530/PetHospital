@@ -4,9 +4,12 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ProcessType, OperationType } from "./processType.tsx";
 import BackButton from "../../global/backButton.tsx";
+import { useSelector } from "react-redux";
 
 
 const ProcessDetail = () => {
+    const userLogin = useSelector((state: any) => state.userLogin)
+    const { userInfo } = userLogin
 
     const params = useParams();
     //console.log(params)
@@ -17,8 +20,11 @@ const ProcessDetail = () => {
 
     useEffect(() => {
         //获取后台数据
-        fetch(`https://47.120.14.174:443/petHospital/processes/${params.processId}`
-        )
+        fetch(`https://47.120.14.174:443/petHospital/processes/${params.processId}`, {
+            headers: {
+                "Authorization": userInfo.data.result.token,
+            }
+        })
             .then(
                 (response) => response.json(),
             )

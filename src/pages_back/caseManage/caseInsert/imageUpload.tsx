@@ -3,6 +3,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { Modal, Upload } from 'antd';
 import type { RcFile, UploadProps } from 'antd/es/upload';
 import type { UploadFile } from 'antd/es/upload/interface';
+import { useSelector } from 'react-redux';
 
 //上传图片
 
@@ -18,6 +19,8 @@ const getBase64 = (file: RcFile): Promise<string> =>
 
 
 const ImageUpload: React.FC = (props) => {
+  const userLogin = useSelector((state: any) => state.userLogin)
+  const { userInfo } = userLogin
   // console.log(props);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
@@ -95,6 +98,7 @@ const ImageUpload: React.FC = (props) => {
         onPreview={handlePreview}
         onChange={handleChange}
         onRemove={onRemove}
+        headers={{ "Authorization": userInfo.data.result.token }}
       >
         {fileList.length >= props.num ? null : uploadButton}
       </Upload>

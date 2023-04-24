@@ -6,9 +6,13 @@ import { DeleteTwoTone, SearchOutlined, EditTwoTone, ExclamationCircleFilled, Ey
 import { ColumnType, FilterConfirmProps } from "antd/es/table/interface";
 import { ProcessType } from "./processType.js";
 import Highlighter from 'react-highlight-words';
+import { useSelector } from "react-redux";
 
 
 const ProcessInfo: React.FC = () => {
+    const userLogin = useSelector((state: any) => state.userLogin)
+    const { userInfo } = userLogin
+
     const [pageOption, setPageOption] = useState({
         pageNo: 1,  //当前页为1
         pageSize: 10, //一页10行
@@ -38,7 +42,11 @@ const ProcessInfo: React.FC = () => {
     const [processData, setProcessData] = useState<ProcessType[]>([]);
     useEffect(() => {
         //获取后台数据
-        fetch('https://47.120.14.174:443/petHospital/processes'
+        fetch('https://47.120.14.174:443/petHospital/processes', {
+            headers: {
+                "Authorization": userInfo.data.result.token,
+            }
+        }
         )
             .then(
                 (response) => response.json(),
@@ -237,6 +245,9 @@ const ProcessInfo: React.FC = () => {
                 setProcessData(data);
                 fetch(`https://47.120.14.174:443/petHospital/processes/${id}`, {
                     method: 'DELETE',
+                    headers: {
+                        "Authorization": userInfo.data.result.token,
+                    }
                 }).then((response) => {
                     if (response.status === 200) {
                         ////console.log('删除成功！')

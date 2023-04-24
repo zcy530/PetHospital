@@ -2,12 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { InboxOutlined } from '@ant-design/icons';
 import { Divider, UploadFile, UploadProps } from 'antd';
 import { message, Upload } from 'antd';
+import { useSelector } from 'react-redux';
 
 const { Dragger } = Upload;
 
 //因为是要实现一个在formitem里的自定义组件，所以一定要有value和triggerChange函数，其中value的值会返回到表单当中
 // const VideoUpload: React.FC<VideoValueProps> = ({ value = {}, onChange }) => {
 const VideoUpload = (props) => {
+    const userLogin = useSelector((state: any) => state.userLogin)
+    const { userInfo } = userLogin
     console.log(props);
     const [fileList, setFileList] = useState<UploadFile[]>([]);
 
@@ -56,6 +59,9 @@ const VideoUpload = (props) => {
         name: 'videos',
         multiple: true,
         action: 'https://47.120.14.174:443/petHospital/videos',
+        headers: {
+            "Authorization": userInfo.data.result.token,
+        },
         onChange: handleChange,
         onDrop(e) {
             // console.log('Dropped files', e.dataTransfer.files);

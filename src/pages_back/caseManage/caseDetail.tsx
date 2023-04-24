@@ -2,11 +2,13 @@ import { Descriptions, Layout, Image, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import BackButton from "../global/backButton.tsx";
 import { useParams } from "react-router-dom";
-import { CaseFormType, InspectionInfo } from "./caseType.tsx";
+import { CaseFormType } from "./caseType.tsx";
 import { ColumnsType } from "antd/es/table/InternalTable.js";
+import { useSelector } from "react-redux";
 
 const CaseDetail = () => {
-
+    const userLogin = useSelector((state: any) => state.userLogin)
+    const { userInfo } = userLogin
 
     const params = useParams();
     //console.log(params)
@@ -35,7 +37,11 @@ const CaseDetail = () => {
 
     useEffect(() => {
         //获取后台数据
-        fetch(`https://47.120.14.174:443/petHospital/cases/${params.case_id}/detail`)
+        fetch(`https://47.120.14.174:443/petHospital/cases/${params.case_id}/detail`, {
+            headers: {
+                "Authorization": userInfo.data.result.token,
+            }
+        })
             .then(
                 (response) => response.json(),
             )

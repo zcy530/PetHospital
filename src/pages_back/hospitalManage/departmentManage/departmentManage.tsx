@@ -7,10 +7,13 @@ import { SearchOutlined, EditTwoTone, MinusCircleOutlined, PlusOutlined } from '
 import { ColumnType, FilterConfirmProps } from "antd/es/table/interface";
 import Highlighter from 'react-highlight-words';
 import { DepartmentType } from "./departmentType.tsx";
+import { useSelector } from "react-redux";
 
 const { TextArea } = Input;
 
 const DepartmentInfo: React.FC = () => {
+    const userLogin = useSelector((state: any) => state.userLogin)
+    const { userInfo } = userLogin
 
     //分页默认值，记得import useState
     const [pageOption, setPageOption] = useState({
@@ -41,8 +44,11 @@ const DepartmentInfo: React.FC = () => {
     const [count, setCount] = useState(0);
     useEffect(() => {
         //获取后台数据
-        fetch('https://47.120.14.174:443/petHospital/departments'
-        )
+        fetch('https://47.120.14.174:443/petHospital/departments', {
+            headers: {
+                "Authorization": userInfo.data.result.token,
+            }
+        })
             .then(
                 (response) => response.json(),
             )
@@ -227,6 +233,7 @@ const DepartmentInfo: React.FC = () => {
                                 body: JSON.stringify(values),
                                 headers: {
                                     'Content-type': 'application/json; charset=UTF-8',
+                                    "Authorization": userInfo.data.result.token,
                                 }
                             })
                                 .then((response) => response.json())

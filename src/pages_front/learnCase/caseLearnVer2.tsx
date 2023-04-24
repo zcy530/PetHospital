@@ -49,9 +49,11 @@ const CaseLearnVer2 = () => {
   const numAscending = category.sort((a, b) => b.typeId - a.typeId);
 
   // 左侧菜单栏
+  const rootSubmenuKeys=[]
   const tabItems: MenuProps['items'] = numAscending.map((info, index) => {
     console.log(numAscending);
       const key = info.typeName;
+      rootSubmenuKeys.push(info.typeName)
       return {
         key: key,
         label: info.typeName,
@@ -66,16 +68,22 @@ const CaseLearnVer2 = () => {
   });
 
   // 控制每次只打开一个 tab 的函数
-  const rootSubmenuKeys = [ '产科病', '传染病', '内科病', '外科病','寄生虫病','牙科病','眼科疾病','神经科病','肠胃病'];
   const [openKeys, setOpenKeys] = useState(['肠胃病']);
 
   const onOpenChange: MenuProps['onOpenChange'] = (keys) => {
-    
     const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
+    // console.log('keys',keys);
+    // console.log('latest',latestOpenKey);
+    // console.log('key',openKeys)
+    // console.log('root',rootSubmenuKeys)
     if (rootSubmenuKeys.indexOf(latestOpenKey!) === -1) {
       setOpenKeys(keys);
+      setBigDiseaseName(latestOpenKey);
+      setSmallDiseaseName('');
     } else {
       setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
+      setBigDiseaseName(latestOpenKey ? latestOpenKey : '');
+      setSmallDiseaseName('');
     } 
   };
 
@@ -93,7 +101,11 @@ const CaseLearnVer2 = () => {
             onSelect={(item)=> {
               setChooseNow(parseInt(item.key));
               setShowDetail(false);
-              console.log(item.key);
+
+              let diseaseList = tabItems.find(el=>el.key===bigDiseaseName);
+              let smallName = diseaseList.children.find(el=>el.key == item.key);
+              //console.log("dis",smallName)
+              setSmallDiseaseName(smallName.label)
             }}
             onOpenChange={onOpenChange}
             openKeys={openKeys}

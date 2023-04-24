@@ -7,6 +7,7 @@ import { ColumnType, FilterConfirmProps } from "antd/es/table/interface";
 import Highlighter from 'react-highlight-words';
 import { VaccineType } from "./vaccineType.tsx";
 import TextArea from "antd/es/input/TextArea";
+import { useSelector } from "react-redux";
 
 
 //------------------------------------------
@@ -25,6 +26,8 @@ interface CollectionEditFormProps {
 //----------------------------------------------
 
 const VaccineInfo: React.FC = () => {
+    const userLogin = useSelector((state: any) => state.userLogin)
+    const { userInfo } = userLogin
     //定义表格数据使用
     const [vaccineData, setVaccineData] = useState<VaccineType[]>([]);
     //count监听变化
@@ -32,7 +35,11 @@ const VaccineInfo: React.FC = () => {
 
     useEffect(() => {
         //获取后台数据
-        fetch('https://47.120.14.174:443/petHospital/vaccines'
+        fetch('https://47.120.14.174:443/petHospital/vaccines', {
+            headers: {
+                "Authorization": userInfo.data.result.token,
+            }
+        }
         )
             .then(
                 (response) => response.json(),
@@ -89,6 +96,7 @@ const VaccineInfo: React.FC = () => {
                                 method: 'POST',
                                 headers: {
                                     'Content-type': 'application/json; charset=UTF-8',
+                                    "Authorization": userInfo.data.result.token,
                                 },
                                 body: JSON.stringify({
                                     "id": 0,
@@ -182,6 +190,7 @@ const VaccineInfo: React.FC = () => {
                                 }),
                                 headers: {
                                     'Content-type': 'application/json; charset=UTF-8',
+                                    "Authorization": userInfo.data.result.token,
                                 }
                             })
                                 .then((response) => response.json())
@@ -364,6 +373,9 @@ const VaccineInfo: React.FC = () => {
                 console.log('OK');
                 fetch(`https://47.120.14.174:443/petHospital/vaccines/${id}`, {
                     method: 'DELETE',
+                    headers: {
+                        "Authorization": userInfo.data.result.token,
+                    }
                 }).then((response) => {
                     if (response.status === 200) {
                         console.log('删除成功！')

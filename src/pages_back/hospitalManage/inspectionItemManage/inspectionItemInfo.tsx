@@ -7,6 +7,7 @@ import { ColumnType, FilterConfirmProps } from "antd/es/table/interface";
 import Highlighter from 'react-highlight-words';
 import { InspectionItemType } from "./inspectionItemType.tsx";
 import TextArea from "antd/es/input/TextArea";
+import { useSelector } from "react-redux";
 
 
 //------------------------------------------
@@ -32,6 +33,9 @@ interface department {
 const { Option } = Select;
 
 const InspectionInfo: React.FC = () => {
+    const userLogin = useSelector((state: any) => state.userLogin)
+    const { userInfo } = userLogin
+
     //定义表格数据使用
     const [inspectionData, setInspectionData] = useState<InspectionItemType[]>([]);
     //count监听变化
@@ -41,8 +45,9 @@ const InspectionInfo: React.FC = () => {
     useEffect(() => {
         getAllDepartment();
         //获取后台数据
-        fetch('https://47.120.14.174:443/petHospital/inspections'
-        )
+        fetch('https://47.120.14.174:443/petHospital/inspections', {
+            headers: { "Authorization": userInfo.data.result.token, }
+        })
             .then(
                 (response) => response.json(),
             )
@@ -58,7 +63,11 @@ const InspectionInfo: React.FC = () => {
 
     const getAllDepartment = () => {
         //获取后台数据
-        fetch('https://47.120.14.174:443/petHospital/departments'
+        fetch('https://47.120.14.174:443/petHospital/departments', {
+            headers: {
+                "Authorization": userInfo.data.result.token,
+            }
+        }
         )
             .then(
                 (response) => response.json(),
@@ -118,6 +127,7 @@ const InspectionInfo: React.FC = () => {
                                 method: 'POST',
                                 headers: {
                                     'Content-type': 'application/json; charset=UTF-8',
+                                    "Authorization": userInfo.data.result.token,
                                 },
                                 body: JSON.stringify({
                                     "inspectionItemId": 0,
@@ -231,6 +241,7 @@ const InspectionInfo: React.FC = () => {
                                 }),
                                 headers: {
                                     'Content-type': 'application/json; charset=UTF-8',
+                                    "Authorization": userInfo.data.result.token,
                                 }
                             })
                                 .then((response) => response.json())
@@ -328,7 +339,7 @@ const InspectionInfo: React.FC = () => {
     };
 
     //获取列
-    const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<VaccineType> => ({
+    const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<InspectionItemType> => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
             <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
                 <Input
@@ -424,6 +435,9 @@ const InspectionInfo: React.FC = () => {
             async onOk() {
                 fetch(`https://47.120.14.174:443/petHospital/inspections/${id}`, {
                     method: 'DELETE',
+                    headers: {
+                        "Authorization": userInfo.data.result.token,
+                    }
                 }).then(
                     (response) => response.json()
                 ).then((data) => {
@@ -507,8 +521,8 @@ const InspectionInfo: React.FC = () => {
             title: '费用',
             dataIndex: 'fee',
             align: 'center',
-             // sort 
-             sorter: (a, b) => (a.fee > b.fee) ? 1 : -1,
+            // sort 
+            sorter: (a, b) => (a.fee > b.fee) ? 1 : -1,
         },
         {
             title: '操作',

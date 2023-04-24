@@ -6,18 +6,6 @@ import { oneDiseaseCaseDetail } from './caseTypeDefine.tsx';
 import { dataFrom_oneDiseaseCaseDetail } from './mockData.tsx';
 import Cat from "../../Assets/image/cat2.png";
 import { useSelector } from 'react-redux';
-import {
-  Player,
-  ControlBar,
-  PlayToggle, // PlayToggle 播放/暂停按钮 若需禁止加 disabled
-  ReplayControl, // 后退按钮
-  ForwardControl,  // 前进按钮
-  CurrentTimeDisplay,
-  TimeDivider,
-  PlaybackRateMenuButton,  // 倍速播放选项
-  VolumeMenuButton
-} from 'video-react';
-
 export interface detailsProps {
   id: number;
   showDetail: boolean;
@@ -25,6 +13,7 @@ export interface detailsProps {
 }
 
 const CaseDetail = (props : detailsProps) => {
+  
   const userLogin = useSelector((state:any) => state.userLogin)
   const { userInfo } = userLogin
   const [caseDetail, setCaseDetail]= useState<oneDiseaseCaseDetail>(dataFrom_oneDiseaseCaseDetail);
@@ -41,6 +30,10 @@ const CaseDetail = (props : detailsProps) => {
       const { data } = await axios.get(`https://47.120.14.174:443/petHospital/cases/${props.id}?front=1`,config);
       setCaseDetail(data.result);
       console.log(data.result);
+      
+      caseDetail.treatmentVideoList.map((item, i) => (
+        console.log(item)
+     ))
     }
     fetchDetail();
 	},[])
@@ -139,9 +132,16 @@ const CaseDetail = (props : detailsProps) => {
               </Image.PreviewGroup>
             </Descriptions.Item>
             <Descriptions.Item label="视频描述" span={3}>
-            <video id="playChatVideo"  width="680" height="410" style={{marginBottom:'20'}} controls>
-              <source src={"https://pet-hospital-back-end-video.oss-cn-shanghai.aliyuncs.com/00225video_publisheranonymousUser/VID_20230405_210947.mp4"} type="video/mp4"></source>
-            </video>
+            {/* <video id="playChatVideo"  width="680" height="410" style={{marginBottom:'20'}} controls>
+              <source src={caseDetail.treatmentVideoList[0]} type="video/mp4"></source>s
+            </video> */}
+
+            {caseDetail.treatmentVideoList.map((item, i) => (
+                 
+                  <video id="playChatVideo" width="610" height="410" style={{ marginBottom: '20' }} controls>
+                      <source src={item} type="video/mp4"></source>
+                  </video>
+             ))}
             </Descriptions.Item>
             </Descriptions>
         </Layout>

@@ -16,7 +16,6 @@ import Highlighter from 'react-highlight-words';
 import { UserType } from './userType';
 import Loading from '../global/loading.tsx'
 
-
 type DataIndex = keyof UserType;
 const { Option } = Select;
 
@@ -38,6 +37,7 @@ interface CollectionEditFormProps {
 const UserInfo: React.FC = () => {
   //获取自己账号的id？
   const userLogin = useSelector(state => state.userLogin)
+  const token = userLogin.userInfo.data.result.token;
   const selfId = userLogin.userInfo.data.result.userId;
 
   console.log("本用户为：" + selfId)
@@ -187,7 +187,9 @@ const UserInfo: React.FC = () => {
   const hasSelected = selectedRowKeys.length > 0;
   useEffect(() => {
     //获取后台数据
-    fetch('https://47.120.14.174:443/petHospital/users'
+    fetch('https://47.120.14.174:443/petHospital/users', {
+      headers: { 'Authorization': token }
+    }
     )
       .then(
         (response) => response.json(),
@@ -255,6 +257,7 @@ const UserInfo: React.FC = () => {
                 method: 'POST',
                 headers: {
                   'Content-type': 'application/json; charset=UTF-8',
+                  'Authorization': token
                 },
                 body: JSON.stringify({
                   "email": values.email,
@@ -383,6 +386,7 @@ const UserInfo: React.FC = () => {
                 }),
                 headers: {
                   'Content-type': 'application/json; charset=UTF-8',
+                  'Authorization': token
                 }
               })
                 .then((response) => response.json())
@@ -501,6 +505,7 @@ const UserInfo: React.FC = () => {
             body: JSON.stringify(userList),
             headers: {
               'Content-type': 'application/json; charset=UTF-8',
+              'Authorization': token
             },
           }).then((response) => response.json())
             .then((data) => {
@@ -521,8 +526,8 @@ const UserInfo: React.FC = () => {
               console.log(err.message);
               message.error("删除失败，请稍后再试！");
             });
-            //rowselect重置
-            setSelectedRowKeys([]);
+          //rowselect重置
+          setSelectedRowKeys([]);
         }
       },
       onCancel() {
@@ -546,6 +551,7 @@ const UserInfo: React.FC = () => {
         //删除的事件 DELETE
         await fetch(`https://47.120.14.174:443/petHospital/users/${id}`, {
           method: 'DELETE',
+          headers: {'Authorization': token}
         }).then((response) => {
           if (response.status === 200) {
             //DONE：重新加载数据 filter一下
@@ -669,7 +675,9 @@ const UserInfo: React.FC = () => {
             setEditFormOpen(false);
           }} />
 
-        <Table rowSelection={rowSelection} rowKey={record => record.key} columns={columns} dataSource={userData} style={{ margin: 16 }} pagination={{ position: ['bottomCenter'] }} />
+        <Table rowSelection={rowSelection} rowKey={record => record.key} columns={columns}
+          loading={userData.length === 0}
+          dataSource={userData} style={{ margin: 16 }} />
       </div >
     ) : (
       <>

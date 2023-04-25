@@ -9,13 +9,13 @@ import {
     Checkbox,
     Radio,
     RadioChangeEvent,
-    message,
-    List
+    message
 } from 'antd';
 import { Container } from 'react-bootstrap';
-import { diseaseType } from '../../diseaseManage/diseaseType.tsx'
+import { diseaseOption, getDiseaseList } from '../../diseaseManage/diseaseType.tsx'
 import { useNavigate } from 'react-router-dom';
 import BackButton from '../../global/backButton.tsx';
+import { useSelector } from 'react-redux';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -39,7 +39,10 @@ const choiceList: ChoiceOption[] = [
 ]
 
 const QuestionInsert: React.FC = () => {
-
+    const userLogin = useSelector(state => state.userLogin)
+    const token = userLogin.userInfo.data.result.token;
+    //疾病类别
+    const [diseaseType, setDiseaseType] = useState<diseaseOption[]>([]);
     const [form] = Form.useForm();
     const navigate = useNavigate(); //跳转路由
 
@@ -51,10 +54,6 @@ const QuestionInsert: React.FC = () => {
     const [single, setSingle] = useState(false);
     const [multiple, setMultiple] = useState(true);
     const [judge, setJudge] = useState(true);
-
-    useEffect(() => {
-        setChoices();
-    })
 
     const typeChange = (e: RadioChangeEvent) => {
         console.log(e.target.value)
@@ -127,6 +126,7 @@ const QuestionInsert: React.FC = () => {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json; charset=UTF-8',
+                    'Authorization': token
                 },
                 body: JSON.stringify({
                     "ans": ans,
@@ -154,12 +154,19 @@ const QuestionInsert: React.FC = () => {
         )
     }
 
+    useEffect(() => {
+        form.setFieldValue("questionType", type)
+        setChoices();
+        //疾病类别 用于筛选
+        const list = getDiseaseList(token);
+        setTimeout(() => {
+            setDiseaseType(list);
+        }, 500)
+        console.log(diseaseType)
+    }, [])
+
     const multiSelectChange = (rule, value, callback) => {
         if (value.length < 2) {
-            // message.error('请至少选择2个');
-            // form.setFieldsValue({
-            //     "multi_ans": _.take(value, 2),
-            // })
             callback('请至少选择2个正确答案！')
         } else {
             callback()
@@ -210,7 +217,7 @@ const QuestionInsert: React.FC = () => {
                         <Input />
                     </Form.Item>
 
-                    {/* 如果是判断 这里要隐藏 */}
+                    {/* 如果是判断 这里要隐藏选项 */}
                     {judge === false ? (<>
 
                     </>) : (<>
@@ -228,7 +235,6 @@ const QuestionInsert: React.FC = () => {
                                                 >
                                                     <Input placeholder="选项" />
                                                 </Form.Item>
-                                                {/* <MinusCircleOutlined onClick={() => remove(name)} /> */}
                                             </Space>
                                         ))}
                                     </>
@@ -236,36 +242,45 @@ const QuestionInsert: React.FC = () => {
                             </Form.List>
                         </Form.Item>
                     </>)}
+                    <div>
+                        {(() => {
+                            switch (type) {
+                                case '单选':
+                                    return <Form.Item label="单选题答案" name="single_ans"
+                                        rules={[{ required: !single, message: '请选择题目答案！' }]}>
+                                        <Radio.Group disabled={single}>
+                                            <Radio value="0">A</Radio>
+                                            <Radio value="1">B</Radio>
+                                            <Radio value="2">C</Radio>
+                                            <Radio value="3">D</Radio>
+                                        </Radio.Group>
+                                    </Form.Item>
+                                case '多选':
+                                    return <Form.Item label="多选题答案" name="multi_ans"
+                                        rules={[{ required: !multiple, validator: multiSelectChange }]}
+                                    >
+                                        {/* 多选至少选2个 */}
+                                        <Checkbox.Group disabled={multiple}>
+                                            <Checkbox value="0">A</Checkbox>
+                                            <Checkbox value="1">B</Checkbox>
+                                            <Checkbox value="2">C</Checkbox>
+                                            <Checkbox value="3">D</Checkbox>
+                                        </Checkbox.Group>
+                                    </Form.Item>
+                                case '判断':
+                                    return <Form.Item label="判断题答案" name="judge_ans"
+                                        rules={[{ required: !judge, message: '请选择题目答案！' }]}>
+                                        <Radio.Group disabled={judge}>
+                                            <Radio value="0"> 对 </Radio>
+                                            <Radio value="1"> 错 </Radio>
+                                        </Radio.Group>
+                                    </Form.Item>
 
-                    <Form.Item label="单选题答案" name="single_ans"
-                        rules={[{ required: !single, message: '请选择题目答案！' }]}>
-                        <Radio.Group disabled={single}>
-                            <Radio value="0">A</Radio>
-                            <Radio value="1">B</Radio>
-                            <Radio value="2">C</Radio>
-                            <Radio value="3">D</Radio>
-                        </Radio.Group>
-                    </Form.Item>
-
-                    <Form.Item label="多选题答案" name="multi_ans"
-                        rules={[{ required: !multiple, validator: multiSelectChange }]}
-                    >
-                        {/* 多选至少选2个 */}
-                        <Checkbox.Group disabled={multiple}>
-                            <Checkbox value="0">A</Checkbox>
-                            <Checkbox value="1">B</Checkbox>
-                            <Checkbox value="2">C</Checkbox>
-                            <Checkbox value="3">D</Checkbox>
-                        </Checkbox.Group>
-                    </Form.Item>
-
-                    <Form.Item label="判断题答案" name="judge_ans"
-                        rules={[{ required: !judge, message: '请选择题目答案！' }]}>
-                        <Radio.Group disabled={judge}>
-                            <Radio value="0"> 对 </Radio>
-                            <Radio value="1"> 错 </Radio>
-                        </Radio.Group>
-                    </Form.Item>
+                                default:
+                                    return null;
+                            }
+                        })()}
+                    </div>
 
                     <Form.Item style={{ textAlign: 'center' }}>
                         <Button type="primary" htmlType="submit" onClick={submitQuestion}>
@@ -274,7 +289,7 @@ const QuestionInsert: React.FC = () => {
                     </Form.Item>
                 </Form>
             </div>
-        </Container>
+        </Container >
 
     );
 

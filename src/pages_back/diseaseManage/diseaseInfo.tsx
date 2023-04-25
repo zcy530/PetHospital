@@ -4,8 +4,9 @@ import type { ColumnsType, ColumnType } from 'antd/es/table';
 import { DeleteTwoTone, EditTwoTone, SearchOutlined, ExclamationCircleFilled } from '@ant-design/icons';
 import type { FilterConfirmProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
-import { DiseaseInfo, diseaseCategory } from './diseaseType.tsx'
+import { DiseaseInfo, diseaseOption, getCategoryList } from './diseaseType.tsx'
 import Loading from '../global/loading.tsx'
+import { useSelector } from 'react-redux';
 
 type DataIndex = keyof DiseaseInfo;
 const { Option } = Select;
@@ -25,10 +26,12 @@ interface CollectionEditFormProps {
 }
 
 const DiseaseManage: React.FC = () => {
+    const userLogin = useSelector(state => state.userLogin)
+    const token = userLogin.userInfo.data.result.token;
     const [createOpenForm, setCreateFormOpen] = useState(false);
     const [editFormOpen, setEditFormOpen] = useState(false);
     const [editRecord, setEditRecord] = useState<DiseaseInfo>([]);
-
+    const [diseaseCategory, setDiseaseCategory] = useState<diseaseOption[]>([]);
 
     const onCreate = (values: any) => {
         console.log('Received values of form: ', values);
@@ -61,6 +64,7 @@ const DiseaseManage: React.FC = () => {
                                 method: 'POST',
                                 headers: {
                                     'Content-type': 'application/json; charset=UTF-8',
+                                    'Authorization': token
                                 },
                                 body: JSON.stringify({
                                     "diseaseName": values.diseaseName,
@@ -146,6 +150,7 @@ const DiseaseManage: React.FC = () => {
                                 method: 'PUT',
                                 headers: {
                                     'Content-type': 'application/json; charset=UTF-8',
+                                    'Authorization': token
                                 },
                                 body: JSON.stringify({
                                     "diseaseId": record.diseaseId,
@@ -314,8 +319,10 @@ const DiseaseManage: React.FC = () => {
     const [count, setCount] = useState(0);
 
     useEffect(() => {
+        setDiseaseCategory(getCategoryList(token))
         //获取后台数据
-        fetch('https://47.120.14.174:443/petHospital/diseases'
+        fetch('https://47.120.14.174:443/petHospital/diseases',
+            { headers: { 'Authorization': token } }
         )
             .then(
                 (response) => response.json(),
@@ -361,6 +368,7 @@ const DiseaseManage: React.FC = () => {
                 //删除的事件 DELETE
                 await fetch(`https://47.120.14.174:443/petHospital/diseases/${id}`, {
                     method: 'DELETE',
+                    headers: { 'Authorization': token }
                 }).then(
                     (response) => response.json()
                 ).then((data) => {
@@ -384,8 +392,8 @@ const DiseaseManage: React.FC = () => {
         });
     };
 
-      //分页默认值，记得import useState
-      const [pageOption, setPageOption] = useState({
+    //分页默认值，记得import useState
+    const [pageOption, setPageOption] = useState({
         pageNo: 1,  //当前页为1
         pageSize: 10, //一页10行
     })

@@ -7,6 +7,7 @@ import type { ColumnsType, ColumnType, TableProps } from 'antd/es/table';
 import type { FilterConfirmProps, } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 interface TestType {
     testId: number;
@@ -21,6 +22,8 @@ interface TestType {
 type DataIndex = keyof TestType;
 
 const Test: React.FC = () => {
+    const userLogin = useSelector(state => state.userLogin)
+    const token = userLogin.userInfo.data.result.token;
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef<InputRef>(null);
@@ -138,6 +141,7 @@ const Test: React.FC = () => {
                 //删除的事件 DELETE
                 await fetch(`https://47.120.14.174:443/petHospital/tests/${id}`, {
                     method: 'DELETE',
+                    headers: { 'Authorization': token }
                 }).then((response) => {
                     if (response.status === 200) {
                         setCount(count + 1)
@@ -159,28 +163,28 @@ const Test: React.FC = () => {
         });
     };
 
-        //分页默认值，记得import useState
-        const [pageOption, setPageOption] = useState({
-            pageNo: 1,  //当前页为1
-            pageSize: 10, //一页10行
+    //分页默认值，记得import useState
+    const [pageOption, setPageOption] = useState({
+        pageNo: 1,  //当前页为1
+        pageSize: 10, //一页10行
+    })
+
+    //分页配置
+    const paginationProps = {
+        current: pageOption.pageNo,
+        pageSize: pageOption.pageSize,
+        onChange: (current, size) => paginationChange(current, size)
+    }
+
+    //当翻页时，改变当前为第current页，current和size这两参数是onChange API自带的，会帮你算出来你现在在第几页，这一页有多少行数据。
+    const paginationChange = async (current, size) => {
+        //前面用到useState
+        setPageOption({
+            pageNo: current, //当前所在页面
+            pageSize: size,  //一页有几行
         })
-    
-        //分页配置
-        const paginationProps = {
-            current: pageOption.pageNo,
-            pageSize: pageOption.pageSize,
-            onChange: (current, size) => paginationChange(current, size)
-        }
-    
-        //当翻页时，改变当前为第current页，current和size这两参数是onChange API自带的，会帮你算出来你现在在第几页，这一页有多少行数据。
-        const paginationChange = async (current, size) => {
-            //前面用到useState
-            setPageOption({
-                pageNo: current, //当前所在页面
-                pageSize: size,  //一页有几行
-            })
-        }
-    
+    }
+
 
     const columns: ColumnsType<TestType> = [
         {
@@ -262,7 +266,10 @@ const Test: React.FC = () => {
 
     useEffect(() => {
         //获取后台数据
-        fetch('https://47.120.14.174:443/petHospital/tests'
+        fetch('https://47.120.14.174:443/petHospital/tests',
+            {
+                headers: { 'Authorization': token }
+            }
         )
             .then(
                 (response) => response.json(),
@@ -299,7 +306,9 @@ const Test: React.FC = () => {
                     <Button type="primary" ghost>新增考试场次</Button>
                 </Link>
             </div>
-            <Table style={{ margin: 16 }} columns={columns} dataSource={testData} pagination={paginationProps}/>;
+            <Table style={{ margin: 16 }} columns={columns}
+                loading={testData.length === 0}
+                dataSource={testData} pagination={paginationProps} />;
         </div>
     )
 };

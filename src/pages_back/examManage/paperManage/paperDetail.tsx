@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom';
-import { MinusCircleOutlined, PlusOutlined, TagTwoTone, LeftCircleTwoTone, LeftOutlined, FileTextTwoTone } from '@ant-design/icons';
+import { FileTextTwoTone } from '@ant-design/icons';
 import { Form, Space, List, Divider, Input } from 'antd';
 import BackButton from '../../global/backButton.tsx';
 import { PaperDetailType } from './paperType.tsx';
+import { useSelector } from 'react-redux';
+
 
 const PaperDetail = () => {
     const params = useParams();
+    const userLogin = useSelector(state => state.userLogin)
+    const token = userLogin.userInfo.data.result.token;
     const [form] = Form.useForm();
     const [paperDetail, setPaperDetail] = useState<PaperDetailType>({
         "paperId": 1,
@@ -31,7 +35,9 @@ const PaperDetail = () => {
             questionList: []
         };
         //获取后台数据
-        fetch(`https://47.120.14.174:443/petHospital/papers/${params.paper_id}?front=false`)
+        fetch(`https://47.120.14.174:443/petHospital/papers/${params.paper_id}?front=false`, {
+            headers: { 'Authorization': token },
+        })
             .then(
                 (response) => response.json(),
             )

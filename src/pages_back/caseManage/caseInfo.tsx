@@ -7,7 +7,7 @@ import Highlighter from 'react-highlight-words';
 //导入CaseData & CaseType
 import { CaseType } from "./caseType";
 import { Link } from "react-router-dom";
-import { diseaseCategory } from '../diseaseManage/diseaseType.tsx';
+import { getCategoryList, diseaseOption } from '../diseaseManage/diseaseType.tsx';
 import { useSelector } from 'react-redux';
 
 //列的下标
@@ -42,7 +42,12 @@ const CaseInfo: React.FC = () => {
 
     //定义表格数据使用
     const [caseData, setCaseData] = useState<CaseType[]>([]);
+    //疾病类型
+    const [diseaseCategory, setDiseaseCategory] = useState<diseaseOption[]>([]);
     useEffect(() => {
+        const diseaseList = getCategoryList(userInfo.data.result.token)
+        console.log(diseaseList);
+        setDiseaseCategory(diseaseList)
         //获取后台数据
         fetch('https://47.120.14.174:443/petHospital/cases', {
             headers: {

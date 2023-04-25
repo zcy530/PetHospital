@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Select } from 'antd';
 import Loading from '../global/loading.tsx'
+import { useSelector } from 'react-redux';
 
 
 const { Option } = Select;
@@ -12,6 +13,8 @@ interface paperOption {
 
 
 const PaperSelect = (props) => {
+    const userLogin = useSelector(state => state.userLogin)
+    const token = userLogin.userInfo.data.result.token;
     // console.log("paper props:")
     console.log(props);
 
@@ -19,7 +22,8 @@ const PaperSelect = (props) => {
 
     useEffect(() => {
 
-        fetch('https://47.120.14.174:443/petHospital/papers'
+        fetch('https://47.120.14.174:443/petHospital/papers',
+            { headers: { 'Authorization': token } }
         )
             .then(
                 (response) => response.json(),
@@ -48,15 +52,14 @@ const PaperSelect = (props) => {
     return (
         <Select
             size="large"
-            showSearch //带搜索的选择框
-            style={{ width: 160 }}
+            style={{ width: 200 }}
             placeholder="Select a paper"
             onChange={handleChange}
         >
             {
                 paperList ? (
                     paperList.map(paper =>
-                        <Option key={paper.id}> {paper.name} </Option>
+                        <Option value={paper.id}> {paper.name} </Option>
                     )
                 ) : (
                     <>

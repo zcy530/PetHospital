@@ -5,17 +5,19 @@ export interface DiseaseInfo {
   typeName: string;
 }
 
-interface diseaseOption {
+export interface diseaseOption {
   id: number,
   text: string,
   value: string
 }
 
+
 //获取疾病的类别目录
-const getCategoryList = () => {
-  let diseaseList: diseaseOption[] =[];
+export function getCategoryList(token: string) {
+  let diseaseList: diseaseOption[] = [];
   //获取后台数据
-  fetch("https://47.120.14.174:443/petHospital/categories"
+  fetch("https://47.120.14.174:443/petHospital/categories",
+    { headers: { 'Authorization': token } }
   )
     .then(
       (response) => response.json(),
@@ -23,10 +25,10 @@ const getCategoryList = () => {
     .then((data) => {
       console.log(data.result);
       const lists = data.result;
-      
+
       lists.map(list => {
         // console.log(list.typeName)
-        diseaseList.push({"id": list.typeId, "text": list.typeName, "value": list.typeName })
+        diseaseList.push({ "id": list.typeId, "text": list.typeName, "value": list.typeName })
       })
       console.log(diseaseList)
     })
@@ -38,10 +40,11 @@ const getCategoryList = () => {
 }
 
 //获取疾病/病种列表
-const getDiseaseList = () => {
-  let diseaseList: diseaseOption[] =[];
+export const getDiseaseList = (token: string) => {
+  let diseaseList: diseaseOption[] = [];
   //获取后台数据
-  fetch("https://47.120.14.174:443/petHospital/diseases"
+  fetch("https://47.120.14.174:443/petHospital/diseases",
+    { headers: { 'Authorization': token } }
   )
     .then(
       (response) => response.json(),
@@ -49,10 +52,10 @@ const getDiseaseList = () => {
     .then((data) => {
       console.log(data.result);
       const lists = data.result;
-      
+
       lists.map(list => {
         // console.log(list.typeName)
-        diseaseList.push({"id": list.diseaseId, "text": list.diseaseName, "value": list.diseaseName })
+        diseaseList.push({ "id": list.diseaseId, "text": list.diseaseName, "value": list.diseaseName })
       })
       console.log(diseaseList)
     })
@@ -65,6 +68,6 @@ const getDiseaseList = () => {
 
 
 //疾病类别
-export const diseaseType = getDiseaseList();
+// export const diseaseType = getDiseaseList();
 
-export const diseaseCategory = getCategoryList();
+// export const diseaseCategory = getCategoryList();

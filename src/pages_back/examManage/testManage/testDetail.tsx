@@ -5,15 +5,22 @@ import { Form, Space, List, Divider, Input, Tag, Avatar } from 'antd';
 import BackButton from '../../global/backButton.tsx';
 import { TestDetailType } from './testType.tsx'
 import TextArea from 'antd/es/input/TextArea';
+import { useSelector } from 'react-redux';
 
 
 const TestDetail = () => {
+    const userLogin = useSelector(state => state.userLogin)
+    const token = userLogin.userInfo.data.result.token;
     const param = useParams();
     const [detail, setDetail] = useState<TestDetailType>({});
     const [form] = Form.useForm();
 
     useEffect(() => {
-        fetch("https://47.120.14.174:443/petHospital/tests/" + param.testId, { method: 'GET' })
+        fetch("https://47.120.14.174:443/petHospital/tests/" + param.testId, {
+            method: 'GET',
+            headers: { 'Authorization': token }
+
+        })
             .then(
                 (response) => response.json(),
             )
@@ -54,7 +61,7 @@ const TestDetail = () => {
                 </Form.Item>
 
                 <Form.Item label="简介" name="intro">
-                    <TextArea readOnly = {true} rows={5} />
+                    <TextArea readOnly={true} rows={5} />
                 </Form.Item>
 
                 <Form.Item label="标签" name="tag">

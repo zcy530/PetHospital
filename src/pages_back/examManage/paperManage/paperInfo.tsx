@@ -7,11 +7,14 @@ import { ColumnsType } from 'antd/es/table';
 import { FilterConfirmProps } from 'antd/es/table/interface';
 import { Link } from 'react-router-dom';
 import { PaperType } from './paperType.tsxy'
+import { useSelector } from 'react-redux';
 
 
 type DataIndex = keyof PaperType;
 
 const Paper: React.FC = () => {
+    const userLogin = useSelector(state => state.userLogin)
+    const token = userLogin.userInfo.data.result.token;
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef<InputRef>(null);
@@ -128,6 +131,7 @@ const Paper: React.FC = () => {
                 //删除的事件 DELETE
                 await fetch(`https://47.120.14.174:443/petHospital/papers/${id}`, {
                     method: 'DELETE',
+                    headers: { 'Authorization': token }
                 }).then(
                     (response) => response.json()
                 ).then((data) => {
@@ -161,7 +165,9 @@ const Paper: React.FC = () => {
 
     useEffect(() => {
         //获取后台数据
-        fetch('https://47.120.14.174:443/petHospital/papers'
+        fetch('https://47.120.14.174:443/petHospital/papers',{
+            headers: { 'Authorization': token }
+        }
         )
             .then(
                 (response) => response.json(),
@@ -245,7 +251,9 @@ const Paper: React.FC = () => {
 
     return (
         <div>
-            <Table style={{ margin: 16 }} columns={columns} dataSource={paperData} pagination={paginationProps} />
+            <Table style={{ margin: 16 }} columns={columns} dataSource={paperData} 
+            loading={paperData.length === 0}
+            pagination={paginationProps} />
 
         </div>
     )

@@ -6,16 +6,18 @@ import { Button, Input, Space, Table, message } from 'antd';
 import type { ColumnsType, ColumnType } from 'antd/es/table';
 import type { FilterConfirmProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
-import { diseaseType } from '../../diseaseManage/diseaseType.tsx'
+import { diseaseOption, getDiseaseList } from '../../diseaseManage/diseaseType.tsx'
 import { Link, useLocation } from 'react-router-dom';
 import { QuestionType } from '../../examManage/questionManage/questionType.tsx'
 import Loading from '../../global/loading.tsx'
+import { useSelector } from 'react-redux';
 
 
 type DataIndex = keyof QuestionType;
 
 const QuestionInfo: React.FC = () => {
-
+    const userLogin = useSelector(state => state.userLogin)
+    const token = userLogin.userInfo.data.result.token;
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef<InputRef>(null);
@@ -131,6 +133,7 @@ const QuestionInfo: React.FC = () => {
                 //删除的事件 DELETE
                 await fetch(`https://47.120.14.174:443/petHospital/questions/${id}`, {
                     method: 'DELETE',
+                    headers: { 'Authorization': token }
                 }).then(
                     (response) => response.json()
                 ).then((data) => {
@@ -195,7 +198,8 @@ const QuestionInfo: React.FC = () => {
     };
 
     const hasSelected = selectedRowKeys.length > 0;
-
+    //疾病类别
+    const [diseaseType, setDiseaseType] = useState<diseaseOption[]>([]);
 
     //定义列
     const columns: ColumnsType<QuestionType> = [
@@ -286,9 +290,13 @@ const QuestionInfo: React.FC = () => {
     //获取全部考题数据
     const [questionData, setQuestionData] = useState<QuestionType[]>([]);
 
+
     useEffect(() => {
+        //疾病类别 用于筛选
+        setDiseaseType(getDiseaseList(token));
         //获取后台数据
-        fetch('https://47.120.14.174:443/petHospital/questions'
+        fetch('https://47.120.14.174:443/petHospital/questions',
+            { headers: { 'Authorization': token } }
         )
             .then(
                 (response) => response.json(),
@@ -358,7 +366,9 @@ const QuestionInfo: React.FC = () => {
                     </Space>
                 </Space>
 
-                <Table style={{ margin: 16 }} rowSelection={rowSelection} columns={columns} dataSource={questionData} />;
+                <Table style={{ margin: 16 }} rowSelection={rowSelection} columns={columns}
+                    loading={questionData.length === 0}
+                    dataSource={questionData} />;
             </div >
         ) : (
             <>

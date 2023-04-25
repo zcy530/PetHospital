@@ -59,8 +59,7 @@ const CaseDetail = (props : detailsProps) => {
             bordered size='middle'
             labelStyle={{justifyContent:'flex-end'}}
             contentStyle={{justifyContent:'flex-end'}}>       
-            <Descriptions.Item label="病种大类">{caseDetail.caseName.split('病例')[0]}</Descriptions.Item>
-            <Descriptions.Item label="就医时间">2022.03.04</Descriptions.Item>
+            <Descriptions.Item label="病种大类" span={2}>{caseDetail.caseName.split('病例')[0]}</Descriptions.Item>
             <Descriptions.Item label="就医地点">安永宠物医院</Descriptions.Item>
             <Descriptions.Item label="接诊描述" span={3}>{caseDetail.admissionText}</Descriptions.Item>
             <Descriptions.Item label="诊断信息" span={3}>{caseDetail.diagnosticInfo}</Descriptions.Item>

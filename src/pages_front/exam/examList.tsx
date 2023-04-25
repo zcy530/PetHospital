@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FormOutlined, ClockCircleOutlined, TagsOutlined} from '@ant-design/icons';
-import { Modal } from 'antd';
+import { Button, Modal, Statistic } from 'antd';
 import { List, Space} from 'antd';
 import { examCardData } from './mockExamData.tsx';
 import { examList } from './examTypeDefine.js';
@@ -15,6 +15,7 @@ import moment from 'moment';
 export interface examListProps {
   chooseTab: number;
   setStartExam: (startExam: boolean) => void;
+  setCheckExamAnswer: (checkExamAnswer: boolean) => void;
   setExamDetailId : (id: number) => void;
   filterText: string[];
   setFilterText: (text: string[]) => void;
@@ -87,6 +88,8 @@ const ExamList = ( props: examListProps) => {
 
   return (
     <>
+    {/* 所有考试 */}
+    {props.chooseTab == 1 &&  <>
         <List
             itemLayout="vertical"
             size="large"
@@ -118,7 +121,6 @@ const ExamList = ( props: examListProps) => {
                 ]}
                 extra={ <img width={200} alt="logo" src={props.chooseTab==1?cat:cat2}/>}
               >
-                {getDateAndTimeFromString(item.beginDate,item.endDate)}
                 
                 <List.Item.Meta className='exam-card-title'
                   title={<div style={{fontSize:'24px'}}><a>{item.testName}</a></div>}
@@ -148,11 +150,65 @@ const ExamList = ( props: examListProps) => {
             <br />
             四、若还没到开考的考试时间，请耐心等待
             <br />
-            <br />
+            {/* <br />
             <b>本场考试为：</b>
             <br />
-            <b>本次考试的时间为：2022.3.4 13:00</b>
+            <b>本次考试的时间为：2022.3.4 13:00</b> */}
           </Modal>
+    </>}
+
+    {/* 我的考试 */}
+    {props.chooseTab != 1 && <>
+      <List
+        itemLayout="vertical"
+        size="large"
+        className='exam-list'
+        pagination={{
+          onChange: (page) => {
+            console.log(page);
+          },
+          pageSize: 3,
+        }}
+        dataSource={examList}
+        footer={
+          <div style={{fontSize:'18px'}}>
+            <b>请选择试题进入考试</b>
+          </div>
+        }
+        renderItem={(item:any) => (
+          ( props.filterText.findIndex((i) => i != item.tag) != -1 && (              
+          <List.Item
+            key={item.testId}
+            onClick={()=> {
+              props.setExamDetailId(item.testId);
+            }}
+            actions={[
+              // <IconText icon={FormOutlined} text="共23道题" key="list-vertical-star-o" />,
+              // <IconText icon={ClockCircleOutlined} text={`时长:${(moment(item.endDate.split('T')[1].split('.')[0])).diff((item.beginDate.split('T')[1].split('.')[0]),"minute") }分钟`} key="list-vertical-like-o" />,
+              <IconText icon={TagsOutlined} text={item.tag} key="list-vertical-message" />,
+            ]}
+            extra={ 
+            <div>
+            <Statistic title="最终得分" value={item.score} suffix="/ 100" /> 
+            <Button 
+              type="primary" 
+              style={{marginTop:'20px'}}
+              onClick={()=>{
+                props.setCheckExamAnswer(true);
+              }}
+              >查看题目解析</Button>
+            </div>}
+          >
+            
+            <List.Item.Meta className='exam-card-title'
+              title={<div style={{fontSize:'24px'}}><a>{item.testName}</a></div>}
+              description={`考试时间：${item.beginDate.split('T')[0]} ${item.beginDate.split('T')[1].split('.')[0]}-${item.endDate.split('T')[1].split('.')[0]}`}
+            /> {item.intro}
+          </List.Item>))
+        )}
+      />
+    
+    </>}
     </>
   );
 };

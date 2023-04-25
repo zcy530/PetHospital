@@ -37,8 +37,9 @@ const Exam = () => {
       return <ExamAnswerCheck id={examDetailId} setCheckExamAnswer={setCheckExamAnswer}/>
     } else {
       return <ExamList 
-       chooseTab={chooseTab} 
+       chooseTab={chooseTab}
        setStartExam={setStartExam} 
+       setCheckExamAnswer={setCheckExamAnswer}
        setExamDetailId={setExamDetailId} 
        filterText={filterText}
        setFilterText={setFilterText}

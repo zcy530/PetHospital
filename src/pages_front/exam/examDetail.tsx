@@ -108,9 +108,11 @@ const ExamDetail = (props: examDetailsProps) => {
             
             {examPaperData.questionList.map((question,index)=>(
               <>
-                <Form.Item label={question.description} ></Form.Item>
+                {/* <Form.Item label={question.description} ></Form.Item> */}
+                <div style={{fontSize:'17px',marginBottom:'3px'}}><b>{index+1}.{'（'}{question.questionType}{'）'}{question.description}</b>{' '}{'（分数：'}{question.score}{'分）'}</div>
                 <Checkbox.Group 
                   options={question.choice} 
+                  className="font-checkbox"
                   onChange={(checkedValues: CheckboxValueType[])=> {
                     const myans = checkedValues.join(';')
                     
@@ -129,7 +131,8 @@ const ExamDetail = (props: examDetailsProps) => {
                     }
                     
                   }}
-                  style={{fontSize:'30px'}} />
+                  
+                  style={{fontSize:'17px'}} />
                 <Divider />
               </>
             ))}

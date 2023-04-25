@@ -274,7 +274,7 @@ html {
     background-color: #ffffff70;
   }
   .learn-rightarea-detail {
-    height: 2800px;
+    /* height: 2800px; */
     margin-left: 40px;
     margin-right: 30px;
     padding: 0px;
@@ -452,6 +452,9 @@ html {
     color: #000 !important;
   }
   
+  .font-checkbox {
+    font-size: 17px !important;
+  }
 
 
 /* 后台 systemManage */

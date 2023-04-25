@@ -33,6 +33,7 @@ const ExamAnswerCheck = (props: examAnswerCheckProps) => {
 
     const [paperName, setPaperName] = useState<string>('');
     const [examPaperAnswer, setExamPaperAnswer] = useState<oneQuestionStandardAnswer[]>(initial_paperAnswer);
+    const [userAnswer, setUserAnswer] = useState<string[]>([]);
 
     const config = {
         headers:{
@@ -66,7 +67,7 @@ const ExamAnswerCheck = (props: examAnswerCheckProps) => {
         <h3>{paperName}</h3>
         <Divider />
         <Form 
-          style={{marginLeft:'130px',marginRight:'100px',fontSize:'18px',textAlign:'left'}}>
+          style={{marginLeft:'130px',marginRight:'100px',fontSize:'17px',textAlign:'left'}}>
             
             {examPaperAnswer.map((question,index)=>(
                 <>
@@ -91,7 +92,7 @@ const ExamAnswerCheck = (props: examAnswerCheckProps) => {
                         type="checkbox"
                         id={choice}
                         label={choice}
-                        defaultChecked={!(question.userAns==choice)}
+                        defaultChecked={((question.userAns.split(';')).findIndex(i => i == choice)!=-1)}
                         disabled={true}
                         >
                         </Form.Check>

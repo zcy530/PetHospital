@@ -45,6 +45,7 @@ const ExamList = ( props: examListProps) => {
       "Authorization": userInfo.data.result.token,
     }
   }; 
+  const arr = [];
   
   useEffect(() => {
 		const fetchDetail = async() => {
@@ -55,12 +56,13 @@ const ExamList = ( props: examListProps) => {
       const { data } = await axios.get(url,config);
       setExamList(data.result);
       console.log(data.result);
-      // data.result.map((item, i)=>(
-      //   props.setPlainOptions(props.plainOptions.concat([item.tag]))
-      // ))
+      data.result.map((item, i)=>(
+        arr.push(item.tag)
+      ))
+      props.setPlainOptions(arr);
     }
     fetchDetail();
-    console.log(props.plainOptions)
+    
 	},[props.chooseTab])
   
   const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (

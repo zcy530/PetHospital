@@ -23,17 +23,15 @@ const Exam = () => {
   const [exitReminder, setExitReminder] = useState<boolean>(false);
 
   // 所有的选项
-  const [plainOptions, setPlainOptions] = useState<string[]>(['脑科','皮肤病','肠胃病','心脏病','寄生虫']);
+  const [plainOptions, setPlainOptions] = useState<string[]>([]);
   // 已经选了的选项
   const [filterText, setFilterText] = useState<string[]>([]);
 
   
 
   useEffect(() => {
-    if(filterText.length == 0) {
-      setFilterText(plainOptions);
-    }
-	},[filterText])
+    setFilterText(plainOptions);
+	},[plainOptions])
 
   const tabItems: MenuProps['items'] = ['所有考试','答题记录'].map((info, index) => {
       return {

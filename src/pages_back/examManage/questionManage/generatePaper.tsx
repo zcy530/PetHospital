@@ -10,9 +10,12 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import BackButton from '../../global/backButton.tsx';
 import { QuestionDetail, PostQuestion } from './questionDetail.tsx';
 import Loading from '../../global/loading.tsx'
+import { useSelector } from 'react-redux';
 
 //传入参数：questionIdList: number[]
 const GeneratePaper = () => {
+    const userLogin = useSelector(state => state.userLogin)
+    const token = userLogin.userInfo.data.result.token;
     //使用钩子获取state
     const { state } = useLocation();
     const list = state.questionList;
@@ -31,7 +34,9 @@ const GeneratePaper = () => {
             ans: '',
             keyword: ''
         };
-        await fetch(`https://47.120.14.174:443/petHospital/questions/${id}?front=false`)
+        await fetch(`https://47.120.14.174:443/petHospital/questions/${id}?front=false`,
+            { headers: { 'Authorization': token } }
+        )
             .then(
                 (response) => response.json(),
             )
@@ -126,6 +131,7 @@ const GeneratePaper = () => {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
+                'Authorization': token
             },
             body: JSON.stringify({
                 "paperId": 0,

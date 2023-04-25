@@ -8,14 +8,20 @@ import type { FilterConfirmProps } from 'antd/es/table/interface';
 import { QuestionDetailType } from './questionType.tsx'
 import BackButton from '../../global/backButton.tsx'
 import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const QuestionDetail = () => {
+    const userLogin = useSelector(state => state.userLogin)
+    const token = userLogin.userInfo.data.result.token;
     const param = useParams(); //传参
     const [form] = Form.useForm();
     const [detail, setDetail] = useState<QuestionDetailType>({});
 
     useEffect(() => {
-        fetch("https://47.120.14.174:443/petHospital/questions/" + param.questionId, { method: 'GET' })
+        fetch("https://47.120.14.174:443/petHospital/questions/" + param.questionId, { 
+            method: 'GET' ,
+            headers: {'Authorization': token}
+        })
             .then(
                 (response) => response.json(),
             )

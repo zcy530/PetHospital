@@ -6,16 +6,19 @@ import { Button, Input, Space, Table, message } from 'antd';
 import type { ColumnsType, ColumnType } from 'antd/es/table';
 import type { FilterConfirmProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
-import { diseaseType } from '../../diseaseManage/diseaseType.tsx'
+import { diseaseOption, getDiseaseList } from '../../diseaseManage/diseaseType.tsx'
 import { Question } from '../questionManage/questionType.tsx';
 import { QuestionType } from '../../examManage/questionManage/questionType.tsx'
 import Loading from '../../global/loading.tsx'
+import { useSelector } from 'react-redux';
 
 
 type DataIndex = keyof QuestionType;
 
 const QuestionTable: React.FC = (props) => {
-
+    const userLogin = useSelector(state => state.userLogin)
+    const token = userLogin.userInfo.data.result.token;
+    const [diseaseType, setDiseaseType] = useState<diseaseOption[]>([]);
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef<InputRef>(null);
@@ -150,7 +153,10 @@ const QuestionTable: React.FC = (props) => {
     const confirmAdd = () => {
         let selectedList: Question[] = [];
         questionList.map(async id => {
-            await fetch("https://47.120.14.174:443/petHospital/questions/" + id, { method: 'GET' })
+            await fetch("https://47.120.14.174:443/petHospital/questions/" + id, {
+                method: 'GET',
+                headers: { 'Authorization': token }
+            })
                 .then(
                     (response) => response.json(),
                 )
@@ -265,8 +271,11 @@ const QuestionTable: React.FC = (props) => {
     const [questionData, setQuestionData] = useState<QuestionType[]>([]);
 
     useEffect(() => {
+        const diseaseList = getDiseaseList(token);
+        setDiseaseType(diseaseList)
         //获取后台数据
-        fetch('https://47.120.14.174:443/petHospital/questions'
+        fetch('https://47.120.14.174:443/petHospital/questions',
+            { headers: { 'Authorization': token } }
         )
             .then(
                 (response) => response.json(),

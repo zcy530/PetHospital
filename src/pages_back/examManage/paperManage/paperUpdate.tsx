@@ -8,6 +8,7 @@ import BackButton from '../../global/backButton.tsx';
 import { PostQuestion, Question } from '../questionManage/questionType.tsx';
 import { PaperDetailType } from './paperType.tsx';
 import QuestionTable from './questionTable.tsx'
+import { useSelector } from 'react-redux';
 
 interface TableProps {
     open: boolean,
@@ -17,6 +18,8 @@ interface TableProps {
 
 const PaperUpdate = () => {
     const params = useParams();
+    const userLogin = useSelector(state => state.userLogin)
+    const token = userLogin.userInfo.data.result.token;
     const [form] = Form.useForm();
     const navigate = useNavigate(); //跳转路由
 
@@ -32,7 +35,9 @@ const PaperUpdate = () => {
             questionList: []
         };
         //获取后台数据
-        fetch(`https://47.120.14.174:443/petHospital/papers/${params.paper_id}?front=false`)
+        fetch(`https://47.120.14.174:443/petHospital/papers/${params.paper_id}?front=false`,{
+            headers: { 'Authorization': token }
+        })
             .then(
                 (response) => response.json(),
             )
@@ -146,6 +151,7 @@ const PaperUpdate = () => {
             method: 'PUT',
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
+                'Authorization': token
             },
             body: JSON.stringify({
                 "paperId": params.paper_id,

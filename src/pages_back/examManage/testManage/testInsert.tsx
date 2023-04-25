@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { TagTwoTone, FileTextTwoTone } from '@ant-design/icons';
 import {
     Form,
@@ -15,12 +15,17 @@ import StudentSelect from '../studentSelect.tsx';
 import TextArea from 'antd/es/input/TextArea';
 import BackButton from '../../global/backButton.tsx';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import moment, { Moment } from 'moment'
+
 
 dayjs.extend(customParseFormat);
 //时间范围选择器
 const { RangePicker } = DatePicker;
 
 const TestInsert: React.FC = () => {
+    const userLogin = useSelector(state => state.userLogin)
+    const token = userLogin.userInfo.data.result.token;
     const [form] = Form.useForm();
     const navigate = useNavigate(); //跳转路由
 
@@ -73,6 +78,7 @@ const TestInsert: React.FC = () => {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json; charset=UTF-8',
+                    'Authorization': token
                 },
                 body: JSON.stringify({
                     "beginDate": beginDate,
@@ -90,8 +96,8 @@ const TestInsert: React.FC = () => {
                     let res = data.success;
                     if (res === true) {
                         message.success("添加成功！")
-                         // 跳转至 test-detail
-                         navigate(`/systemManage/test/detail/${data.result.testId}`, { replace: true })
+                        // 跳转至 test-detail
+                        navigate(`/systemManage/test/detail/${data.result.testId}`, { replace: true })
                     }
                     else message.error("添加失败，请稍后再试！");
                 })
@@ -100,6 +106,19 @@ const TestInsert: React.FC = () => {
                 });
         })
     }
+
+    const [initDisableTime, setInitDisableTime] = useState([]);; // 设置时间范围不可选的初始值
+    // // 设置时间不可选范围
+    // const onCalendarChange = (dates) => {
+    //     if (dates.length === 1) {
+    //         setInitDisableTime(dates[0]);
+    //     }
+    // }
+
+    // const onOpenChange = () => {
+    //     setInitDisableTime([]);
+    // }
+    // const disabledDate = current => current && current < dayjs().subtract(1, 'days')
 
     return (
         <Container style={{ width: '100%', height: '100%' }}>

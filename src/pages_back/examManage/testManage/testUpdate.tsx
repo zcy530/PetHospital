@@ -16,8 +16,8 @@ import BackButton from '../../global/backButton.tsx';
 import { TestDetailType } from './testType.tsx';
 import { useNavigate, useParams } from 'react-router-dom';
 import Loading from '../../global/loading.tsx';
+import { useSelector } from 'react-redux';
 
-// TODO: 新增每场考试，可以选择相应的考试试卷(select?)，开始时间(DatePicker)和结束时间，以及哪些学生(multi-select)可以参加考试。
 
 dayjs.extend(customParseFormat);
 //时间范围选择器
@@ -36,6 +36,8 @@ interface paperOption {
 const { Option } = Select;
 
 const TestUpdate: React.FC = () => {
+    const userLogin = useSelector(state => state.userLogin)
+    const token = userLogin.userInfo.data.result.token;
     const param = useParams();
     const navigate = useNavigate(); //跳转路由
 
@@ -96,6 +98,7 @@ const TestUpdate: React.FC = () => {
                 method: 'PUT',
                 headers: {
                     'Content-type': 'application/json; charset=UTF-8',
+                    'Authorization': token
                 },
                 body: JSON.stringify({
                     "beginDate": beginDate,
@@ -131,7 +134,11 @@ const TestUpdate: React.FC = () => {
     }
 
     const getTestDetail = () => {
-        fetch("https://47.120.14.174:443/petHospital/tests/" + param.testId, { method: 'GET' })
+        fetch("https://47.120.14.174:443/petHospital/tests/" + param.testId, {
+            method: 'GET',
+            headers: { 'Authorization': token }
+
+        })
             .then(
                 (response) => response.json(),
             )
@@ -169,7 +176,10 @@ const TestUpdate: React.FC = () => {
     const [paperList, setPaper] = useState<paperOption[]>([]);
 
     const getPaperList = () => {
-        fetch('https://47.120.14.174:443/petHospital/papers'
+        fetch('https://47.120.14.174:443/petHospital/papers',
+            {
+                headers: { 'Authorization': token }
+            }
         )
             .then(
                 (response) => response.json(),
@@ -191,7 +201,10 @@ const TestUpdate: React.FC = () => {
 
     const [studentList, setStudent] = useState<studentOption[]>([]);
     const getStudentList = () => {
-        fetch('https://47.120.14.174:443/petHospital/users')
+        fetch('https://47.120.14.174:443/petHospital/users',
+            {
+                headers: { 'Authorization': token }
+            })
             .then(
                 (response) => response.json(),
             )
@@ -200,8 +213,8 @@ const TestUpdate: React.FC = () => {
                 const lists = data.result;
                 let student_List: studentOption[] = [];
                 lists.map(list => {
-                    if (list.role === 'user')
-                        student_List.push({ "userId": list.userId, "email": list.email })
+                    // if (list.role === 'user')
+                    student_List.push({ "userId": list.userId, "email": list.email })
                 })
                 //赋值给paper
                 setStudent(student_List);
@@ -213,7 +226,7 @@ const TestUpdate: React.FC = () => {
 
 
     useEffect(() => {
-        
+
         //试卷列表和学生列表
         getPaperList();
         getStudentList();
@@ -248,8 +261,7 @@ const TestUpdate: React.FC = () => {
                         rules={[{ required: true, message: '请选择试卷！' }]}>
                         <Select
                             size="large"
-                            showSearch //带搜索的选择框
-                            style={{ width: 160 }}
+                            style={{ width: 200 }}
                             placeholder="Select a paper"
                             onChange={handlePaperChange}
                         >
@@ -286,7 +298,6 @@ const TestUpdate: React.FC = () => {
                     <Form.Item label="参考学生" name="userList">
                         <Select
                             size="large"
-                            // showSearch //带搜索的选择框
                             mode="multiple"
                             allowClear
                             style={{ width: '100%' }}

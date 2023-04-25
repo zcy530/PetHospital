@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Select, } from 'antd';
 import Loading from '../global/loading.tsx'
+import { useSelector } from 'react-redux';
 
 const { Option } = Select;
 
@@ -13,11 +14,14 @@ interface studentOption {
 const StudentSelect = (props) => {
     // console.log("student props:");
     console.log(props);
-
+    const userLogin = useSelector(state => state.userLogin)
+    const token = userLogin.userInfo.data.result.token;
     const [studentList, setStudent] = useState<studentOption[]>([]);
 
     useEffect(() => {
-        fetch('https://47.120.14.174:443/petHospital/users')
+        fetch('https://47.120.14.174:443/petHospital/users',
+        { headers: { 'Authorization': token } }
+        )
             .then(
                 (response) => response.json(),
             )
@@ -26,8 +30,8 @@ const StudentSelect = (props) => {
                 const lists = data.result;
                 let student_List: studentOption[] = [];
                 lists.map(list => {
-                    if (list.role === 'user')
-                        student_List.push({ "userId": list.userId, "email": list.email })
+                    // if (list.role === 'user')
+                    student_List.push({ "userId": list.userId, "email": list.email })
                 })
                 //赋值给paper
                 setStudent(student_List);
@@ -46,7 +50,6 @@ const StudentSelect = (props) => {
     return (
         <Select
             size="large"
-            // showSearch //带搜索的选择框
             mode="multiple"
             allowClear
             style={{ width: '100%' }}

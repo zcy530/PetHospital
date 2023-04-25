@@ -100,14 +100,14 @@ const DiseaseManage: React.FC = () => {
                     <Form.Item
                         name="diseaseName"
                         label="填写病种名称"
-                        rules={[{ required: true, message: 'Please input the title of disease!' }]}
+                        rules={[{ required: true, message: '请输入病种名称！' }]}
                     >
                         <Input placeholder="病种" />
                     </Form.Item>
                     <Form.Item
                         name="typeName"
                         label="疾病类别"
-                        rules={[{ required: true, message: 'Please select the type of disease!' }]}
+                        rules={[{ required: true, message: '请选择疾病类别！' }]}
                     >
                         <Select placeholder="选择疾病类别">
                             {/* 循环遍历渲染数组对象 */}
@@ -189,14 +189,14 @@ const DiseaseManage: React.FC = () => {
                     <Form.Item
                         name="diseaseName"
                         label="填写病种名称"
-                        rules={[{ required: true, message: 'Please input the title of disease!' }]}
+                        rules={[{ required: true, message: '请输入病种名称！' }]}
                     >
                         <Input placeholder={record.diseaseName} />
                     </Form.Item>
                     <Form.Item
                         name="typeName"
                         label="疾病类别"
-                        rules={[{ required: true, message: 'Please select the type of disease!' }]}
+                        rules={[{ required: true, message: '请输入疾病类别！' }]}
                     >
                         <Select placeholder={record.typeName}>
                             {/* 循环遍历渲染数组对象 */}

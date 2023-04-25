@@ -551,7 +551,7 @@ const UserInfo: React.FC = () => {
         //删除的事件 DELETE
         await fetch(`https://47.120.14.174:443/petHospital/users/${id}`, {
           method: 'DELETE',
-          headers: {'Authorization': token}
+          headers: { 'Authorization': token }
         }).then((response) => {
           if (response.status === 200) {
             //DONE：重新加载数据 filter一下
@@ -642,21 +642,18 @@ const UserInfo: React.FC = () => {
   return (
     userData ? (
       <div style={{ margin: 16 }}>
-        <Space size={600}>
-          <Space>
-            <Button type="primary" onClick={reload} disabled={!hasSelected} loading={loading}>
-              Reload
-            </Button>
-            <span style={{ marginLeft: 8 }}>
-              {hasSelected ? `选择了 ${selectedRowKeys.length} 个用户` : ''}
-            </span>
-          </Space>
-          <Space wrap>
-            <Button type="primary" ghost onClick={addUsers}>新增用户</Button>
-            {/* TODO:批量删除用户  */}
-            <Button type="primary" danger ghost onClick={batchDel}>删除用户</Button>
-          </Space>
-        </Space>
+        <div style={{ float: 'left' , margin: 10 }}>
+          <Button type="primary" onClick={reload} disabled={!hasSelected} loading={loading}>
+            Reload
+          </Button>
+          <span style={{ marginLeft: 8 , margin: 10 }}>
+            {hasSelected ? `选择了 ${selectedRowKeys.length} 个用户` : ''}
+          </span>
+        </div>
+        <div style={{ float: "right",  margin: 10 }}>
+          <Button type="primary" ghost onClick={addUsers}>新增用户</Button>
+          <Button type="primary" danger style={{ marginLeft: '10px' }}  ghost onClick={batchDel}>删除用户</Button>
+        </div>
 
         {/* 创建用户的表单 open为true时弹出 */}
         <UserCreateForm

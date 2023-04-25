@@ -101,7 +101,7 @@ const Exam = () => {
             onCancel={() => setExitReminder(false) }
             width={600}
           >
-            <b>考试正在进行中，离开将自动交卷请确认是否要退出考试？</b>
+            <b>考试正在进行中，离开将不保存考试记录，请确认是否要退出考试？</b>
           </Modal>
 
           <div className='exam-tag-choose'>

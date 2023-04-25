@@ -9,7 +9,7 @@ import { Alert } from "react-bootstrap";
 const NavBar = () => {
 
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const userLogin = useSelector((state:any) => state.userLogin)
   const { userInfo } = userLogin
   const [show, setShow] = useState<boolean>(true);

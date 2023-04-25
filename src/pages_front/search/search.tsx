@@ -7,11 +7,7 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
-export interface detailsProps {
-    id: number;
-  }
-
-const Search = ( props: detailsProps) => {
+const Search = () => {
 
   // react-router   
   const navigate = useNavigate()
@@ -56,6 +52,7 @@ const Search = ( props: detailsProps) => {
             </Card.Body>
             <Card.Footer className="text-muted">
                 <Link onClick={() => {
+                  navigate(`/searchdetail/${value.caseId}`)
                 }}>查看详情
                 </Link>
             </Card.Footer>

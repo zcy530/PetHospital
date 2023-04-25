@@ -1,6 +1,6 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import { FormOutlined, ClockCircleOutlined, TagsOutlined} from '@ant-design/icons';
-import { MenuProps, Modal } from 'antd';
+import { Checkbox, MenuProps, Modal } from 'antd';
 import { Breadcrumb, Layout, Menu, Avatar, List, Space} from 'antd';
 import { examCardData } from './mockExamData.tsx';
 import { Form, Tab } from 'react-bootstrap';
@@ -9,6 +9,8 @@ import ExamDetail from './examDetail.tsx';
 import ExamList from './examList.tsx';
 import ExamEnd from './examEnd.tsx';
 import ExamAnswerCheck from './examAnswerCheck.tsx';
+import { CheckboxValueType } from 'antd/es/checkbox/Group.js';
+import { CheckboxChangeEvent } from 'antd/es/checkbox/Checkbox.js';
 
 const Exam = () => {
 
@@ -19,14 +21,32 @@ const Exam = () => {
   const [chooseTab, setChooseTab] = useState<number>(1);
   const [examDetailId, setExamDetailId] = useState<number>(1);
   const [exitReminder, setExitReminder] = useState<boolean>(false);
-  const [filterText, setFilterText] = useState<string[]>(['']);
 
-  const tabItems: MenuProps['items'] = ['所有考试','我的考试'].map((info, index) => {
+  // 所有的选项
+  const [plainOptions, setPlainOptions] = useState<string[]>(['脑科','皮肤病','肠胃病','心脏病','寄生虫']);
+  // 已经选了的选项
+  const [filterText, setFilterText] = useState<string[]>([]);
+
+  
+
+  useEffect(() => {
+    if(filterText.length == 0) {
+      setFilterText(plainOptions);
+    }
+	},[filterText])
+
+  const tabItems: MenuProps['items'] = ['所有考试','答题记录'].map((info, index) => {
       return {
         key: index + 1,
         label: info,
       };
   });
+
+  const onChange = (checkedValues: CheckboxValueType[]) => {
+    console.log('checked = ', checkedValues);
+    setFilterText(checkedValues.join(';').split(';'));
+  };
+
 
   const renderRightComponent = () => {
     if(startExam) {
@@ -40,6 +60,8 @@ const Exam = () => {
        chooseTab={chooseTab}
        setStartExam={setStartExam} 
        setCheckExamAnswer={setCheckExamAnswer}
+       plainOptions={plainOptions}
+       setPlainOptions={setPlainOptions}
        setExamDetailId={setExamDetailId} 
        filterText={filterText}
        setFilterText={setFilterText}
@@ -87,13 +109,11 @@ const Exam = () => {
           <div className='exam-tag-choose'>
             <b>选择tag筛选题目</b>
             <div className='exam-tag-choose-item'>
-            {['肠胃病','皮肤病'].map((tags,subindex) => (
-                <Form.Check  
-                type="checkbox"
-                id={tags}
-                label={tags}
-                />
-            ))}
+            <Checkbox.Group 
+               style={{ display: 'block'}} 
+               options={plainOptions} 
+               defaultValue={plainOptions} 
+               onChange={onChange} />
             </div>
           </div>
         </Sider>

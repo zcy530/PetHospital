@@ -17,6 +17,8 @@ export interface examListProps {
   setStartExam: (startExam: boolean) => void;
   setCheckExamAnswer: (checkExamAnswer: boolean) => void;
   setExamDetailId : (id: number) => void;
+  plainOptions: string[]
+  setPlainOptions: (option: string[]) => void;
   filterText: string[];
   setFilterText: (text: string[]) => void;
 }  
@@ -42,20 +44,23 @@ const ExamList = ( props: examListProps) => {
     headers:{
       "Authorization": userInfo.data.result.token,
     }
-  };
+  }; 
   
   useEffect(() => {
 		const fetchDetail = async() => {
       const url_notdone='https://47.120.14.174:443/petHospital/mytest/category'
       const url_record='https://47.120.14.174:443/petHospital/mytest/records/category'
-
       const url = props.chooseTab == 1? url_notdone : url_record;
 
       const { data } = await axios.get(url,config);
       setExamList(data.result);
       console.log(data.result);
+      // data.result.map((item, i)=>(
+      //   props.setPlainOptions(props.plainOptions.concat([item.tag]))
+      // ))
     }
     fetchDetail();
+    console.log(props.plainOptions)
 	},[props.chooseTab])
   
   const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
@@ -107,7 +112,7 @@ const ExamList = ( props: examListProps) => {
               </div>
             }
             renderItem={(item:any) => (
-              ( props.filterText.findIndex((i) => i != item.tag) != -1 && (              
+              ( props.filterText.findIndex((i) => i == item.tag) != -1 && (              
               <List.Item
                 key={item.testId}
                 onClick={() => {
@@ -121,7 +126,6 @@ const ExamList = ( props: examListProps) => {
                 ]}
                 extra={ <img width={200} alt="logo" src={props.chooseTab==1?cat:cat2}/>}
               >
-                
                 <List.Item.Meta className='exam-card-title'
                   title={<div style={{fontSize:'24px'}}><a>{item.testName}</a></div>}
                   description={`考试时间：${item.beginDate.split('T')[0]} ${item.beginDate.split('T')[1].split('.')[0]}-${item.endDate.split('T')[1].split('.')[0]}`}
@@ -172,11 +176,11 @@ const ExamList = ( props: examListProps) => {
         dataSource={examList}
         footer={
           <div style={{fontSize:'18px'}}>
-            <b>请选择试题进入考试</b>
+            <b>请选择试题查看答案</b>
           </div>
         }
         renderItem={(item:any) => (
-          ( props.filterText.findIndex((i) => i != item.tag) != -1 && (              
+          ( props.filterText.findIndex((i) => i == item.tag) != -1 && (              
           <List.Item
             key={item.testId}
             onClick={()=> {

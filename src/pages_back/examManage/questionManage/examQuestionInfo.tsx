@@ -333,18 +333,17 @@ const QuestionInfo: React.FC = () => {
 
     return (
         questionData ? (
-            <div style={{ margin: 16 }}>
-                <Space wrap size={600}>
-                    <Space>
+            <div>
+                <div style={{ margin: 16 }} >
+                    <div style={{ float: 'left', margin: 10 }}>
                         <Button type="primary" onClick={reload} disabled={!hasSelected} loading={loading}>
                             Reload
                         </Button>
-                        <span style={{ marginLeft: 8 }}>
+                        <span style={{ marginLeft: 8, margin: 10 }}>
                             {hasSelected ? `选择了 ${selectedRowKeys.length} 个考题` : ''}
                         </span>
-                    </Space>
-
-                    <Space>
+                    </div>
+                    <div style={{ float: "right", margin: 10}}>
                         <Link to="/systemManage/exercise/insert">
                             <Button type="primary" ghost>新增考题</Button>
                         </Link>
@@ -354,22 +353,23 @@ const QuestionInfo: React.FC = () => {
                             <Link to='/systemManage/exercise/generate'
                                 state={{ questionList: questionList }}
                             >
-                                <Button type="primary">
+                                <Button type="primary" style={{ marginLeft: '10px' }}>
                                     生成试卷
                                 </Button>
                             </Link>
                         ) : (
-                            <Button type="primary" onClick={hintError}>
+                            <Button type="primary" style={{ marginLeft: '10px' }} onClick={hintError}>
                                 生成试卷
                             </Button>
                         )}
-                    </Space>
-                </Space>
-
-                <Table style={{ margin: 16 }} rowSelection={rowSelection} columns={columns}
-                    loading={questionData.length === 0}
-                    dataSource={questionData} />;
-            </div >
+                    </div>
+                </div>
+                <div style={{ margin: 16 }}>
+                    <Table rowSelection={rowSelection} columns={columns}
+                        loading={questionData.length === 0}
+                        dataSource={questionData} />;
+                </div>
+            </div>
         ) : (
             <>
                 <Loading />

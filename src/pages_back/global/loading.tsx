@@ -1,4 +1,4 @@
-import { Spin, Row, Col } from "antd";
+import { Spin, Row, Col, Image } from "antd";
 import React from "react";
 import Cat from "../../Assets/image/cat2.png";
 
@@ -9,9 +9,9 @@ const Loading = () => {
 
             <Row>
 
-                <Col >
-                    <img src={Cat} />
-                </Col>
+                {/* <Col >
+                    <Image src={Cat} width={300} height={300} />
+                </Col> */}
 
                 <Col style={{ marginTop: 300, marginLeft: 150 }}>
 

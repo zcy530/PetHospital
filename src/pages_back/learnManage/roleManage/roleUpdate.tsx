@@ -175,7 +175,7 @@ const RoleUpdate = () => {
                     <div style={{ textAlign: 'left' }}>
                         <Form
                             labelCol={{ span: 4 }}
-                            wrapperCol={{ span: 14 }}
+                            wrapperCol={{ span: 18 }}
                             layout="horizontal"
                             style={{ maxWidth: '100%' }}
                             form={form} name="process_insert"

@@ -94,7 +94,7 @@ const CaseDetail = () => {
                     }}
                 >
                     {record.inspection_graphs?.map((item, i) => (
-                        <Image width={350} height={250} style={{ padding: '10px' }} src={item} />
+                        <Image width={200} height={150} style={{ padding: '10px' }} src={item} />
                     ))}
                 </Image.PreviewGroup>
             ),
@@ -114,11 +114,11 @@ const CaseDetail = () => {
                 <Descriptions.Item label="疾病名称" >{caseData?.disease?.diseaseName}</Descriptions.Item>
                 <Descriptions.Item label="疾病类型" >{caseData?.disease?.typeName}</Descriptions.Item>
                 <Descriptions.Item label="接诊信息" span={2}>{caseData?.admissionText} </Descriptions.Item>
-                <Descriptions.Item label="病例封面">
+                <Descriptions.Item label="病例封面" span={3}>
                     {
                         caseData?.frontGraph ? (
                             <>
-                                <Image width={350} height={250} style={{ padding: '10px' }} src={caseData.frontGraph} />
+                                <Image width={250} height={150} style={{ padding: '10px' }} src={caseData.frontGraph} />
                             </>
                         ) : (
                             <>
@@ -128,7 +128,7 @@ const CaseDetail = () => {
 
                 </Descriptions.Item>
 
-                <Descriptions.Item label="接诊图片" span={2}>
+                <Descriptions.Item label="接诊图片" span={3}>
                     <Image.PreviewGroup
                         preview={{
                             onChange: (current, prev) =>
@@ -136,7 +136,7 @@ const CaseDetail = () => {
                         }}
                     >
                         {caseData?.admissionGraphList.map((item, i) => (
-                            <Image width={350} height={250} style={{ padding: '10px' }} src={item} />
+                            <Image width={250} height={150} style={{ padding: '10px' }} src={item} />
                         ))}
                     </Image.PreviewGroup>
                 </Descriptions.Item>
@@ -158,13 +158,13 @@ const CaseDetail = () => {
                         }}
                     >
                         {caseData?.treatmentGraphList.map((item, i) => (
-                            <Image width={350} height={250} style={{ padding: '10px' }} src={item} />
+                            <Image width={250} height={150} style={{ padding: '10px' }} src={item} />
                         ))}
                     </Image.PreviewGroup>
                 </Descriptions.Item>
                 <Descriptions.Item label="治疗方案视频" span={3}>
                     {caseData?.treatmentVideoList.map((item, i) => (
-                        <video id="playChatVideo" width="680" height="410" style={{ marginBottom: '20' }} controls>
+                        <video id="playChatVideo" width="500" height="350" style={{ marginBottom: '20' }} controls>
                             <source src={item} type="video/mp4"></source>
                         </video>
                     ))}
